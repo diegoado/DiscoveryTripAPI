@@ -17,6 +17,9 @@
   },
   "author": "Diego Adolfo <diegoado@gmail.com>",
   "license": "MIT",
+  "engines": {
+    "node": ">=6.x"
+  },
   "dependencies": {
     "body-parser": "~1.15.2",
     "express": "~4.14.0",
@@ -24,5 +27,8 @@
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
     "morgan": "~1.7.0"
+  },
+  "devDependencies": {
+    "nodemon": "~1.11.0"
   }
 }
