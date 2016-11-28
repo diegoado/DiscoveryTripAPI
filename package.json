@@ -1,6 +1,7 @@
 {
   "name": "discovery-trip-api",
   "version": "1.0.0",
+  "private": true,
   "description": "The web API for DiscoveryTrip mobile application",
   "main": "server.js",
   "scripts": {
@@ -10,11 +11,18 @@
     "API",
     "DiscoveryTrip"
   ],
+  "repository": {
+  "type": "git",
+  "url": "git://github.com/diegoado/DiscoveryTripAPI.git"
+  },
   "author": "Diego Adolfo <diegoado@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "body-parser": "^1.15.2",
-    "express": "^4.14.0",
-    "mongoose": "^4.7.0"
+    "body-parser": "~1.15.2",
+    "express": "~4.14.0",
+    "mongoose": "~4.7.0",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.2.0",
+    "morgan": "~1.7.0"
   }
 }
