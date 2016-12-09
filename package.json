@@ -26,7 +26,6 @@
     "mongoose": "~4.7.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.x",
-    "faker": "^2.0.x",
     "method-override": "^2.3.x",
     "nconf": "^0.6.x",
     "oauth2orize": "^1.0.x",
