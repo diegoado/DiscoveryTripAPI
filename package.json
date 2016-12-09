@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "description": "The web API for DiscoveryTrip mobile application",
-  "main": "server.js",
   "scripts": {
+    "start": "node ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -21,14 +21,44 @@
     "node": ">=6.x"
   },
   "dependencies": {
-    "body-parser": "~1.15.2",
+    "body-parser": "~1.8.x",
     "express": "~4.14.0",
     "mongoose": "~4.7.0",
     "cookie-parser": "~1.4.3",
-    "debug": "~2.2.0",
-    "morgan": "~1.7.0"
+    "debug": "~2.2.x",
+    "morgan": "~1.7.0",
+    "faker": "^2.0.x",
+    "method-override": "^2.3.x",
+    "nconf": "^0.6.x",
+    "oauth2orize": "^1.0.x",
+    "passport": "^0.2.x",
+    "passport-http": "^0.2.x",
+    "passport-http-bearer": "^1.0.x",
+    "passport-oauth2-client-password": "^0.1.x",
+    "winston": "^0.8.x"
   },
   "devDependencies": {
     "nodemon": "~1.11.0"
+  },
+  "jshintConfig":{
+    "curly": true,
+    "eqeqeq": true,
+    "immed": true,
+    "latedef": false,
+    "newcap": false,
+    "noarg": true,
+    "sub": true,
+    "undef": true,
+    "boss": true,
+    "eqnull": true,
+    "strict": false,
+    "scripturl": true,
+    "evil": true,
+    "globals" : {
+      "location": true,
+      "printStackTrace": false
+    },
+    "browser" : true,
+    "node": true
   }
 }
