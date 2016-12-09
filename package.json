@@ -12,8 +12,8 @@
     "DiscoveryTrip"
   ],
   "repository": {
-  "type": "git",
-  "url": "git://github.com/diegoado/DiscoveryTripAPI.git"
+    "type": "git",
+    "url": "git://github.com/diegoado/DiscoveryTripAPI.git"
   },
   "author": "Diego Adolfo <diegoado@gmail.com>",
   "license": "MIT",
@@ -22,12 +22,12 @@
   },
   "dependencies": {
     "body-parser": "~1.8.x",
-    "express": "~4.14.0",
-    "mongoose": "~4.7.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.x",
-    "faker": "^2.0.x",
+    "express": "~4.14.0",
     "method-override": "^2.3.x",
+    "mongoose": "~4.7.0",
+    "mongoose-validator": "^1.2.5",
     "nconf": "^0.6.x",
     "oauth2orize": "^1.0.x",
     "passport": "^0.2.x",
@@ -39,7 +39,7 @@
   "devDependencies": {
     "nodemon": "~1.11.0"
   },
-  "jshintConfig":{
+  "jshintConfig": {
     "curly": true,
     "eqeqeq": true,
     "immed": true,
@@ -53,11 +53,11 @@
     "strict": false,
     "scripturl": true,
     "evil": true,
-    "globals" : {
+    "globals": {
       "location": true,
       "printStackTrace": false
     },
-    "browser" : true,
+    "browser": true,
     "node": true
   }
 }
