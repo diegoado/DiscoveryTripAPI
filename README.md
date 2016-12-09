@@ -30,17 +30,17 @@ The web API for DiscoveryTrip Mobile applications
   * **Code:** 200 <br />
     **Content:**
     ```json
-    {
-      "user": {
-        "__v": 0,
-        "username": "username",
-        "email": "email@email.com",
-        "_id": "584ad1d46ab8be1fcb3a46d1",
-        "created": "YYYY-MM-DDTHH:mm:SS.XXXZ"
-      },
-      "status": "ok",
-      "message": "New User created with success"
-    }
+      {
+        "user": {
+          "__v": 0,
+          "username": "username",
+          "email": "email@email.com",
+          "_id": "584ad1d46ab8be1fcb3a46d1",
+          "created": "YYYY-MM-DDTHH:mm:SS.XXXZ"
+        },
+        "status": "ok",
+        "message": "New User created with success"
+      }
     ```
  
 * **Error Response:**
@@ -48,7 +48,7 @@ The web API for DiscoveryTrip Mobile applications
   * **Code:** 400 BAD REQUEST <br />
     **Content:** 
     ```json
-    {"status": "error", "message": "User validation failed"}
+      {"status": "error", "message": "User validation failed"}
     ```
     
   OR
@@ -56,7 +56,7 @@ The web API for DiscoveryTrip Mobile applications
   * **Code:** 500 INTERNAL ERROR <br />
     **Content:** 
     ```json
-    {"status": "error", "message": "Internal Server Error"}
+      {"status": "error", "message": "Internal Server Error"}
     ```
 
 * **Sample Call:**
