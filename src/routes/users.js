@@ -20,44 +20,46 @@ router.post('/', function(req, res) {
             var message = 'New User created with success';
 
             log.info(message);
-            return res.json({
-                user: {id: user.userId, username: user.username, email: user.email},
-                status: 'ok', message: message
-            });
+            res.json({user: user, status: 'ok', message: message});
         } else {
             if (err.name === 'ValidationError') {
                 res.statusCode = 400;
-                res.json({status: 'error', message: 'Validation Error'});
+
+                var fields = {};
+                for (var field in err.errors) {
+                    fields[field] = {value: err.errors[field].value, message: err.errors[field].message};
+                }
+                res.json({status: 'error', message: err.message, errorsOnFields: fields});
             } else {
                 res.statusCode = 500;
                 res.json({status: 'error', message: 'Internal Server Error'});
             }
+            log.error('Internal error(%d): %s', res.statusCode, err.message);
         }
-        log.error('Internal error(%d): %s', res.statusCode, err.name);
     });
 });
 
-router.get('/', passport.authenticate('bearer', { session: false }), function(req, res) {
-    User.find(function (err, users) {
-        if (!err) {
-            return res.json(users)
-        } else {
-            res.statusCode = 500;
-            res.json({status: 'error', message: 'Internal Server Error'})
-        }
-        log.error('Internal error(%d): %s', res.statusCode, err.name);
-    })
-});
+// router.get('/', passport.authenticate('bearer', { session: false }), function(req, res) {
+//     User.find(function (err, users) {
+//         if (!err) {
+//             return res.json(users)
+//         } else {
+//             res.statusCode = 500;
+//             res.json({status: 'error', message: 'Internal Server Error'})
+//         }
+//         log.error('Internal error(%d): %s', res.statusCode, err.name);
+//     })
+// });
 
-router.get('/:id', function(req, res) {
+router.get('/:id', passport.authenticate('bearer', { session: false }), function(req, res) {
     res.json({'message': 'This is not implemented now!'});
 });
 
-router.put('/:id', function (req, res) {
+router.put('/:id', passport.authenticate('bearer', { session: false }), function (req, res) {
     res.json({'message': 'This is not implemented now!'});
 });
 
-router.delete('/:id', function (req, res) {
+router.delete('/:id', passport.authenticate('bearer', { session: false }), function (req, res) {
     res.json({'message': 'This is not implemented now!'});
 });
 

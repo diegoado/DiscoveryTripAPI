@@ -1,4 +1,5 @@
 var mongoose = require('mongoose'),
+    validator = require('mongoose-validator'),
     crypto = require('crypto'),
     Schema = mongoose.Schema;
 
@@ -16,7 +17,8 @@ var User = new Schema({
     email: {
         type: String,
         unique: true,
-        required: true
+        required: true,
+        validate: validator({validator: 'isEmail', message: 'Invalid Email Address'})
     },
 
     hashedPassword: {
