@@ -27,8 +27,9 @@ The web API for DiscoveryTrip Mobile applications
 
 * **Success Response:**
   
-  * **Code:** 200 <br />
-    **Content:**
+  * **Code:** 200
+  * **Content:**
+    
     ```json
       {
         "user": {
@@ -45,16 +46,18 @@ The web API for DiscoveryTrip Mobile applications
  
 * **Error Response:**
 
-  * **Code:** 400 BAD REQUEST <br />
-    **Content:** 
+  * **Code:** 400 BAD REQUEST
+  * **Content:** 
+  
     ```json
       {"status": "error", "message": "User validation failed"}
     ```
     
   OR
   
-  * **Code:** 500 INTERNAL ERROR <br />
-    **Content:** 
+  * **Code:** 500 INTERNAL ERROR
+  * **Content:** 
+  
     ```json
       {"status": "error", "message": "Internal Server Error"}
     ```
