@@ -3,7 +3,7 @@ The web API for DiscoveryTrip Mobile applications
 
 **Create User**
 ----
-  Adds a new user to the mobile application. The user name Timestamp is validated to avoid creating duplicate names in the application.
+  Adds a new user to the mobile application. The user name and email is validated to avoid creating duplicates in the application.
 
 * **URL**
 
@@ -37,7 +37,7 @@ The web API for DiscoveryTrip Mobile applications
           "username": "username",
           "email": "email@email.com",
           "_id": "584ad1d46ab8be1fcb3a46d1",
-          "created": "YYYY-MM-DDTHH:mm:SS.XXXZ"
+          "created": "YYYY-MM-DDTHH:mm:SS.000Z"
         },
         "status": "ok",
         "message": "New User created with success"
