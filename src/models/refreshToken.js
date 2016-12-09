@@ -1,6 +1,9 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
+/* RefreshToken: another type of token allows you to request a new bearer-token
+ * without re-request a password from the user.
+ **/
 var RefreshToken = new Schema({
     userId: {
         type: String,

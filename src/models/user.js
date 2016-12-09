@@ -2,6 +2,10 @@ var mongoose = require('mongoose'),
     crypto = require('crypto'),
     Schema = mongoose.Schema;
 
+/* User: Who factor uses the mobile application.
+ *
+ * A user is who has a name, password hash and a salt.
+ **/
 var User = new Schema({
     username: {
         type: String,

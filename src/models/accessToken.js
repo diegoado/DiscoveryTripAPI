@@ -1,6 +1,8 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
+/* AccessToken: token (type of bearer), issued to the client application, limited by time.
+ **/
 var AccessToken = new Schema({
     userId: {
         type: String,

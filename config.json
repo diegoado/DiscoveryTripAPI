@@ -15,8 +15,8 @@
       "password": "discovery"
     },
     "client": {
-      "name": "Android API v1",
-      "clientId": "android",
+      "name": "Discovery Trip",
+      "clientId": "discoveryTrip",
       "clientSecret": "0ca9b9b3-1370-44e0-b42e-01cf6f6fc04c"
     }
   }
