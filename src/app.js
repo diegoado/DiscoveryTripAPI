@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/', api);
 app.use('/api', api);
 app.use('/api/users', users);
-app.use('/api/token', oauth);
+app.use('/api/login', oauth);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next){

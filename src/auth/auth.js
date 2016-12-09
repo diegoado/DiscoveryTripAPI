@@ -70,7 +70,6 @@ passport.use(new BearerStrategy(
                         return done(err);
                     }
                 });
-
                 return done(null, false, { message: 'Token expired' });
             }
 
@@ -84,8 +83,7 @@ passport.use(new BearerStrategy(
                     return done(null, false, { message: 'Unknown user' });
                 }
 
-                var info = { scope: '*' };
-                done(null, user, info);
+                done(null, user, { scope: '*' });
             });
         });
     }
