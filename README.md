@@ -37,7 +37,7 @@ The web API for DiscoveryTrip Mobile applications
           "username": "username",
           "email": "email@email.com",
           "_id": "584ad1d46ab8be1fcb3a46d1",
-          "created": "YYYY-MM-DDTHH:mm:SS.000Z"
+          "created": "YYYY-mm-DDTHH:MM:SS.dddZ"
         },
         "status": "ok",
         "message": "New User created with success"
