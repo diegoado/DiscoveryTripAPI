@@ -46,6 +46,8 @@ var User = new Schema({
         type: Date,
         default: Date.now
     }
+}, {
+    versionKey: false
 });
 
 User.virtual('userId')

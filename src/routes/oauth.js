@@ -2,11 +2,14 @@ var express = require('express'),
     passport = require('passport'),
     router = express.Router();
 
-var src = process.cwd() + '/src/',
-    log = require(src + 'log')(module),
-    oauth2 = require(src + 'auth/oauth2');
+// Find project working directory
+var src = process.cwd() + '/src/';
 
-// Load Models for user in call routes
+var log = require(src + 'log')(module),
+    oauth2 = require(src + 'auth/oauth2'),
+    errorHandler = require(src + 'errors');
+
+// Load Models
 var AccessToken = require(src + 'models/accessToken');
 
 router.post('/login', oauth2.token);
@@ -16,19 +19,16 @@ router.delete('/logout', passport.authenticate('bearer', { session: false }), fu
 
     AccessToken.findOne({userId: userId}, function (err, token) {
         if (err) {
-            res.statusCode = 500;
-            log.error('Internal error(%d): %s', res.statusCode, err.message);
-
-            res.json({status: 'error', message: 'Internal Server Error'});
+            return errorHandler.internalError(err, res);
         }
         token.remove(function (err) {
             if (!err) {
-                return res.json({status: 'ok', message: 'User logout completed with success!'});
-            } else {
-                res.statusCode = 500;
-                log.error('Internal error(%d): %s', res.statusCode, err.message);
+                var message = 'User logout completed with success!';
+                log.info(message);
 
-                return res.json({status: 'error', message: 'Internal Server Error'});
+                return res.json({status: 'ok', message: message});
+            } else {
+                return errorHandler.internalError(err, res);
             }
         });
     });
@@ -41,7 +41,7 @@ router.delete('/logout', passport.authenticate('bearer', { session: false }), fu
 //         res.json({status: 'ok'});
 //     } else {
 //         res.statusCode = 401;
-//         res.json({status: 'error'});
+//         res.json({status: 'errorHandler'});
 //     }
 // });
 

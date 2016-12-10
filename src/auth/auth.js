@@ -17,15 +17,12 @@ passport.use(new BasicStrategy(
             if (err) {
                 return done(err);
             }
-
             if (!client) {
                 return done(null, false);
             }
-
             if (client.clientSecret !== password) {
                 return done(null, false);
             }
-
             return done(null, client);
         });
     }
@@ -37,15 +34,12 @@ passport.use(new ClientPasswordStrategy(
             if (err) {
                 return done(err);
             }
-
             if (!client) {
                 return done(null, false);
             }
-
             if (client.clientSecret !== clientSecret) {
                 return done(null, false);
             }
-
             return done(null, client);
         });
     }
@@ -54,15 +48,12 @@ passport.use(new ClientPasswordStrategy(
 passport.use(new BearerStrategy(
     function(accessToken, done) {
         AccessToken.findOne({ token: accessToken }, function(err, token) {
-
             if (err) {
                 return done(err);
             }
-
             if (!token) {
                 return done(null, false);
             }
-
             if (Math.round((Date.now() - token.created) / 1000) > config.get('security:tokenLife') ) {
 
                 AccessToken.remove({ token: accessToken }, function (err) {
@@ -72,17 +63,14 @@ passport.use(new BearerStrategy(
                 });
                 return done(null, false, { message: 'Token expired' });
             }
-
             User.findById(token.userId, function(err, user) {
 
                 if (err) {
                     return done(err);
                 }
-
                 if (!user) {
                     return done(null, false, { message: 'Unknown user' });
                 }
-
                 done(null, user, { scope: '*' });
             });
         });
@@ -90,21 +78,21 @@ passport.use(new BearerStrategy(
 ));
 
 // TODO: Provider facebook authentication
-passport.use(new FacebookTokenStrategy(
-    config.get('auth:facebook'),
-    function (accessToken, refreshToken, profile, done) {
-        User.findOne({ 'facebookId': profile.id }, function (err, user) {
-
-            if (err) {
-                return done(err);
-            }
-
-            if (user) {
-                return done(null, user);
-            } else {
-                var newUser = new User();
-                return done(null, newUser);
-            }
-        })
-    }
-));
+// passport.use(new FacebookTokenStrategy(
+//     config.get('auth:facebook'),
+//     function (accessToken, refreshToken, profile, done) {
+//         User.findOne({ 'facebookId': profile.id }, function (err, user) {
+//
+//             if (err) {
+//                 return done(err);
+//             }
+//
+//             if (user) {
+//                 return done(null, user);
+//             } else {
+//                 var newUser = new User();
+//                 return done(null, newUser);
+//             }
+//         })
+//     }
+// ));

@@ -27,6 +27,8 @@ var AccessToken = new Schema({
         type: Date,
         default: Date.now
     }
+}, {
+    versionKey: false
 });
 
 AccessToken.post('remove', function (accessToken) {

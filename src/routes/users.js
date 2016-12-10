@@ -3,10 +3,15 @@ var passport = require('passport'),
     crypto = require('crypto'),
     router = express.Router();
 
-var src = process.cwd() + '/src/',
-    db = require(src + 'db/mongoose'),
+// Find project working directory
+var src = process.cwd() + '/src/';
+
+var db = require(src + 'db/mongoose'),
     log = require(src + 'log')(module),
-    User = require(src + 'models/user');
+    errorHandler = require(src + 'errors');
+
+// Load Models
+var User = require(src + 'models/user');
 
 router.post('/', function(req, res) {
     var user = new User({
@@ -29,18 +34,9 @@ router.post('/', function(req, res) {
             });
         } else {
             if (err.name === 'ValidationError') {
-                res.statusCode = 400;
-
-                var fields = {};
-                for (var field in err.errors) {
-                    fields[field] = {value: err.errors[field].value, message: err.errors[field].message};
-                }
-                return res.json({status: 'error', message: err.message, errorsOnFields: fields});
+                return errorHandler.invalidFieldError(err, res);
             } else {
-                res.statusCode = 500;
-                log.error('Internal error(%d): %s', res.statusCode, err.message);
-
-                return res.json({status: 'error', message: 'Internal Server Error'});
+                return errorHandler.internalError(err, res);
             }
         }
     });
@@ -49,8 +45,7 @@ router.post('/', function(req, res) {
 router.get('/:id', passport.authenticate('bearer', { session: false }), function(req, res) {
     User.findById(req.params.id, function (err, user) {
         if (!user) {
-            res.statusCode = 404;
-            return res.json({status: 'error', message: 'User not found!'})
+            return errorHandler.resourceNotFoundError(res, 'User not found!');
         } else if (!err) {
             return res.json({
                 user: {
@@ -59,10 +54,7 @@ router.get('/:id', passport.authenticate('bearer', { session: false }), function
                 status: 'ok'
             });
         } else {
-            res.statusCode = 500;
-            log.error('Internal error(%d): %s', res.statusCode, err.message);
-
-            return res.json({status: 'ok', message: 'Internal Server Error'});
+            return errorHandler.internalError(err, res);
         }
     });
 });
@@ -71,8 +63,7 @@ router.put('/:id', passport.authenticate('bearer', { session: false }), function
     User.findById(req.params.id, function (err, user) {
 
         if (!user) {
-            res.statusCode = 404;
-            return res.json({status: 'error', message: 'User not found!'})
+            return errorHandler.resourceNotFoundError(res, 'User not found!');
         }
 
         user.name = req.body.name;
@@ -83,26 +74,20 @@ router.put('/:id', passport.authenticate('bearer', { session: false }), function
         user.save(function (err) {
 
             if (!err) {
+                var message = 'User updated with success!';
+
+                log.info(message);
                 return res.json({
                     user: {
                         id: user.userId, name: user.name, email: user.email, photo_url: user.photo_url, created: user.created
                     },
-                    status: 'ok', message: 'User updated'
+                    status: 'ok', message: message
                 });
             } else {
                 if (err.name === 'ValidationError') {
-                    res.statusCode = 400;
-
-                    var fields = {};
-                    for (var field in err.errors) {
-                        fields[field] = {value: err.errors[field].value, message: err.errors[field].message};
-                    }
-                    return res.json({status: 'error', message: err.message, errorsOnFields: fields});
+                    return errorHandler.invalidFieldError(err, res);
                 } else {
-                    res.statusCode = 500;
-                    log.error('Internal error(%d): %s', res.statusCode, err.message);
-
-                    return res.json({status: 'error', message: 'Internal Server Error'});
+                   return errorHandler.internalError(err, res);
                 }
             }
         });
@@ -114,23 +99,22 @@ router.delete('/:id', passport.authenticate('bearer', { session: false }), funct
     User.findById(req.params.id, function (err, user) {
 
         if (!user) {
-            res.statusCode = 404;
-            return res.json({status: 'error', message: 'User not found!'})
+            return errorHandler.resourceNotFoundError(res, 'User not found!');
         } else {
             user.remove(function (err) {
 
                 if (!err) {
+                    var message = 'User deleted with success!';
+
+                    log.info(message);
                     return res.json({
                         user: {
                             id: user.userId, name: user.name, email: user.email, photo_url: user.photo_url, created: user.created
                         },
-                        status: 'ok', message: 'User deleted'
+                        status: 'ok', message: message
                     });
                 } else {
-                    res.statusCode = 500;
-                    log.error('Internal error(%d): %s', res.statusCode, err.message);
-
-                    return res.json({status: 'error', message: 'Internal Server Error'});
+                   return errorHandler.internalError(err, res);
                 }
             });
         }

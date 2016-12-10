@@ -25,6 +25,8 @@ var RefreshToken = new Schema({
         type: Date,
         default: Date.now
     }
+}, {
+    versionKey: false
 });
 
 module.exports = mongoose.model('RefreshToken', RefreshToken);

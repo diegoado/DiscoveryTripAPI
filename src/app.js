@@ -28,22 +28,22 @@ app.use('/api', api);
 app.use('/api', oauth);
 app.use('/api/users', users);
 
-// Catch 404 and forward to error handler
-app.use(function(req, res, next){
+// Catch 404 and forward to errorHandler handler
+app.use(function(req, res, next) {
     res.status(404);
-    log.debug('%s %d %s', req.method, res.statusCode, req.url);
-    res.json({
-        error: 'Resource not found'
-    });
+    log.error('%s %d %s', req.method, res.statusCode, req.url);
+
+    res.json({status: 'error', message: 'Route not found'});
+    next();
 });
 
 // Error handlers
-app.use(function(err, req, res, next){
+app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     log.error('%s %d %s', req.method, res.statusCode, err.message);
-    res.json({
-        error: err.message
-    });
+
+    res.json({status: 'error', message: err.message});
+    next();
 });
 
 module.exports = app;

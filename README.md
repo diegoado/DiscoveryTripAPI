@@ -6,10 +6,10 @@ Document Version: v1.0
 
 - [Overview](#overview)
 - [Users](#users)
-    - [Create a User](#create-a-user)
-    - [Remove a User](#remove-a-user)
-    - [Update a User](#update-a-user)
-    - [Get a User](#get-a-user)
+    - [Create](#create-a-user)
+    - [Remove](#remove-a-user)
+    - [Update](#update-a-user)
+    - [Get](#get-a-user)
 - [Errors](#errors)
 
 ## Overview
@@ -18,7 +18,7 @@ The web API for DiscoveryTrip Mobile applications.
 
 ## Users
 
-#### **Create a User**
+#### **Create**
 
   Adds a new user to the mobile application. 
   The user email is validated to avoid creating duplicates in the application.
@@ -71,7 +71,7 @@ The web API for DiscoveryTrip Mobile applications.
         http://localhost:8080/api/users
   ```
 
-#### **Get a User**
+#### **Get**
 
   Lists details of a user present in the application.
 
@@ -115,12 +115,12 @@ The web API for DiscoveryTrip Mobile applications.
         http://localhost:8080/api/users/:id
   ```
 
-#### Update a User
+#### Update
 
   Modifies details of the specified user in the mobile application. 
   Valid user with update privilege logged in to the application may modify the user details.
 
-#### Remove a User
+#### Remove
 
   Removes a user present in the application based on your ID.
   
@@ -133,7 +133,7 @@ The request cannot be fulfilled due to bad syntax.
   * *Content*: 
   
     ```json
-      {"status": "error", "message": "Resource validation failed"}
+      {"status": errorHandle, "message": "Resource validation failed"}
     ```
 
 ##### Error 401 - Unauthorized
@@ -152,7 +152,7 @@ The requested page could not be found a resource.
   * *Content:* 
   
     ```json
-      {"status": "error", "message": "Resource not found"}
+      {"status": errorHandle, "message": "Resource not found"}
     ```
     
 ##### Error 500 - Internal Server Error 
@@ -162,5 +162,5 @@ A generic error message, given when no more specific message is suitable
   * *Content:*
   
     ```json
-      {"status": "error", "message": "Internal Server Error"}
+      {"status": errorHandle, "message": "Internal Server Error"}
     ```
