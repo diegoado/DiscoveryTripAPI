@@ -21,7 +21,7 @@ The web API for DiscoveryTrip Mobile applications.
 #### **Create a User**
 
   Adds a new user to the mobile application. 
-  The user name and email is validated to avoid creating duplicates in the application.
+  The user email is validated to avoid creating duplicates in the application.
 
 * **URL**
 
@@ -35,7 +35,7 @@ The web API for DiscoveryTrip Mobile applications.
 
    *Required:*
  
-     * `username = [string]`
+     * `name = [string]`
      * `password = [string]`
      * `email = [string]`
 
@@ -51,9 +51,10 @@ The web API for DiscoveryTrip Mobile applications.
     ```json
       {
         "user": {
-          "username": "username",
-          "email": "email@email.com",
-          "id": "584ad1d46ab8be1fcb3a46d1",
+          "id": "id",
+          "name": "name",
+          "email": "email",
+          "photo_url": "url",
           "created": "YYYY-MM-DDThh:mm:ss.sssZ"
         },
         "status": "ok",
@@ -66,7 +67,7 @@ The web API for DiscoveryTrip Mobile applications.
   ```bash
     curl -i \
         -H "Content-Type: application/json" \
-        -X POST -d '{"username": "someString", "email": "someString@email.com", "password":"someString"}' \
+        -X POST -d '{"name": "someString", "email": "someString@email.com", "password":"someString"}' \
         http://localhost:8080/api/users
   ```
 
@@ -96,9 +97,10 @@ The web API for DiscoveryTrip Mobile applications.
     ```json
       {
         "user": {
-          "username": "username",
-          "email": "email@email.com",
-          "id": "584ad1d46ab8be1fcb3a46d1",
+          "id": "id",
+          "name": "name",
+          "email": "email",
+          "photo_url": "url",
           "created": "YYYY-MM-DDThh:mm:ss.sssZ"
         },
         "status": "ok"

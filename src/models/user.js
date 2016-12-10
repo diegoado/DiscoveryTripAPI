@@ -8,9 +8,8 @@ var mongoose = require('mongoose'),
  * A user is who has a name, password hash and a salt.
  **/
 var User = new Schema({
-    username: {
+    name: {
         type: String,
-        unique: true,
         required: true
     },
 
@@ -19,6 +18,16 @@ var User = new Schema({
         unique: true,
         required: true,
         validate: validator({validator: 'isEmail', message: 'Invalid Email Address'})
+    },
+
+    facebookId: {
+        type: String,
+        select: false
+    },
+
+    photo_url: {
+        type: String,
+        validate: validator({validator: 'isURL', passIfEmpty: true, message: 'Invalid Photo Url'})
     },
 
     hashedPassword: {

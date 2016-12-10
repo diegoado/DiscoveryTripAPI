@@ -1,6 +1,9 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
+var src = process.cwd() + '/src/',
+    RefreshToken = require(src + 'models/refreshToken');
+
 /* AccessToken: token (type of bearer), issued to the client application, limited by time.
  **/
 var AccessToken = new Schema({
@@ -24,6 +27,10 @@ var AccessToken = new Schema({
         type: Date,
         default: Date.now
     }
+});
+
+AccessToken.post('remove', function (accessToken) {
+    RefreshToken.remove({userId: accessToken.userId}).exec();
 });
 
 module.exports  = mongoose.model('AccessToken', AccessToken);

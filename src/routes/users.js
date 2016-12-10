@@ -10,9 +10,10 @@ var src = process.cwd() + '/src/',
 
 router.post('/', function(req, res) {
     var user = new User({
-        username: req.body.username,
-        password: req.body.password,
-        email   : req.body.email.toLowerCase()
+        name     : req.body.name,
+        password : req.body.password,
+        email    : req.body.email.toLowerCase(),
+        photo_url: req.body.photo_url
     });
 
     user.save(function (err) {
@@ -20,7 +21,12 @@ router.post('/', function(req, res) {
             var message = 'New User created with success';
 
             log.info(message);
-            res.json({user: user, status: 'ok', message: message});
+            return res.json({
+                user: {
+                    id: user.userId, name: user.name, email: user.email, photo_url: user.photo_url, created: user.created
+                },
+                status: 'ok', message: message
+            });
         } else {
             if (err.name === 'ValidationError') {
                 res.statusCode = 400;
@@ -46,7 +52,12 @@ router.get('/:id', passport.authenticate('bearer', { session: false }), function
             res.statusCode = 404;
             return res.json({status: 'error', message: 'User not found!'})
         } else if (!err) {
-            return res.json({user: user, status: 'ok'})
+            return res.json({
+                user: {
+                    id: user.userId, name: user.name, email: user.email, photo_url: user.photo_url, created: user.created
+                },
+                status: 'ok'
+            });
         } else {
             res.statusCode = 500;
             log.error('Internal error(%d): %s', res.statusCode, err.message);
@@ -64,14 +75,20 @@ router.put('/:id', passport.authenticate('bearer', { session: false }), function
             return res.json({status: 'error', message: 'User not found!'})
         }
 
-        user.username = req.body.username;
+        user.name = req.body.name;
         user.password = req.body.password;
         user.email = req.body.email.toLowerCase();
+        user.picture = req.body.picture;
 
         user.save(function (err) {
 
             if (!err) {
-                return res.json({user: user, status: 'ok', message: 'User updated'});
+                return res.json({
+                    user: {
+                        id: user.userId, name: user.name, email: user.email, photo_url: user.photo_url, created: user.created
+                    },
+                    status: 'ok', message: 'User updated'
+                });
             } else {
                 if (err.name === 'ValidationError') {
                     res.statusCode = 400;
@@ -103,7 +120,12 @@ router.delete('/:id', passport.authenticate('bearer', { session: false }), funct
             user.remove(function (err) {
 
                 if (!err) {
-                    return res.json({user: user, status: 'ok', message: 'User deleted'});
+                    return res.json({
+                        user: {
+                            id: user.userId, name: user.name, email: user.email, photo_url: user.photo_url, created: user.created
+                        },
+                        status: 'ok', message: 'User deleted'
+                    });
                 } else {
                     res.statusCode = 500;
                     log.error('Internal error(%d): %s', res.statusCode, err.message);
@@ -114,18 +136,5 @@ router.delete('/:id', passport.authenticate('bearer', { session: false }), funct
         }
     });
 });
-
-// TODO: Move this method to client application routes
-// router.get('/', /*passport.authenticate('bearer', { session: false }),*/ function(req, res) {
-//     User.find(function (err, users) {
-//         if (!err) {
-//             return res.json(users)
-//         } else {
-//             res.statusCode = 500;
-//             res.json({status: 'error', message: 'Internal Server Error'})
-//         }
-//         log.error('Internal error(%d): %s', res.statusCode, err.name);
-//     })
-// });
 
 module.exports = router;

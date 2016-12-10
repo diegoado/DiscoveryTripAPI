@@ -1,7 +1,7 @@
 var passport = require('passport'),
     BasicStrategy = require('passport-http').BasicStrategy,
     BearerStrategy = require('passport-http-bearer').Strategy,
-    // FacebookTokenStrategy = require('passport-facebook-token'),
+    FacebookTokenStrategy = require('passport-facebook-token'),
     ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy;
 
 var src = process.cwd() + '/src/', // Find the src path,
@@ -90,21 +90,21 @@ passport.use(new BearerStrategy(
 ));
 
 // TODO: Provider facebook authentication
-// passport.use(new FacebookTokenStrategy(
-//     config.get('auth:facebook'),
-//     function (accessToken, refreshToken, profile, done) {
-//         User.findOne({ 'facebookId': profile.id }, function (err, user) {
-//
-//             if (err) {
-//                 return done(err);
-//             }
-//
-//             if (user) {
-//                 return done(null, user);
-//             } else {
-//                 var newUser = new User();
-//                 return done(null, newUser);
-//             }
-//         })
-//     }
-// ));
+passport.use(new FacebookTokenStrategy(
+    config.get('auth:facebook'),
+    function (accessToken, refreshToken, profile, done) {
+        User.findOne({ 'facebookId': profile.id }, function (err, user) {
+
+            if (err) {
+                return done(err);
+            }
+
+            if (user) {
+                return done(null, user);
+            } else {
+                var newUser = new User();
+                return done(null, newUser);
+            }
+        })
+    }
+));
