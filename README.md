@@ -6,6 +6,10 @@ Document Version: v1.0
 
 - [Overview](#overview)
 - [Users](#users)
+    - [Create a User](#create-a-user)
+    - [Remove a User](#remove-a-user)
+    - [Update a User](#update-a-user)
+    - [Get a User](#get-a-user)
 - [Errors](#errors)
 
 ## Overview
@@ -14,9 +18,10 @@ The web API for DiscoveryTrip Mobile applications.
 
 ## Users
 
-#### **Create User**
+#### **Create a User**
 
-  Adds a new user to the mobile application. The user name and email is validated to avoid creating duplicates in the application.
+  Adds a new user to the mobile application. 
+  The user name and email is validated to avoid creating duplicates in the application.
 
 * **URL**
 
@@ -28,20 +33,20 @@ The web API for DiscoveryTrip Mobile applications.
   
 * **URL Params**
 
-   **Required:**
+   *Required:*
  
      * `username = [string]`
      * `password = [string]`
      * `email = [string]`
 
-   **Optional:**
+   *Optional:*
  
      * `photo_url = [alphanumeric]`
 
 * **Success Response:**
   
-  * **Code:** 200
-  * **Content:**
+  * *Code:* 200
+  * *Content:*
     
     ```json
       {
@@ -107,10 +112,19 @@ The web API for DiscoveryTrip Mobile applications.
         -H "Authorization: Bearer access_token" \
         http://localhost:8080/api/users/:id
   ```
+
+#### Update a User
+
+  Modifies details of the specified user in the mobile application. 
+  Valid user with update privilege logged in to the application may modify the user details.
+
+#### Remove a User
+
+  Removes a user present in the application based on your ID.
   
 ## Errors
 
-#### Error 400 - BAD REQUEST
+#### Error 400 - Bad Request
 
 The request cannot be fulfilled due to bad syntax.
 
@@ -129,7 +143,7 @@ The request was a legal request, but the server is refusing to respond to it.
       Unauthorized
     ```
 
-##### Error 404 - NOT FOUND
+##### Error 404 - Not Found
 
 The requested page could not be found a resource.
 
@@ -139,7 +153,7 @@ The requested page could not be found a resource.
       {"status": "error", "message": "Resource not found"}
     ```
     
-##### Error 500 - INTERNAL SERVER ERROR 
+##### Error 500 - Internal Server Error 
 
 A generic error message, given when no more specific message is suitable
 
