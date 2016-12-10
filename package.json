@@ -12,8 +12,8 @@
     "DiscoveryTrip"
   ],
   "repository": {
-  "type": "git",
-  "url": "git://github.com/diegoado/DiscoveryTripAPI.git"
+    "type": "git",
+    "url": "git://github.com/diegoado/DiscoveryTripAPI.git"
   },
   "author": "Diego Adolfo <diegoado@gmail.com>",
   "license": "MIT",
@@ -33,6 +33,7 @@
     "passport": "^0.2.x",
     "passport-http": "^0.2.x",
     "passport-http-bearer": "^1.0.x",
+    "passport-facebook-token": "^3.3.0",
     "passport-oauth2-client-password": "^0.1.x",
     "winston": "^0.8.x"
   },

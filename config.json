@@ -19,5 +19,11 @@
       "clientId": "discoveryTrip",
       "clientSecret": "0ca9b9b3-1370-44e0-b42e-01cf6f6fc04c"
     }
+  },
+  "auth": {
+    "facebook": {
+      "clientID": "218714921902397",
+      "clientSecret": "36498bd6512d269eb648602bca1be4aa"
+    }
   }
 }
