@@ -1,1 +1,1 @@
-web: ./bin/www.js
+web: ./bin/www.js --PRODUCTION on

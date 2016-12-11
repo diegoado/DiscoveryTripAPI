@@ -8,10 +8,16 @@ var config = require(src + 'conf'),
 
 var Client = require(src + 'models/client');
 
-mongoose.Promise = global.Promise;
-
 // Connect to MongoDB
-var MONGODB_URI = process.env.MONGODB_URI;
+var MONGODB_URI;
+
+if (process.env.PRODUCTION) {
+    MONGODB_URI = process.env.MONGODB_URI;
+} else {
+    MONGODB_URI = config.get('mongoose:uri');
+}
+
+mongoose.Promise = global.Promise;
 mongoose.connect(MONGODB_URI, config.get('mongoose:options'));
 
 mongoose.connection.on('error', function (err) {
