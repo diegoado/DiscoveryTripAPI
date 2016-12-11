@@ -1,1 +1,1 @@
-web: ./bin/www.js --PRODUCTION on
+web: PRODUCTION='on' ./bin/www.js

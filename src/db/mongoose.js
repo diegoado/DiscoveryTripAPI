@@ -13,8 +13,10 @@ var MONGODB_URI;
 
 if (process.env.PRODUCTION) {
     MONGODB_URI = process.env.MONGODB_URI;
+    log.info("Starting MongoDB in Production Mode");
 } else {
     MONGODB_URI = config.get('mongoose:uri');
+    log.info("Starting MongoDB in Development Mode");
 }
 
 mongoose.Promise = global.Promise;
