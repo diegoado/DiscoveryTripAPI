@@ -158,7 +158,7 @@ The user email is validated to avoid creating duplicates in the application.
    ```bash
       curl -i \
         -H "Content-Type: application/json" \
-        -X POST -d '{"name": "someString", "email": "someString@email.com", "password":"someString"}' \
+        -X POST -d '{"username": "someString", "email": "someString@email.com", "password":"someString"}' \
         http://localhost:8080/api/users
    ```
 
