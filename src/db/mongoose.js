@@ -3,8 +3,8 @@ var mongoose = require('mongoose');
 // Find project working directory
 var src = process.cwd() + '/src/';
 
-var config = require(src + 'conf'),
-    log = require(src + 'log')(module);
+var config = require(src + 'helpers/conf'),
+    log = require(src + 'helpers/log')(module);
 
 var Client = require(src + 'models/client');
 
@@ -19,7 +19,6 @@ if (process.env.PRODUCTION) {
     log.info("Starting MongoDB in Development Mode");
 }
 
-mongoose.Promise = global.Promise;
 mongoose.connect(MONGODB_URI, config.get('mongoose:options'));
 
 mongoose.connection.on('error', function (err) {
@@ -27,6 +26,7 @@ mongoose.connection.on('error', function (err) {
 });
 
 mongoose.connection.once('open', function callback () {
+    mongoose.Promise = global.Promise;
     var client = config.get('default:client');
 
     Client.findOrCreate({clientId: client.clientId}, {name: client.name, clientSecret: client.clientSecret},

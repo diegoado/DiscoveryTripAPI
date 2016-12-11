@@ -5,9 +5,9 @@ var express = require('express'),
 // Find project working directory
 var src = process.cwd() + '/src/';
 
-var log = require(src + 'log')(module),
-    oauth2 = require(src + 'auth/oauth2'),
-    errorHandler = require(src + 'error');
+var oauth2 = require(src + 'auth/oauth2'),
+    log = require(src + 'helpers/log')(module),
+    errorHandler = require(src + 'helpers/error');
 
 // Load Models
 var AccessToken = require(src + 'models/accessToken');
@@ -35,7 +35,7 @@ router.delete('/logout', passport.authenticate('bearer', { session: false }), fu
 });
 
 // TODO: Provider facebook authentication
-// router.post('/facebook', passport.authenticate('facebook-token'), function (req, res) {
+// router.post('/facebook/login', passport.authenticate('facebook-token'), function (req, res) {
 //     if (req.user) {
 //         res.statusCode = 200;
 //         res.json({status: 'ok'});

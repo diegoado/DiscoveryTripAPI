@@ -5,10 +5,10 @@ var oauth2orize = require('oauth2orize'),
 // Find project working directory
 var src = process.cwd() + '/src/';
 
-var config = require(src + 'conf'),
-    db = require(src + 'db/mongoose'),
-    log = require(src + 'log')(module),
-    errHandler = require(src + 'error');
+var db = require(src + 'db/mongoose'),
+    config = require(src + 'helpers/conf'),
+    log = require(src + 'helpers/log')(module),
+    errHandler = require(src + 'helpers/error');
 
 // Load Models
 var User = require(src + 'models/user'),

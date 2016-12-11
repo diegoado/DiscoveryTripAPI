@@ -5,7 +5,7 @@ var passport = require('passport'),
     ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy;
 
 var src = process.cwd() + '/src/', // Find the src path,
-    config = require(src + 'conf');
+    config = require(src + 'helpers/conf');
 
 var User = require(src + 'models/user'),
     Client = require(src + 'models/client'),

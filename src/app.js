@@ -9,7 +9,7 @@ var app = express(),
     src = process.cwd() + '/src/';
 
 require(src + 'auth/auth');
-var log = require('./log')(module);
+var log = require('./helpers/log')(module);
 
 // Load routes
 var api = require('./routes/api'),

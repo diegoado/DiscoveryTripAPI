@@ -7,8 +7,8 @@ var passport = require('passport'),
 var src = process.cwd() + '/src/';
 
 var db = require(src + 'db/mongoose'),
-    log = require(src + 'log')(module),
-    errorHandler = require(src + 'error');
+    log = require(src + 'helpers/log')(module),
+    errorHandler = require(src + 'helpers/error');
 
 // Load Models
 var User = require(src + 'models/user');

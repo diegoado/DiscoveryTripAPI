@@ -1,5 +1,5 @@
 var src = process.cwd() + '/src/',
-    log = require(src + 'log')(module);
+    log = require(src + 'helpers/log')(module);
 
 
 exports.internalError = function (err, res) {

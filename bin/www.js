@@ -3,8 +3,8 @@ var debug = require('debug')('restapi'),
     src = process.cwd() + '/src/'; // Find the src path
 
 var app = require(src + 'app'),
-    conf = require(src + 'conf'),
-    log = require(src + 'log')(module);
+    conf = require(src + 'helpers/conf'),
+    log = require(src + 'helpers/log')(module);
 
 app.set('port', process.env.PORT || conf.get('port') || 3000);
 
