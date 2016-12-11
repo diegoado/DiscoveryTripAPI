@@ -15,7 +15,7 @@ var User = require(src + 'models/user');
 
 router.post('/', function(req, res) {
     var user = new User({
-        name     : req.body.name,
+        username : req.body.username,
         password : req.body.password,
         email    : req.body.email.toLowerCase(),
         photo_url: req.body.photo_url
@@ -28,7 +28,8 @@ router.post('/', function(req, res) {
             log.info(message);
             return res.json({
                 user: {
-                    id: user.userId, name: user.name, email: user.email, photo_url: user.photo_url, created: user.created
+                    id: user.userId, username: user.username, email: user.email,
+                    photo_url: user.photo_url, created: user.created
                 },
                 status: 'ok', message: message
             });
@@ -49,7 +50,8 @@ router.get('/:id', passport.authenticate('bearer', { session: false }), function
         } else if (!err) {
             return res.json({
                 user: {
-                    id: user.userId, name: user.name, email: user.email, photo_url: user.photo_url, created: user.created
+                    id: user.userId, username: user.username, email: user.email,
+                    photo_url: user.photo_url, created: user.created
                 },
                 status: 'ok'
             });
@@ -66,7 +68,7 @@ router.put('/:id', passport.authenticate('bearer', { session: false }), function
             return errorHandler.resourceNotFoundError(res, 'User not found!');
         }
 
-        user.name = req.body.name;
+        user.username = req.body.username;
         user.password = req.body.password;
         user.email = req.body.email.toLowerCase();
         user.picture = req.body.picture;
@@ -79,7 +81,8 @@ router.put('/:id', passport.authenticate('bearer', { session: false }), function
                 log.info(message);
                 return res.json({
                     user: {
-                        id: user.userId, name: user.name, email: user.email, photo_url: user.photo_url, created: user.created
+                        id: user.userId, username: user.username, email: user.email,
+                        photo_url: user.photo_url, created: user.created
                     },
                     status: 'ok', message: message
                 });
@@ -109,7 +112,8 @@ router.delete('/:id', passport.authenticate('bearer', { session: false }), funct
                     log.info(message);
                     return res.json({
                         user: {
-                            id: user.userId, name: user.name, email: user.email, photo_url: user.photo_url, created: user.created
+                            id: user.userId, username: user.username, email: user.email,
+                            photo_url: user.photo_url, created: user.created
                         },
                         status: 'ok', message: message
                     });

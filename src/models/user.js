@@ -8,8 +8,9 @@ var mongoose = require('mongoose'),
  * A user is who has a name, password hash and a salt.
  **/
 var User = new Schema({
-    name: {
+    username: {
         type: String,
+        unique: true,
         required: true
     },
 
