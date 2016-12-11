@@ -35,14 +35,14 @@ router.delete('/logout', passport.authenticate('bearer', { session: false }), fu
 });
 
 // TODO: Provider facebook authentication
-// router.post('/facebook/login', passport.authenticate('facebook-token'), function (req, res) {
-//     if (req.user) {
-//         res.statusCode = 200;
-//         res.json({status: 'ok'});
-//     } else {
-//         res.statusCode = 401;
-//         res.json({status: 'errorHandler'});
-//     }
-// });
+router.post('/facebook/login', passport.authenticate('facebook-token'), function (req, res) {
+    if (req.user) {
+        res.statusCode = 200;
+        res.json({status: 'ok'});
+    } else {
+        res.statusCode = 401;
+        res.json({status: 'error'});
+    }
+});
 
 module.exports = router;

@@ -78,21 +78,21 @@ passport.use(new BearerStrategy(
 ));
 
 // TODO: Provider facebook authentication
-// passport.use(new FacebookTokenStrategy(
-//     config.get('auth:facebook'),
-//     function (accessToken, refreshToken, profile, done) {
-//         User.findOne({ 'facebookId': profile.id }, function (err, user) {
-//
-//             if (err) {
-//                 return done(err);
-//             }
-//
-//             if (user) {
-//                 return done(null, user);
-//             } else {
-//                 var newUser = new User();
-//                 return done(null, newUser);
-//             }
-//         })
-//     }
-// ));
+passport.use(new FacebookTokenStrategy(
+    config.get('auth:facebook'),
+    function (accessToken, refreshToken, profile, done) {
+        User.findOne({ 'facebookId': profile.id }, function (err, user) {
+
+            if (err) {
+                return done(err);
+            }
+
+            if (user) {
+                return done(null, user);
+            } else {
+                var newUser = new User();
+                return done(null, newUser);
+            }
+        })
+    }
+));
