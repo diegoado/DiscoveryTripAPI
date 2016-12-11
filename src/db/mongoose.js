@@ -11,7 +11,8 @@ var Client = require(src + 'models/client');
 mongoose.Promise = global.Promise;
 
 // Connect to MongoDB
-mongoose.connect(config.get('mongoose:uri'), config.get('mongoose:options'));
+var MONGODB_URI = process.env.MONGODB_URI;
+mongoose.connect(MONGODB_URI, config.get('mongoose:options'));
 
 mongoose.connection.on('error', function (err) {
     log.error('Error to connect to MongoDB: ', err.message);
