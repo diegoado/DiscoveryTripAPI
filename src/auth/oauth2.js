@@ -8,7 +8,7 @@ var src = process.cwd() + '/src/';
 var config = require(src + 'conf'),
     db = require(src + 'db/mongoose'),
     log = require(src + 'log')(module),
-    errHandler = require(src + 'errors');
+    errHandler = require(src + 'error');
 
 // Load Models
 var User = require(src + 'models/user'),

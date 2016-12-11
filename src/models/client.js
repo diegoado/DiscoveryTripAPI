@@ -1,4 +1,5 @@
 var mongoose = require('mongoose'),
+    findOrCreate = require('mongoose-findorcreate'),
     Schema = mongoose.Schema;
 
 /* Client: A application which requests access on behalf of a user.
@@ -8,7 +9,6 @@ var mongoose = require('mongoose'),
 var Client = new Schema({
     name: {
         type: String,
-        unique: true,
         required: true
     },
 
@@ -25,5 +25,7 @@ var Client = new Schema({
 }, {
     versionKey: false
 });
+
+Client.plugin(findOrCreate);
 
 module.exports = mongoose.model('Client', Client);

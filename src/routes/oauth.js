@@ -7,7 +7,7 @@ var src = process.cwd() + '/src/';
 
 var log = require(src + 'log')(module),
     oauth2 = require(src + 'auth/oauth2'),
-    errorHandler = require(src + 'errors');
+    errorHandler = require(src + 'error');
 
 // Load Models
 var AccessToken = require(src + 'models/accessToken');

@@ -4,14 +4,21 @@
     "tokenLife" : 3600
   },
   "mongoose": {
-    "uri": "mongodb://localhost/DiscoveryTripApi"
+    "uri": "mongodb://localhost:27017/DiscoveryTripApi",
+    "options": {
+      "db": { "native_parser": true },
+      "server": {
+        "socketOptions": { "keepAlive": 1 }
+      }
+    }
   },
   "default": {
     "api": {
       "version" : "v1"
     },
     "user": {
-      "username": "admin",
+      "user": "admin",
+      "email": "admin@discovery.com",
       "password": "discovery"
     },
     "client": {
