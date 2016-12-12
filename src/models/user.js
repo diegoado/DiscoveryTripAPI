@@ -24,6 +24,7 @@ var User = new Schema({
 
     facebookId: {
         type: String,
+        unique: true,
         select: false
     },
 
