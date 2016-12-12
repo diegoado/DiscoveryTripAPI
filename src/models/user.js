@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
     validator = require('mongoose-validator'),
+    findOrCreate = require('mongoose-findorcreate'),
     crypto = require('crypto'),
     Schema = mongoose.Schema;
 
@@ -33,13 +34,16 @@ var User = new Schema({
 
     hashedPassword: {
         type: String,
-        required: true,
         select: false
     },
 
     salt: {
         type: String,
-        required: true,
+        select: false
+    },
+
+    socialAuth: {
+        type: Boolean,
         select: false
     },
 
@@ -76,5 +80,7 @@ User.methods.encryptPassword = function(password) {
 User.methods.checkPassword = function(password) {
     return this.encryptPassword(password) === this.hashedPassword;
 };
+
+User.plugin(findOrCreate);
 
 module.exports = mongoose.model('User', User);

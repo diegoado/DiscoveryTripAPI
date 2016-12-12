@@ -30,7 +30,8 @@
   "auth": {
     "facebook": {
       "clientID": "218714921902397",
-      "clientSecret": "36498bd6512d269eb648602bca1be4aa"
+      "clientSecret": "36498bd6512d269eb648602bca1be4aa",
+      "profileFields": ["id", "name", "displayName", "link", "gender", "photos", "emails"]
     }
   }
 }

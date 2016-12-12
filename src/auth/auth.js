@@ -4,8 +4,10 @@ var passport = require('passport'),
     FacebookTokenStrategy = require('passport-facebook-token'),
     ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy;
 
-var src = process.cwd() + '/src/', // Find the src path,
-    config = require(src + 'helpers/conf');
+// Find the src path
+var src = process.cwd() + '/src/';
+
+var config = require(src + 'helpers/conf');
 
 var User = require(src + 'models/user'),
     Client = require(src + 'models/client'),
@@ -77,22 +79,25 @@ passport.use(new BearerStrategy(
     }
 ));
 
-// TODO: Provider facebook authentication
-passport.use(new FacebookTokenStrategy(
-    config.get('auth:facebook'),
+passport.use(new FacebookTokenStrategy(config.get('auth:facebook'),
     function (accessToken, refreshToken, profile, done) {
-        User.findOne({ 'facebookId': profile.id }, function (err, user) {
+        var email     = profile.emails[0].value,
+            photo_url = profile.photos[0].value,
+            username  = profile._json.link.split('/').slice(-1)[0] || profile.displayName;
 
-            if (err) {
-                return done(err);
-            }
+        User.findOrCreate({ facebookId: profile.id },
+            {username: username, email: email, photo_url: photo_url, socialAuth: true}, function (err, user) {
 
-            if (user) {
+            if (!err) {
+                AccessToken.remove({userId: user.userId});
+
+                var token = new AccessToken(
+                    {userId: user.userId, clientId: config.get('default:client:clientId'), token: accessToken}
+                );
+                token.save();
                 return done(null, user);
-            } else {
-                var newUser = new User();
-                return done(null, newUser);
             }
-        })
+            return done(err, user);
+        });
     }
 ));
