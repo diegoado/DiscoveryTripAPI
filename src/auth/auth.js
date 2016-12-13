@@ -7,7 +7,8 @@ var passport = require('passport'),
 // Find the src path
 var src = process.cwd() + '/src/';
 
-var config = require(src + 'helpers/conf');
+var config = require(src + 'helpers/conf'),
+    log = require(src + 'helpers/log')(module);
 
 var User = require(src + 'models/user'),
     Client = require(src + 'models/client'),
@@ -97,6 +98,12 @@ passport.use(new FacebookTokenStrategy(config.get('auth:facebook'),
                 token.save();
                 return done(null, user);
             }
+            var errFields = [];
+
+            for (var field in err.errors) {
+                errFields.push(field);
+            }
+            log.error('Validation Error on Fields: ' + errFields.toString());
             return done(err, user);
         });
     }
