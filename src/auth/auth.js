@@ -1,5 +1,6 @@
 var passport = require('passport'),
     BasicStrategy = require('passport-http').BasicStrategy,
+    LocalStrategy = require('passport-local').Strategy,
     BearerStrategy = require('passport-http-bearer').Strategy,
     FacebookTokenStrategy = require('passport-facebook-token'),
     ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy;
@@ -12,6 +13,21 @@ var config = require(src + 'helpers/conf');
 var User = require(src + 'models/user'),
     Client = require(src + 'models/client'),
     AccessToken = require(src + 'models/accessToken');
+
+
+passport.use(new LocalStrategy(
+    function(username, password, done) {
+        User.findOne( {$or: [{ username: username }, { email: username }]}, '+hashedPassword +salt', function (err, user) {
+            if (err) {
+                return done(err);
+            }
+            if (!user || !user.checkPassword(password)) {
+                return done(null, false);
+            }
+            return done(null, user);
+        });
+    }
+));
 
 passport.use(new BasicStrategy(
     function(username, password, done) {

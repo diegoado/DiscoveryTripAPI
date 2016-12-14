@@ -12,7 +12,23 @@ var oauth2 = require(src + 'auth/oauth2'),
 // Load Models
 var AccessToken = require(src + 'models/accessToken');
 
-router.post('/login', oauth2.token);
+// router.post('/login', oauth2.token);
+router.post('/login', function(req, res, next){
+    passport.authenticate('local', {session: false}, function(err, user, info) {
+        if (err) {
+            return next(err);
+        }
+        //authentication error
+        if (!user) { return res.json({error: info.message || 'Invalid Token'}) }
+
+        //success
+        req.logIn(user, function(err) {
+            if (err) { return next(err); }
+            return next();
+        });
+
+    })(req, res, next)
+});
 
 router.delete('/logout', passport.authenticate('bearer', { session: false }), function (req, res) {
     var userId = req.user.userId;

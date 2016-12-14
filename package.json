@@ -35,6 +35,7 @@
     "passport-facebook-token": "^3.3.0",
     "passport-http": "^0.2.x",
     "passport-http-bearer": "^1.0.x",
+    "passport-local": "^1.0.0",
     "passport-oauth2-client-password": "^0.1.x",
     "winston": "^0.8.x"
   },
