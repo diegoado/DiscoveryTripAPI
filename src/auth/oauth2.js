@@ -42,7 +42,7 @@ var generateTokens = function (data, done) {
 
     accessToken.save(function (err) {
         if (err) {
-            log.error(err);
+            log.error(err.message);
             return done(err);
         }
         refreshToken.save(errorHandler);
@@ -53,21 +53,35 @@ var generateTokens = function (data, done) {
     });
 };
 
-// Exchange username & password for access token.
+// Exchange username & password for access token by basic strategy.
 authServer.exchange(oauth2orize.exchange.password(function(client, username, password, scope, done) {
+    var message;
     User.findOne({ $or: [{ username: username }, { email: username }] }, '+hashedPassword +salt', function(err, user) {
         if (err) {
             return done(err);
         }
-        if (!user || !user.checkPassword(password)) {
-            return done(null, false);
+        if (!user) {
+            message = 'Incorrect username or email';
+
+            log.error(message);
+            return done(null, false, {message: message});
         }
-        var model = {
-            userId: user.userId,
-            clientId: client.clientId
-        };
-        generateTokens(model, done);
+        if (!user.checkPassword(password)) {
+            message = 'Incorrect password';
+
+            log.error(message);
+            return done(null, false, {message: message});
+        }
+        generateTokens({userId: user.userId, clientId: client.clientId}, done);
     });
+}));
+
+// Exchange username & password for access token by local strategy.
+authServer.exchange(oauth2orize.exchange.clientCredentials(function(user, scope, done) {
+    generateTokens({
+        userId: user.userId,
+        clientId: config.get('default:client:clientId')
+    }, done);
 }));
 
 // Exchange refreshToken for access token.
@@ -80,14 +94,13 @@ authServer.exchange(oauth2orize.exchange.refreshToken(function(client, refreshTo
             return done(null, false);
         }
         User.findById(token.userId, function(err, user) {
-            if (err) { return done(err); }
-            if (!user) { return done(null, false); }
-
-            var model = {
-                userId: user.userId,
-                clientId: client.clientId
-            };
-            generateTokens(model, done);
+            if (err) {
+                return done(err);
+            }
+            if (!user) {
+                return done(null, false);
+            }
+            generateTokens({ userId: user.userId, clientId: client.clientId }, done);
         });
     });
 }));
@@ -101,7 +114,7 @@ authServer.exchange(oauth2orize.exchange.refreshToken(function(client, refreshTo
  */
 
 exports.token = [
-    passport.authenticate(['basic', 'oauth2-client-password'], { session: false }),
+    passport.authenticate(['local', 'oauth2-client-password'], { session: false, failWithError: true }),
     authServer.token(),
     authServer.errorHandler()
 ];

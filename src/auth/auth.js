@@ -18,12 +18,22 @@ var User = require(src + 'models/user'),
 
 passport.use(new LocalStrategy(
     function(username, password, done) {
+        var message;
         User.findOne( {$or: [{ username: username }, { email: username }]}, '+hashedPassword +salt', function (err, user) {
             if (err) {
                 return done(err);
             }
-            if (!user || !user.checkPassword(password)) {
-                return done(null, false);
+            if (!user) {
+                message = 'Incorrect username or email';
+
+                log.error(message);
+                return done(null, false, {message: message});
+            }
+            if (!user.checkPassword(password)) {
+                message = 'Incorrect password';
+
+                log.error(message);
+                return done(null, false, {message: message});
             }
             return done(null, user);
         });
@@ -50,14 +60,21 @@ passport.use(new BasicStrategy(
 passport.use(new ClientPasswordStrategy(
     function(clientId, clientSecret, done) {
         Client.findOne({ clientId: clientId }, function(err, client) {
+            var message;
             if (err) {
                 return done(err);
             }
             if (!client) {
-                return done(null, false);
+                message = 'Client not found';
+
+                log.error(message);
+                return done(null, false, {message: message});
             }
             if (client.clientSecret !== clientSecret) {
-                return done(null, false);
+                message = 'Client secret key is wrong';
+
+                log.message(message);
+                return done(null, false, {message: message});
             }
             return done(null, client);
         });
