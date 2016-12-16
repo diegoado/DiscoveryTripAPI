@@ -6,8 +6,8 @@ var express = require('express'),
 var src = process.cwd() + '/src/';
 
 var oauth2 = require(src + 'auth/oauth2'),
-    log = require(src + 'helpers/log')(module),
-    errorHandler = require(src + 'helpers/error');
+    error = require(src + 'helpers/error'),
+    log = require(src + 'helpers/log')(module);
 
 // Load Models
 var AccessToken = require(src + 'models/accessToken');
@@ -19,58 +19,37 @@ router.delete('/logout', passport.authenticate('bearer', { session: false }), fu
 
     AccessToken.findOne({userId: userId}, function (err, token) {
         if (err) {
-            return errorHandler.internalError(err, res);
+            return error.genericErrorHandler(res, err.status, err.message);
         }
         token.remove(function (err) {
             if (!err) {
                 var message = 'User logout completed with success!';
-                log.info(message);
 
+                log.info(message);
                 return res.json({status: 'ok', message: message});
             } else {
-                return errorHandler.internalError(err, res);
+                return error.genericErrorHandler(res, err.status, err.message);
             }
         });
     });
 });
 
-// router.post('/login', function(req, res, next){
-//     passport.authenticate('local', {session: false, failWithError: true}, function(err, user, info) {
-//         if (err) {
-//             return next(err);
-//         }
-//         //authentication error
-//         if (!user) { return res.json({error: info.message || 'Invalid Token'}) }
-//
-//         //success
-//         req.logIn(user, function(err) {
-//             if (err) { return next(err); }
-//             return next();
-//         });
-//
-//     })(req, res, next)
-// });
-
-// router.post('/login', passport.authenticate('local', { session: false, failWithError: true }),
-//     // Handle success
-//     function(req, res, next) {
-//         if (req.user) {
-//             return res.json({ id: req.user.id }); }
-//     },
-//     // Handle error
-//     function(err, req, res, next) {
-//         return res.json(err);
-//     }
-// );
-
-router.post('/facebook/login', passport.authenticate('facebook-token', { session: false }), function (req, res) {
-    if (req.user) {
-        res.statusCode = 200;
-        res.json({status: 'ok', message: 'User authentication by Facebook completed with success'});
-    } else {
-        res.statusCode = 401;
-        res.send('Unauthorized');
-    }
+router.post('/facebook/login', function(req, res, next) {
+    passport.authenticate('facebook-token', { session: false, failWithError: true },
+        function (err, user, info) {
+            if (err) {
+                if (err.name == 'ValidationError') {
+                    return error.invalidFieldError(err, res);
+                }
+                return error.genericErrorHandler(res, 401, err.message);
+            }
+            if (!user) {
+                return error.genericErrorHandler(res, 400, info.message || 'Invalid Access Token');
+            }
+            res.statusCode = 200;
+            return res.json({status: 'ok', message: 'User authentication by Facebook completed with success'});
+        }
+    )(req, res, next)
 });
 
 module.exports = router;

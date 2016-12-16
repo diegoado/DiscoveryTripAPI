@@ -8,7 +8,7 @@ var src = process.cwd() + '/src/';
 var db = require(src + 'db/mongoose'),
     config = require(src + 'helpers/conf'),
     log = require(src + 'helpers/log')(module),
-    errHandler = require(src + 'helpers/error');
+    error = require(src + 'helpers/error');
 
 // Load Models
 var User = require(src + 'models/user'),
@@ -21,7 +21,7 @@ var authServer = oauth2orize.createServer();
 // Destroys any old tokens and generates a new access and refresh token
 var generateTokens = function (data, done) {
     // Curries in `done` callback so we don't need to pass it
-    var errorHandler = errHandler.genericErrFn.bind(undefined, done),
+    var errorHandler = error.genericErrFn.bind(undefined, done),
         refreshToken,
         refreshTokenValue,
         accessToken,
@@ -116,5 +116,5 @@ authServer.exchange(oauth2orize.exchange.refreshToken(function(client, refreshTo
 exports.token = [
     passport.authenticate(['local', 'oauth2-client-password'], { session: false, failWithError: true }),
     authServer.token(),
-    authServer.errorHandler()
+    authServer.errorHandler({mode: 'indirect'}, error.tokenError)
 ];

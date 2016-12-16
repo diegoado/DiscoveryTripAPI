@@ -1,14 +1,6 @@
 var src = process.cwd() + '/src/',
     log = require(src + 'helpers/log')(module);
 
-
-exports.internalError = function (err, res) {
-    res.statusCode = 500;
-    log.error('Internal errorHandler(%d): %s', res.statusCode, err.message);
-
-    return res.json({status: 'error', message: 'Internal Server Error'});
-};
-
 exports.invalidFieldError = function (err, res) {
     var fields = {},
         errFields = [];
@@ -20,14 +12,15 @@ exports.invalidFieldError = function (err, res) {
     res.statusCode = 400;
     log.error('Validation Error on Fields: ' + errFields.toString());
 
-    return res.json({status: 'error', message: err.message, errorsOnFields: fields});
+    return res.json({status: 'error', error_description: err.message, errorsOnFields: fields});
 };
 
-exports.resourceNotFoundError = function (res, customMessage) {
-    res.statusCode = 404;
-    log.error(customMessage);
+exports.genericErrorHandler = function (res, code, message) {
+    res.statusCode = code    || 500;
+    message        = message || 'Internal Server Error';
 
-    return res.json({status: 'error', message: customMessage});
+    log.error(message);
+    return res.json({status: 'error', error_description: message});
 };
 
 exports.genericErrFn = function (cb, err) {

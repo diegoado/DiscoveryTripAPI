@@ -131,14 +131,6 @@ passport.use(new FacebookTokenStrategy(config.get('auth:facebook'),
                 token.save();
                 return done(null, user);
             }
-            if (err.name === 'ValidationError') {
-                var errFields = [];
-
-                for (var field in err.errors) {
-                    errFields.push(field);
-                }
-                log.error('Validation Error on Fields: ' + errFields.toString());
-            }
             return done(err, user);
         });
     }

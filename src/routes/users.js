@@ -8,7 +8,7 @@ var src = process.cwd() + '/src/';
 
 var db = require(src + 'db/mongoose'),
     log = require(src + 'helpers/log')(module),
-    errorHandler = require(src + 'helpers/error');
+    error = require(src + 'helpers/error');
 
 // Load Models
 var User = require(src + 'models/user');
@@ -35,9 +35,9 @@ router.post('/', function(req, res) {
             });
         } else {
             if (err.name === 'ValidationError') {
-                return errorHandler.invalidFieldError(err, res);
+                return error.invalidFieldError(err, res);
             } else {
-                return errorHandler.internalError(err, res);
+                return error.genericErrorHandler(res, err.status, err.message);
             }
         }
     });
@@ -46,7 +46,7 @@ router.post('/', function(req, res) {
 router.get('/:id', passport.authenticate('bearer', { session: false }), function(req, res) {
     User.findById(req.params.id, function (err, user) {
         if (!user) {
-            return errorHandler.resourceNotFoundError(res, 'User not found!');
+            return error.genericErrorHandler(res, 404, 'User not found!');
         } else if (!err) {
             return res.json({
                 user: {
@@ -56,7 +56,7 @@ router.get('/:id', passport.authenticate('bearer', { session: false }), function
                 status: 'ok'
             });
         } else {
-            return errorHandler.internalError(err, res);
+            return error.genericErrorHandler(res, err.status, err.message);
         }
     });
 });
@@ -65,7 +65,7 @@ router.put('/:id', passport.authenticate('bearer', { session: false }), function
     User.findById(req.params.id, function (err, user) {
 
         if (!user) {
-            return errorHandler.resourceNotFoundError(res, 'User not found!');
+            return error.genericErrorHandler(res, 404, 'User not found!');
         }
 
         user.username = req.body.username;
@@ -88,9 +88,9 @@ router.put('/:id', passport.authenticate('bearer', { session: false }), function
                 });
             } else {
                 if (err.name === 'ValidationError') {
-                    return errorHandler.invalidFieldError(err, res);
+                    return error.invalidFieldError(err, res);
                 } else {
-                   return errorHandler.internalError(err, res);
+                    return error.genericErrorHandler(res, err.status, err.message);
                 }
             }
         });
@@ -102,7 +102,7 @@ router.delete('/:id', passport.authenticate('bearer', { session: false }), funct
     User.findById(req.params.id, function (err, user) {
 
         if (!user) {
-            return errorHandler.resourceNotFoundError(res, 'User not found!');
+            return error.genericErrorHandler(res, 404, 'User not found!');
         } else {
             user.remove(function (err) {
 
@@ -118,7 +118,7 @@ router.delete('/:id', passport.authenticate('bearer', { session: false }), funct
                         status: 'ok', message: message
                     });
                 } else {
-                   return errorHandler.internalError(err, res);
+                   return error.genericErrorHandler(res, err.status, err.message);
                 }
             });
         }
