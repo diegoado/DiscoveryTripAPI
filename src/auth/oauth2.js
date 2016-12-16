@@ -116,5 +116,5 @@ authServer.exchange(oauth2orize.exchange.refreshToken(function(client, refreshTo
 exports.token = [
     passport.authenticate(['local', 'oauth2-client-password'], { session: false, failWithError: true }),
     authServer.token(),
-    authServer.errorHandler({mode: 'indirect'}, error.tokenError)
+    authServer.errorHandler({mode: 'indirect'})
 ];

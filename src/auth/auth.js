@@ -24,16 +24,10 @@ passport.use(new LocalStrategy(
                 return done(err);
             }
             if (!user) {
-                message = 'Incorrect username or email';
-
-                log.error(message);
-                return done(null, false, {message: message});
+                return done({status: 404, code: 'user_error', message: 'User not found with username or email: ' + username}, false);
             }
             if (!user.checkPassword(password)) {
-                message = 'Incorrect password';
-
-                log.error(message);
-                return done(null, false, {message: message});
+                return done({status: 401, code: 'user_error', message: 'Incorrect password'}, false);
             }
             return done(null, user);
         });
@@ -41,16 +35,16 @@ passport.use(new LocalStrategy(
 ));
 
 passport.use(new BasicStrategy(
-    function(username, password, done) {
-        Client.findOne({ clientId: username }, function(err, client) {
+    function(clientId, clientSecret, done) {
+        Client.findOne({ clientId: clientId }, function(err, client) {
             if (err) {
                 return done(err);
             }
             if (!client) {
-                return done(null, false);
+                return done({status: 404, code: 'user_error', message: 'Client not found with clientId: ' + clientId}, false);
             }
-            if (client.clientSecret !== password) {
-                return done(null, false);
+            if (client.clientSecret !== clientSecret) {
+                return done({status: 401, code: 'user_error', message: 'Incorrect client key'}, false);
             }
             return done(null, client);
         });
@@ -65,22 +59,17 @@ passport.use(new ClientPasswordStrategy(
                 return done(err);
             }
             if (!client) {
-                message = 'Client not found';
-
-                log.error(message);
-                return done(null, false, {message: message});
+                return done({status: 404, code: 'user_error', message: 'Client not found with clientId: ' + clientId}, false);
             }
             if (client.clientSecret !== clientSecret) {
-                message = 'Client secret key is wrong';
-
-                log.message(message);
-                return done(null, false, {message: message});
+                return done({status: 401, code: 'user_error', message: 'Incorrect client key'}, false);
             }
             return done(null, client);
         });
     }
 ));
 
+//TODO(diegoado): Apply new error handler strategy
 passport.use(new BearerStrategy(
     function(accessToken, done) {
         AccessToken.findOne({ token: accessToken }, function(err, token) {

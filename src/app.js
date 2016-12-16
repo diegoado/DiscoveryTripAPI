@@ -33,7 +33,7 @@ app.use(function(req, res, next) {
     res.status(404);
     log.error('%s %d %s', req.method, res.statusCode, req.url);
 
-    res.json({status: 'error', error: 'server_error', error_description: 'Resource not found'});
+    res.json({status: 'error', error: 'user_error', error_description: 'Resource not found'});
     next();
 });
 
@@ -42,7 +42,7 @@ app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     log.error('%s %d %s', req.method, res.statusCode, err.message);
 
-    res.json({status: 'error', error: 'server_error', error_description: err.message});
+    res.json({status: 'error', error: err.code || 'server_error', error_description: err.message});
     next();
 });
 

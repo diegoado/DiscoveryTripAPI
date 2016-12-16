@@ -19,16 +19,13 @@ router.delete('/logout', passport.authenticate('bearer', { session: false }), fu
 
     AccessToken.findOne({userId: userId}, function (err, token) {
         if (err) {
-            return error.genericErrorHandler(res, err.status, err.message);
+            return error.genericErrorHandler(res, err.status, err.code, err.message);
         }
         token.remove(function (err) {
             if (!err) {
-                var message = 'User logout completed with success!';
-
-                log.info(message);
-                return res.json({status: 'ok', message: message});
+                return res.json({status: 'ok', message: 'User logout completed with success!'});
             } else {
-                return error.genericErrorHandler(res, err.status, err.message);
+                return error.genericErrorHandler(res, err.status, err.code, err.message);
             }
         });
     });
@@ -41,10 +38,10 @@ router.post('/facebook/login', function(req, res, next) {
                 if (err.name == 'ValidationError') {
                     return error.invalidFieldError(err, res);
                 }
-                return error.genericErrorHandler(res, 401, err.message);
+                return error.genericErrorHandler(res, 401, err.code, err.message);
             }
             if (!user) {
-                return error.genericErrorHandler(res, 400, info.message || 'Invalid Access Token');
+                return error.genericErrorHandler(res, 400, 'user_error', info.message || 'Invalid Access Token');
             }
             res.statusCode = 200;
             return res.json({status: 'ok', message: 'User authentication by Facebook completed with success'});

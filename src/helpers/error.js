@@ -12,15 +12,16 @@ exports.invalidFieldError = function (err, res) {
     res.statusCode = 400;
     log.error('Validation Error on Fields: ' + errFields.toString());
 
-    return res.json({status: 'error', error_description: err.message, errorsOnFields: fields});
+    return res.json({status: 'error', error: 'user_error', error_description: err.message, errorsOnFields: fields});
 };
 
-exports.genericErrorHandler = function (res, code, message) {
-    res.statusCode = code    || 500;
+exports.genericErrorHandler = function (res, status, code, message) {
+    res.statusCode = status  || 500;
+    code           = code    || 'server_error';
     message        = message || 'Internal Server Error';
 
-    log.error(message);
-    return res.json({status: 'error', error_description: message});
+    log.error('%d %s', res.statusCode, message);
+    return res.json({status: 'error', error: code, error_description: message});
 };
 
 exports.genericErrFn = function (cb, err) {
