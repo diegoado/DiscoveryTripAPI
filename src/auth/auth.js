@@ -2,6 +2,7 @@ var passport = require('passport'),
     BasicStrategy = require('passport-http').BasicStrategy,
     LocalStrategy = require('passport-local').Strategy,
     BearerStrategy = require('passport-http-bearer').Strategy,
+    GoogleTokenStrategy = require('passport-google-id-token'),
     FacebookTokenStrategy = require('passport-facebook-token'),
     ClientPasswordStrategy = require('passport-oauth2-client-password').Strategy;
 
@@ -130,6 +131,14 @@ passport.use(new FacebookTokenStrategy(config.get('auth:facebook'),
                 token.save();
                 return done(null, user);
             }
+            return done(err, user);
+        });
+    }
+));
+
+passport.use(new GoogleTokenStrategy(config.get('auth:google'),
+    function(parsedToken, googleId, done) {
+        User.findOrCreate({ socialId: googleId }, function (err, user) {
             return done(err, user);
         });
     }

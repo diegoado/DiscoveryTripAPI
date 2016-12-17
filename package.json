@@ -33,6 +33,7 @@
     "oauth2orize": "^1.0.x",
     "passport": "^0.2.x",
     "passport-facebook-token": "^3.3.0",
+    "passport-google-id-token": "^0.4.0",
     "passport-http": "^0.2.x",
     "passport-http-bearer": "^1.0.x",
     "passport-local": "^1.0.0",

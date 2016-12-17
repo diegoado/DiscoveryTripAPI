@@ -32,6 +32,9 @@
       "clientID": "218714921902397",
       "clientSecret": "36498bd6512d269eb648602bca1be4aa",
       "profileFields": ["id", "name", "displayName", "link", "gender", "photos", "emails"]
+    },
+    "google": {
+      "clientID": "125864993307-uct771sru27ies9gfkp1t027osf1hcbj.apps.googleusercontent.com"
     }
   }
 }

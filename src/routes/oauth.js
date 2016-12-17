@@ -51,4 +51,11 @@ router.post('/facebook/login', function(req, res, next) {
     )(req, res, next)
 });
 
+router.post('/google/login',
+    passport.authenticate('google-id-token', { session: false, failWithError: true }),
+    function (req, res) {
+        res.send(req.user? 200 : 401);
+    }
+);
+
 module.exports = router;
