@@ -42,14 +42,15 @@ var generateTokens = function (data, done) {
 
     accessToken.save(function (err) {
         if (err) {
-            log.error(err.message);
             return done(err);
         }
         refreshToken.save(errorHandler);
 
-        done(null, accessTokenValue, refreshTokenValue, {
-            'expires_in': config.get('security:tokenLife')
-        });
+        var message = 'Access Token acquired with success!',
+            info = {expires_in: config.get('security:tokenLife'), message: message, status: 'ok'};
+
+        log.info(message);
+        done(null, accessTokenValue, refreshTokenValue, info);
     });
 };
 
@@ -61,16 +62,12 @@ authServer.exchange(oauth2orize.exchange.password(function(client, username, pas
             return done(err);
         }
         if (!user) {
-            message = 'Incorrect username or email';
-
-            log.error(message);
-            return done(null, false, {message: message});
+            return done({
+                status: 404, code: 'user_error', message: 'User not found with username or email: ' + username
+            }, false);
         }
         if (!user.checkPassword(password)) {
-            message = 'Incorrect password';
-
-            log.error(message);
-            return done(null, false, {message: message});
+            return done({status: 401, code: 'user_error', message: 'Incorrect password'}, false);
         }
         generateTokens({userId: user.userId, clientId: client.clientId}, done);
     });
@@ -91,14 +88,18 @@ authServer.exchange(oauth2orize.exchange.refreshToken(function(client, refreshTo
             return done(err);
         }
         if (!token) {
-            return done(null, false);
+            return done({
+                status: 401, code: 'user_error', message: 'Invalid Refresh Token'
+            }, false);
         }
         User.findById(token.userId, function(err, user) {
             if (err) {
                 return done(err);
             }
             if (!user) {
-                return done(null, false);
+                return done({
+                    status: 404, code: 'user_error' , message: 'User not found'
+                }, false);
             }
             generateTokens({ userId: user.userId, clientId: client.clientId }, done);
         });

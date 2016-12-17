@@ -22,7 +22,7 @@ var User = new Schema({
         validate: validator({validator: 'isEmail', message: 'Invalid Email Address'})
     },
 
-    facebookId: {
+    socialId: {
         type: String,
         unique: true,
         select: false

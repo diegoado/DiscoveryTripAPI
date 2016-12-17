@@ -8,8 +8,7 @@ var passport = require('passport'),
 // Find the src path
 var src = process.cwd() + '/src/';
 
-var config = require(src + 'helpers/conf'),
-    log = require(src + 'helpers/log')(module);
+var config = require(src + 'helpers/conf');
 
 var User = require(src + 'models/user'),
     Client = require(src + 'models/client'),
@@ -24,7 +23,9 @@ passport.use(new LocalStrategy(
                 return done(err);
             }
             if (!user) {
-                return done({status: 404, code: 'user_error', message: 'User not found with username or email: ' + username}, false);
+                return done({
+                    status: 404, code: 'user_error', message: 'User not found with username or email: ' + username
+                }, false);
             }
             if (!user.checkPassword(password)) {
                 return done({status: 401, code: 'user_error', message: 'Incorrect password'}, false);
@@ -41,7 +42,9 @@ passport.use(new BasicStrategy(
                 return done(err);
             }
             if (!client) {
-                return done({status: 404, code: 'user_error', message: 'Client not found with clientId: ' + clientId}, false);
+                return done({
+                    status: 404, code: 'user_error', message: 'Client not found with clientId: ' + clientId
+                }, false);
             }
             if (client.clientSecret !== clientSecret) {
                 return done({status: 401, code: 'user_error', message: 'Incorrect client key'}, false);
@@ -59,7 +62,9 @@ passport.use(new ClientPasswordStrategy(
                 return done(err);
             }
             if (!client) {
-                return done({status: 404, code: 'user_error', message: 'Client not found with clientId: ' + clientId}, false);
+                return done({
+                    status: 404, code: 'user_error', message: 'Client not found with clientId: ' + clientId
+                }, false);
             }
             if (client.clientSecret !== clientSecret) {
                 return done({status: 401, code: 'user_error', message: 'Incorrect client key'}, false);
@@ -69,7 +74,6 @@ passport.use(new ClientPasswordStrategy(
     }
 ));
 
-//TODO(diegoado): Apply new error handler strategy
 passport.use(new BearerStrategy(
     function(accessToken, done) {
         AccessToken.findOne({ token: accessToken }, function(err, token) {
@@ -77,16 +81,20 @@ passport.use(new BearerStrategy(
                 return done(err);
             }
             if (!token) {
-                return done(null, false);
+                return done({
+                    status: 401, code: 'user_error', message: 'Invalid Access Token'
+                }, false);
             }
             if (Math.round((Date.now() - token.created) / 1000) > config.get('security:tokenLife') ) {
 
-                AccessToken.remove({ token: accessToken }, function (err) {
+                token.remove(function (err) {
                     if (err) {
                         return done(err);
                     }
                 });
-                return done(null, false, { message: 'Token expired' });
+                return done({
+                    status: 401, code: 'user_error', message: 'Access Token expired'
+                }, false);
             }
             User.findById(token.userId, function(err, user) {
 
@@ -94,7 +102,9 @@ passport.use(new BearerStrategy(
                     return done(err);
                 }
                 if (!user) {
-                    return done(null, false, { message: 'Unknown user' });
+                    return done({
+                        status: 404, code: 'user_error' , message: 'User not found'
+                    }, false);
                 }
                 done(null, user, { scope: '*' });
             });
@@ -108,7 +118,7 @@ passport.use(new FacebookTokenStrategy(config.get('auth:facebook'),
             photo_url = profile.photos[0].value,
             username  = profile._json.link.split('/').slice(-1)[0] || profile.displayName;
 
-        User.findOrCreate({ facebookId: profile.id },
+        User.findOrCreate({ socialId: profile.id },
             {username: username, email: email, photo_url: photo_url, socialAuth: true}, function (err, user) {
 
             if (!err) {

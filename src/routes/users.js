@@ -13,6 +13,7 @@ var db = require(src + 'db/mongoose'),
 // Load Models
 var User = require(src + 'models/user');
 
+//TODO(diegoado): Validate the required params before create a local user
 router.post('/', function(req, res) {
     var user = new User({
         username : req.body.username,
@@ -23,21 +24,20 @@ router.post('/', function(req, res) {
 
     user.save(function (err) {
         if (!err) {
-            var message = 'New User created with success';
+            log.info('New User created with success');
 
-            log.info(message);
             return res.json({
                 user: {
                     id: user.userId, username: user.username, email: user.email,
                     photo_url: user.photo_url, created: user.created
                 },
-                status: 'ok', message: message
+                status: 'ok', message: 'New User created with success'
             });
         } else {
             if (err.name === 'ValidationError') {
                 return error.invalidFieldError(err, res);
             } else {
-                return error.genericErrorHandler(res, err.status, err.message);
+                return error.genericErrorHandler(res, err.status, err.code, err.message);
             }
         }
     });
@@ -48,15 +48,18 @@ router.get('/:id', passport.authenticate('bearer', { session: false }), function
         if (!user) {
             return error.genericErrorHandler(res, 404, 'User not found!');
         } else if (!err) {
+            log.info('User found with success');
+
             return res.json({
                 user: {
                     id: user.userId, username: user.username, email: user.email,
                     photo_url: user.photo_url, created: user.created
                 },
-                status: 'ok'
+                status: 'ok',
+                message: 'User found with success'
             });
         } else {
-            return error.genericErrorHandler(res, err.status, err.message);
+            return error.genericErrorHandler(res, err.status, err.code, err.message);
         }
     });
 });
@@ -65,7 +68,7 @@ router.put('/:id', passport.authenticate('bearer', { session: false }), function
     User.findById(req.params.id, function (err, user) {
 
         if (!user) {
-            return error.genericErrorHandler(res, 404, 'User not found!');
+            return error.genericErrorHandler(res, 404, 'user_error', 'User not found!');
         }
 
         user.username = req.body.username;
@@ -76,21 +79,21 @@ router.put('/:id', passport.authenticate('bearer', { session: false }), function
         user.save(function (err) {
 
             if (!err) {
-                var message = 'User updated with success!';
+                log.info('User updated with success!');
 
-                log.info(message);
                 return res.json({
                     user: {
                         id: user.userId, username: user.username, email: user.email,
                         photo_url: user.photo_url, created: user.created
                     },
-                    status: 'ok', message: message
+                    status: 'ok',
+                    message: 'User updated with success!'
                 });
             } else {
                 if (err.name === 'ValidationError') {
                     return error.invalidFieldError(err, res);
                 } else {
-                    return error.genericErrorHandler(res, err.status, err.message);
+                    return error.genericErrorHandler(res, err.status, err.code, err.message);
                 }
             }
         });
@@ -102,23 +105,23 @@ router.delete('/:id', passport.authenticate('bearer', { session: false }), funct
     User.findById(req.params.id, function (err, user) {
 
         if (!user) {
-            return error.genericErrorHandler(res, 404, 'User not found!');
+            return error.genericErrorHandler(res, 404, 'user_error', 'User not found!');
         } else {
             user.remove(function (err) {
 
                 if (!err) {
-                    var message = 'User deleted with success!';
+                    log.info('User deleted with success!');
 
-                    log.info(message);
                     return res.json({
                         user: {
                             id: user.userId, username: user.username, email: user.email,
                             photo_url: user.photo_url, created: user.created
                         },
-                        status: 'ok', message: message
+                        status: 'ok',
+                        message: 'User deleted with success!'
                     });
                 } else {
-                   return error.genericErrorHandler(res, err.status, err.message);
+                   return error.genericErrorHandler(res, err.status, err.code, err.message);
                 }
             });
         }
