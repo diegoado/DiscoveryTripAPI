@@ -63,10 +63,10 @@ Authenticate user with specified credentials. Username or Password and password 
 * **Sample Call:**
 
    ```bash
-      curl -i \
-        -H "Content-Type: application/json" \
-        -X POST -d '{"grant_type": "client_credentials", "username": <USERNAME>, "password": <PASSWORD>}' \
-        http://localhost:8080/api/login
+     curl -i \
+       -H "Content-Type: application/json" \
+       -X POST -d '{"grant_type": "client_credentials", "username": <USERNAME>, "password": <PASSWORD>}' \
+       http://localhost:8080/api/login
    ```
   
 #### **Session Refresh**
@@ -107,10 +107,10 @@ Refresh the user access token. Refresh token, application id and secret key as i
 * **Sample Call:**
 
    ```bash
-      curl -i \
-        -H "Content-Type: application/json" \
-        -X POST -d '{"grant_type": "refresh_token", "refresh_token": <TOKEN>, "client_id": <ID>, "client_secret": <KEY>}' \
-        http://localhost:8080/api/login
+     curl -i \
+       -H "Content-Type: application/json" \
+       -X POST -d '{"grant_type": "refresh_token", "refresh_token": <TOKEN>, "client_id": <ID>, "client_secret": <KEY>}' \
+       http://localhost:8080/api/login
    ```
 
 #### **Logout**
@@ -142,11 +142,11 @@ Remove User session by invoking an explicit logout. Session token to be provided
 * **Sample Call:**
 
    ```bash
-      curl -i \
-        -H "Content-Type: application/json" \
-        -H "Authorization: bearer fe4b6b458906fd6b9dad77a06bed82597bd16dd790a8f48d99f52d8975610c71" \
-        -X DELETE \
-        http://localhost:8080/api/logout
+     curl -i \
+       -H "Content-Type: application/json" \
+       -H "Authorization: bearer fe4b6b458906fd6b9dad77a06bed82597bd16dd790a8f48d99f52d8975610c71" \
+       -X DELETE \
+       http://localhost:8080/api/logout
    ```
     
 ## Users
@@ -197,10 +197,10 @@ The user email is validated to avoid creating duplicates in the application.
 * **Sample Call:**
 
    ```bash
-      curl -i \
-        -H "Content-Type: application/json" \
-        -X POST -d '{"username": <USERNAME>, "email": <EMAIL>, "password": <PASSWORD>}' \
-        http://localhost:8080/api/users
+     curl -i \
+       -H "Content-Type: application/json" \
+       -X POST -d '{"username": <USERNAME>, "email": <EMAIL>, "password": <PASSWORD>}' \
+       http://localhost:8080/api/users
    ```
 
 #### **Get a User**
@@ -241,10 +241,10 @@ Lists details of a user present in the application.
 * **Sample Call:**
 
    ```bash
-      curl -i \
-        -H "Content-Type: application/json" \
-        -H "Authorization: bearer <access_token>" \
-        http://localhost:8080/api/users/:id
+     curl -i \
+       -H "Content-Type: application/json" \
+       -H "Authorization: bearer <access_token>" \
+       http://localhost:8080/api/users/:id
    ```
 
 #### **Update a User**
@@ -289,10 +289,10 @@ Valid user with update privilege logged in to the application may modify the use
 * **Sample Call:**
 
    ```bash
-      curl -i \
-        -H "Content-Type: application/json" \
-        -X PUT -d '{"username": <USERNAME>, "email": <EMAIL>, "password": <PASSWORD>}' \
-        http://localhost:8080/api/users/:id
+     curl -i \
+       -H "Content-Type: application/json" \
+       -X PUT -d '{"username": <USERNAME>, "email": <EMAIL>, "password": <PASSWORD>}' \
+       http://localhost:8080/api/users/:id
    ```
 
 #### **Remove a User**
@@ -334,11 +334,11 @@ Removes a user present in the application based on your ID.
 * **Sample Call:**
 
    ```bash
-      curl -i \
-        -H "Content-Type: application/json" \
-        -H "Authorization: bearer <access_token>" \
-        -X DELETE -d '{"password": <PASSWORD>}' \
-        http://localhost:8080/api/users/:id
+     curl -i \
+       -H "Content-Type: application/json" \
+       -H "Authorization: bearer <access_token>" \
+       -X DELETE -d '{"password": <PASSWORD>}' \
+       http://localhost:8080/api/users/:id
    ```
    
 ## Errors
