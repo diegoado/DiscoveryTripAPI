@@ -293,6 +293,7 @@ Valid user with update privilege logged in to the application may modify the use
         -H "Content-Type: application/json" \
         -X PUT -d '{"username": <USERNAME>, "email": <EMAIL>, "password": <PASSWORD>}' \
         http://localhost:8080/api/users/:id
+   ```
 
 #### **Remove a User**
 
