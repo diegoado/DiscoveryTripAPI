@@ -123,10 +123,10 @@ passport.use(new FacebookTokenStrategy(config.get('auth:facebook'),
             {username: username, email: email, photo_url: photo_url, socialAuth: true}, function (err, user) {
 
             if (!err) {
-                AccessToken.remove({ $or: [{ userId: user }, { userId: profile.id }] });
+                AccessToken.remove({ userId: user });
 
                 var token = new AccessToken(
-                    {userId: profile.id, applicationId: config.get('default:client:applicationId'), token: accessToken}
+                    {userId: user, applicationId: config.get('default:client:applicationId'), token: accessToken}
                 );
                 token.save();
                 return done(null, user);
