@@ -16,13 +16,12 @@ validator.extend('isNotEmpty', function (arr) { return arr.length >= 1 }, 'Array
 
 // Load Models
 var User = require(src + 'models/user'),
-    Image = require(src + 'models/image'),
-    Localization = require(src + 'models/localization');
+    Image = require(src + 'models/image');
 
-var Attractions = new Schema({
-    userOwner: {
+var Attraction = new Schema({
+    userId: {
         type: Schema.ObjectId,
-        ref: User,
+        ref: User.schemaName,
         required: true
     },
 
@@ -46,9 +45,55 @@ var Attractions = new Schema({
     },
 
     localization: {
-        type: Schema.ObjectId,
-        ref: Localization,
-        require: true
+
+        longitude: {
+            type: String,
+            require: true,
+            validate: validator({
+                validator: 'matches',
+                arguments: /^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/i,
+                message: 'Invalid Longitude matches'
+            })
+        },
+
+        latitude: {
+            type: String,
+            require: true,
+            validate: validator({
+                validator: 'matches',
+                arguments: /^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/i,
+                message: 'Invalid Latitude matches'
+            })
+        },
+
+        city: {
+            type: String,
+            select: false
+        },
+        streetName: {
+            type: String,
+            select: false
+        },
+
+        streetNumber: {
+            type: String,
+            select: false
+        },
+
+        zipcode: {
+            type: String,
+            select: false
+        },
+
+        country: {
+            type: String,
+            select: false
+        },
+
+        countryCode: {
+            type: String,
+            select: false
+        }
     },
 
     // images: [{
@@ -79,39 +124,36 @@ var Attractions = new Schema({
     versionKey: false
 });
 
-Attractions.virtual('state')
+Attraction.index({localization: {longitude: 1, latitude: 1}}, {unique: true});
+
+Attraction.virtual('state')
     .get(function () {
         return this.approved ? 'Approval' : 'In Approval';
 });
 
-Attractions.post('save', function (attraction) {
-    Localization.findById(attraction.localization, function (err, loc) {
-        if (!err && loc) {
-            geocoder.reverse({ lat: loc.latitude, lon: loc.longitude }, function (err, address) {
-                if (err) {
-                    log.warn('Cannot find tourist attraction address. Error caused by: %s', err.message);
-                } else {
-                    if (address.length > 1) {
-                        log.info(
-                            "Get multiples address for tourist attraction coordinates, getting address at first position"
-                        );
-                    }
-                    loc.city         = address[0].city;
-                    loc.streetName   = address[0].streetName;
-                    loc.streetNumber = address[0].streetNumber;
-                    loc.zipcode      = address[0].zipcode;
-                    loc.country      = address[0].country;
-                    loc.countryCode  = address[0].countryCode;
+Attraction.post('save', function (att) {
+    geocoder.reverse({lat: att.localization.latitude, lon: att.localization.longitude}, function (err, address) {
+        if (err) {
+            log.warn('Cannot find tourist attraction address. Error caused by: %s', err.message);
+        } else {
+            if (address.length > 1) {
+                log.info("Get multiples address for tourist attraction coordinates, getting address at first position");
+            }
+            att.localization.city = address[0].city;
+            att.localization.streetName = address[0].streetName;
+            att.localization.streetNumber = address[0].streetNumber;
+            att.localization.zipcode = address[0].zipcode;
+            att.localization.country = address[0].country;
+            att.localization.countryCode = address[0].countryCode;
 
-                    loc.save(function (err) {
-                        if (err) {
-                            log.warn('Cannot save the tourist attraction address');
-                        }
-                    });
+            att.save(function (err) {
+                if (err) {
+                    log.warn('Cannot save the tourist attraction address');
                 }
             });
         }
-    }).exec();
+    });
 });
 
-module.exports = mongoose.model('Attraction', Attractions);
+
+module.exports = mongoose.model('Attraction', Attraction);

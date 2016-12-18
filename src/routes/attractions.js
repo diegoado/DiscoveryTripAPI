@@ -10,28 +10,16 @@ var log = require(src + 'helpers/log')(module),
     error = require(src + 'helpers/error');
 
 // Load Models
-var Attraction = require(src + 'models/attraction'),
-    Localization = require(src + 'models/localization');
-
+var Attraction = require(src + 'models/attraction');
 
 router.post('/', passport.authenticate('bearer', { session: false }), function(req, res) {
-    var localization = new Localization({
-        latitude: req.body.latitude,
-        longitude: req.body.longitude
-    });
     var attraction = new Attraction({
-        userOwner   : req.user.userId,
-        name        : req.body.name,
-        description : req.body.description,
-        category    : req.body.category,
-        localization: localization
-    });
-
-    localization.save(function (err) {
-        if (err) {
-            log.error(err.message);
+        userId: req.user, name: req.body.name, description: req.body.description, category: req.body.category,
+        localization: {
+            latitude: req.body.latitude, longitude: req.body.longitude
         }
     });
+
     attraction.save(function (err) {
         if (!err) {
             log.info('New Tourist Attraction created with success');
@@ -39,10 +27,7 @@ router.post('/', passport.authenticate('bearer', { session: false }), function(r
             return res.json({
                 attraction: {
                     name: attraction.name, description: attraction.description,
-                    localization: {
-                        latitude: localization.latitude,
-                        longitude: localization.longitude
-                    },
+                    localization: attraction.localization,
                     created: attraction.created,
                     state: attraction.state
                 },
@@ -58,6 +43,7 @@ router.post('/', passport.authenticate('bearer', { session: false }), function(r
         }
     });
 });
+
 
 module.exports = router;
 
