@@ -29,7 +29,7 @@ mongoose.connection.once('open', function callback () {
     mongoose.Promise = global.Promise;
     var client = config.get('default:client');
 
-    Client.findOrCreate({clientId: client.clientId}, {name: client.name, clientSecret: client.clientSecret},
+    Client.findOrCreate({applicationId: client.applicationId}, {name: client.name, applicationKey: client.applicationKey},
         function (err, client, created) {
 
         if (err) {

@@ -38,16 +38,16 @@ passport.use(new LocalStrategy(
 
 passport.use(new BasicStrategy(
     function(clientId, clientSecret, done) {
-        Client.findOne({ clientId: clientId }, function(err, client) {
+        Client.findOne({ applicationId: clientId }, function(err, client) {
             if (err) {
                 return done(err);
             }
             if (!client) {
                 return done({
-                    status: 404, code: 'user_error', message: 'Client not found with clientId: ' + clientId
+                    status: 404, code: 'user_error', message: 'Client not found with applicationId: ' + clientId
                 }, false);
             }
-            if (client.clientSecret !== clientSecret) {
+            if (client.applicationKey !== clientSecret) {
                 return done({status: 401, code: 'user_error', message: 'Incorrect client key'}, false);
             }
             return done(null, client);
@@ -57,17 +57,17 @@ passport.use(new BasicStrategy(
 
 passport.use(new ClientPasswordStrategy(
     function(clientId, clientSecret, done) {
-        Client.findOne({ clientId: clientId }, function(err, client) {
+        Client.findOne({ applicationId: clientId }, function(err, client) {
             var message;
             if (err) {
                 return done(err);
             }
             if (!client) {
                 return done({
-                    status: 404, code: 'user_error', message: 'Client not found with clientId: ' + clientId
+                    status: 404, code: 'user_error', message: 'Client not found with applicationId: ' + clientId
                 }, false);
             }
-            if (client.clientSecret !== clientSecret) {
+            if (client.applicationKey !== clientSecret) {
                 return done({status: 401, code: 'user_error', message: 'Incorrect client key'}, false);
             }
             return done(null, client);
@@ -123,10 +123,10 @@ passport.use(new FacebookTokenStrategy(config.get('auth:facebook'),
             {username: username, email: email, photo_url: photo_url, socialAuth: true}, function (err, user) {
 
             if (!err) {
-                AccessToken.remove({ $or: [{ userId: user.userId }, { userId: profile.id }] });
+                AccessToken.remove({ $or: [{ userId: user }, { userId: profile.id }] });
 
                 var token = new AccessToken(
-                    {userId: profile.id, clientId: config.get('default:client:clientId'), token: accessToken}
+                    {userId: profile.id, applicationId: config.get('default:client:applicationId'), token: accessToken}
                 );
                 token.save();
                 return done(null, user);
@@ -136,6 +136,7 @@ passport.use(new FacebookTokenStrategy(config.get('auth:facebook'),
     }
 ));
 
+//TODO(diegoado): Implement this Strategy
 passport.use(new GoogleTokenStrategy(config.get('auth:google'),
     function(parsedToken, googleId, done) {
         User.findOrCreate({ socialId: googleId }, function (err, user) {

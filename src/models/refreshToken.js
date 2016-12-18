@@ -1,16 +1,22 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
+// Find project working directory
+var src = process.cwd() + '/src/';
+
+var User = require(src + 'models/user');
+
 /* RefreshToken: another type of token allows you to request a new bearer-token
  * without re-request a password from the user.
  **/
 var RefreshToken = new Schema({
     userId: {
-        type: String,
+        type: Schema.ObjectId,
+        ref: User.schemaName,
         required: true
     },
 
-    clientId: {
+    applicationId: {
         type: String,
         required: true
     },

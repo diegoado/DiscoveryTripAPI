@@ -16,9 +16,7 @@ var AccessToken = require(src + 'models/accessToken');
 router.post('/login', oauth2.token);
 
 router.delete('/logout', passport.authenticate('bearer', { session: false }), function (req, res) {
-    var userId = req.user.userId;
-
-    AccessToken.findOne({userId: userId}, function (err, token) {
+    AccessToken.findOne({userId: req.user}, function (err, token) {
         if (err) {
             return error.genericErrorHandler(res, err.status, err.code, err.message);
         }

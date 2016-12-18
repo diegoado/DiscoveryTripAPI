@@ -12,13 +12,13 @@ var Client = new Schema({
         required: true
     },
 
-    clientId: {
+    applicationId: {
         type: String,
         unique: true,
         required: true
     },
 
-    clientSecret: {
+    applicationKey: {
         type: String,
         required: true
     }

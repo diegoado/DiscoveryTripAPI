@@ -1,18 +1,22 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema;
 
-var src = process.cwd() + '/src/',
+// Find project working directory
+var src = process.cwd() + '/src/';
+
+var User = require(src + 'models/user'),
     RefreshToken = require(src + 'models/refreshToken');
 
 /* AccessToken: token (type of bearer), issued to the client application, limited by time.
  **/
 var AccessToken = new Schema({
     userId: {
-        type: String,
+        type: Schema.ObjectId,
+        ref: User.schemaName,
         required: true
     },
 
-    clientId: {
+    applicationId: {
         type: String,
         required: true
     },

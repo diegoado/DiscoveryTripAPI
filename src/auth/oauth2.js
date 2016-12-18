@@ -56,7 +56,6 @@ var generateTokens = function (data, done) {
 
 // Exchange username & password for access token by basic strategy.
 authServer.exchange(oauth2orize.exchange.password(function(client, username, password, scope, done) {
-    var message;
     User.findOne({ $or: [{ username: username }, { email: username }] }, '+hashedPassword +salt', function(err, user) {
         if (err) {
             return done(err);
@@ -69,21 +68,21 @@ authServer.exchange(oauth2orize.exchange.password(function(client, username, pas
         if (!user.checkPassword(password)) {
             return done({status: 401, code: 'user_error', message: 'Incorrect password'}, false);
         }
-        generateTokens({userId: user.userId, clientId: client.clientId}, done);
+        generateTokens({userId: user, applicationId: client.applicationId}, done);
     });
 }));
 
 // Exchange username & password for access token by local strategy.
 authServer.exchange(oauth2orize.exchange.clientCredentials(function(user, scope, done) {
     generateTokens({
-        userId: user.userId,
-        clientId: config.get('default:client:clientId')
+        userId: user,
+        applicationId: config.get('default:client:applicationId')
     }, done);
 }));
 
 // Exchange refreshToken for access token.
 authServer.exchange(oauth2orize.exchange.refreshToken(function(client, refreshToken, scope, done) {
-    RefreshToken.findOne({ token: refreshToken, clientId: client.clientId }, function(err, token) {
+    RefreshToken.findOne({ token: refreshToken, applicationId: client.applicationId }, function(err, token) {
         if (err) {
             return done(err);
         }
@@ -101,7 +100,7 @@ authServer.exchange(oauth2orize.exchange.refreshToken(function(client, refreshTo
                     status: 404, code: 'user_error' , message: 'User not found'
                 }, false);
             }
-            generateTokens({ userId: user.userId, clientId: client.clientId }, done);
+            generateTokens({ userId: user, applicationId: client.applicationId }, done);
         });
     });
 }));

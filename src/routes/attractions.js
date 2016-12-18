@@ -12,6 +12,7 @@ var log = require(src + 'helpers/log')(module),
 // Load Models
 var Attraction = require(src + 'models/attraction');
 
+//TODO(diegoado): In construction
 router.post('/', passport.authenticate('bearer', { session: false }), function(req, res) {
     var attraction = new Attraction({
         userId: req.user, name: req.body.name, description: req.body.description, category: req.body.category,
