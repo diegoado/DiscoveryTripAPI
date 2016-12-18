@@ -14,7 +14,8 @@ var log = require('./helpers/log')(module);
 // Load routes
 var api = require('./routes/api'),
     users = require('./routes/users'),
-    oauth = require('./routes/oauth');
+    oauth = require('./routes/oauth'),
+    attractions = require('./routes/attractions');
 
 app.use(cookieParser());
 app.use(methodOverride());  // HTTP PUT and DELETE support
@@ -27,6 +28,7 @@ app.use('/', api);
 app.use('/api', api);
 app.use('/api', oauth);
 app.use('/api/users', users);
+app.use('/api/attractions', attractions);
 
 // Catch 404 and forward to error handler
 app.use(function(req, res, next) {

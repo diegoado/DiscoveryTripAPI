@@ -1,17 +1,16 @@
 var passport = require('passport'),
     express = require('express'),
-    crypto = require('crypto'),
     router = express.Router();
 
 // Find project working directory
 var src = process.cwd() + '/src/';
 
-var db = require(src + 'db/mongoose'),
-    log = require(src + 'helpers/log')(module),
+var log = require(src + 'helpers/log')(module),
     error = require(src + 'helpers/error');
 
 // Load Models
 var User = require(src + 'models/user');
+
 
 //TODO(diegoado): Validate the required params before create a local user
 router.post('/', function(req, res) {

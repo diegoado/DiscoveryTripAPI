@@ -1,6 +1,6 @@
 var express = require('express'),
-    passport = require('passport'),
     router = express.Router();
+
 
 /* GET API Status. */
 router.get('/', function (req, res) {

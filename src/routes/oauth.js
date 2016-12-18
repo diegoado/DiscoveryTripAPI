@@ -12,6 +12,7 @@ var oauth2 = require(src + 'auth/oauth2'),
 // Load Models
 var AccessToken = require(src + 'models/accessToken');
 
+
 router.post('/login', oauth2.token);
 
 router.delete('/logout', passport.authenticate('bearer', { session: false }), function (req, res) {
