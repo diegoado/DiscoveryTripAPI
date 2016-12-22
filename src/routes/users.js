@@ -23,15 +23,10 @@ router.post('/', function(req, res) {
 
     user.save(function (err) {
         if (!err) {
-            log.info('New User created with success');
+            var message = 'New User created with success';
 
-            return res.json({
-                user: {
-                    id: user.userId, username: user.username, email: user.email,
-                    photo_url: user.photo_url, created: user.created
-                },
-                status: 'ok', message: 'New User created with success'
-            });
+            log.info(message);
+            return res.json({ user: user.toJSON(), status: 'ok', message: message });
         } else {
             if (err.name === 'ValidationError') {
                 return error.invalidFieldError(err, res);
@@ -47,16 +42,10 @@ router.get('/:id', passport.authenticate('bearer', { session: false }), function
         if (!user) {
             return error.genericErrorHandler(res, 404, 'User not found!');
         } else if (!err) {
-            log.info('User found with success');
+            var message = 'User found with success';
 
-            return res.json({
-                user: {
-                    id: user.userId, username: user.username, email: user.email,
-                    photo_url: user.photo_url, created: user.created
-                },
-                status: 'ok',
-                message: 'User found with success'
-            });
+            log.info(message);
+            return res.json({ user: user.toJSON(), status: 'ok', message: message });
         } else {
             return error.genericErrorHandler(res, err.status, err.code, err.message);
         }
@@ -78,16 +67,10 @@ router.put('/:id', passport.authenticate('bearer', { session: false }), function
         user.save(function (err) {
 
             if (!err) {
-                log.info('User updated with success!');
+                var message = 'User updated with success!';
 
-                return res.json({
-                    user: {
-                        id: user.userId, username: user.username, email: user.email,
-                        photo_url: user.photo_url, created: user.created
-                    },
-                    status: 'ok',
-                    message: 'User updated with success!'
-                });
+                log.info(message);
+                return res.json({ user: user.toJSON(), status: 'ok', message: message });
             } else {
                 if (err.name === 'ValidationError') {
                     return error.invalidFieldError(err, res);
@@ -109,16 +92,10 @@ router.delete('/:id', passport.authenticate('bearer', { session: false }), funct
             user.remove(function (err) {
 
                 if (!err) {
-                    log.info('User deleted with success!');
+                    var message = 'User deleted with success!';
 
-                    return res.json({
-                        user: {
-                            id: user.userId, username: user.username, email: user.email,
-                            photo_url: user.photo_url, created: user.created
-                        },
-                        status: 'ok',
-                        message: 'User deleted with success!'
-                    });
+                    log.info(message);
+                    return res.json({ user: user.toJSON(), status: 'ok', message: message });
                 } else {
                    return error.genericErrorHandler(res, err.status, err.code, err.message);
                 }

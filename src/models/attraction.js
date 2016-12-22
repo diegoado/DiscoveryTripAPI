@@ -11,12 +11,13 @@ var log = require(src + 'helpers/log')(module);
 // Get NodeGeocode using as provider the Google
 var geocoder = NodeGeocoder({provider: 'google'});
 
-// Custom validator function
-validator.extend('isNotEmpty', function (arr) { return arr.length >= 1 }, 'Array can not be empty');
+// Custom validator functions
+validator.extend(
+    'arrayLength', function (arr) { return arr.length >= 1 && arr.length < 11 }, 'Array cannot this length');
 
 // Load Models
 var User = require(src + 'models/user'),
-    Image = require(src + 'models/image');
+    Photo = require(src + 'models/photo');
 
 var Attraction = new Schema({
     userId: {
@@ -67,41 +68,38 @@ var Attraction = new Schema({
         },
 
         city: {
-            type: String,
-            select: false
+            type: String
         },
+
         streetName: {
-            type: String,
-            select: false
+            type: String
         },
 
         streetNumber: {
-            type: String,
-            select: false
+            type: String
         },
 
         zipcode: {
-            type: String,
-            select: false
+            type: String
         },
 
         country: {
-            type: String,
-            select: false
+            type: String
         },
 
         countryCode: {
-            type: String,
-            select: false
+            type: String
         }
     },
 
-    // images: [{
-    //     type: Schema.ObjectId,
-    //     ref: Image,
-    //     require: true,
-    //     validate: validator({validator: 'isNotEmpty', message: 'Tourist attractions must have at least one photo.'})
-    // }],
+    images: [{
+        type: Schema.ObjectId,
+        ref: Photo.schemaName,
+        require: true,
+        validate: validator({
+            validator: 'arrayLength', message: 'Tourist attractions must have between one and ten photos.'
+        })
+    }],
 
     approved: {
         type: Boolean,
@@ -154,6 +152,17 @@ Attraction.post('save', function (att) {
         }
     });
 });
+
+Attraction.methods.toJSON = function () {
+    return {
+        name        : this.name,
+        description : this.description,
+        localization: this.localization,
+        state       : this.state,
+        created     : this.created
+    }
+
+};
 
 
 module.exports = mongoose.model('Attraction', Attraction);

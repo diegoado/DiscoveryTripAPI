@@ -21,8 +21,7 @@ router.delete('/logout', passport.authenticate('bearer', { session: false }), fu
         }
         token.remove(function (err) {
             if (!err) {
-                return res.json({
-                    status: 'ok', message: 'User logout completed with success!'});
+                return res.json({ status: 'ok', message: 'User logout completed with success!' });
             } else {
                 return error.genericErrorHandler(res, err.status, err.code, err.message);
             }
@@ -42,9 +41,9 @@ router.post('/facebook/login', function(req, res, next) {
             if (!user) {
                 return error.genericErrorHandler(res, 400, 'user_error', info.message || 'Invalid Access Token');
             }
+
             res.statusCode = 200;
-            return res.json({
-                status: 'ok', message: 'User authentication by Facebook completed with success'});
+            return res.json({ status: 'ok', message: 'User authentication by Facebook completed with success' });
         }
     )(req, res, next)
 });

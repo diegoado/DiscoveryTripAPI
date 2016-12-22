@@ -82,6 +82,16 @@ User.methods.checkPassword = function(password) {
     return this.encryptPassword(password) === this.hashedPassword;
 };
 
+User.methods.toJSON = function () {
+    return {
+        id       : this.userId,
+        username : this.username,
+        email    : this.email,
+        photo_url: this.photo_url,
+        created  : this.created
+    }
+};
+
 User.plugin(findOrCreate);
 
 module.exports = mongoose.model('User', User);

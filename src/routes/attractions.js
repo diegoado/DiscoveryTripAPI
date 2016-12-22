@@ -23,18 +23,10 @@ router.post('/', passport.authenticate('bearer', { session: false }), function(r
 
     attraction.save(function (err) {
         if (!err) {
-            log.info('New Tourist Attraction created with success');
+            var message = 'New Tourist Attraction created with success';
 
-            return res.json({
-                attraction: {
-                    name: attraction.name, description: attraction.description,
-                    localization: attraction.localization,
-                    created: attraction.created,
-                    state: attraction.state
-                },
-                status: 'ok',
-                message: 'New Tourist Attraction created with success'
-            });
+            log.info(message);
+            return res.json({ attraction: attraction.toJSON(), status: 'ok', message: message });
         } else {
             if (err.name === 'ValidationError') {
                 return error.invalidFieldError(err, res);

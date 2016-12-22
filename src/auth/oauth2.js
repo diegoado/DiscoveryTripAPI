@@ -61,23 +61,21 @@ authServer.exchange(oauth2orize.exchange.password(function(client, username, pas
             return done(err);
         }
         if (!user) {
-            return done({
-                status: 404, code: 'user_error', message: 'User not found with username or email: ' + username
-            }, false);
+            return done(
+                { status: 404, code: 'user_error', message: 'User not found with username or email: ' + username },
+                false
+            );
         }
         if (!user.checkPassword(password)) {
-            return done({status: 401, code: 'user_error', message: 'Incorrect password'}, false);
+            return done({ status: 401, code: 'user_error', message: 'Incorrect password' }, false);
         }
-        generateTokens({userId: user, applicationId: client.applicationId}, done);
+        generateTokens({ userId: user, applicationId: client.applicationId }, done);
     });
 }));
 
 // Exchange username & password for access token by local strategy.
 authServer.exchange(oauth2orize.exchange.clientCredentials(function(user, scope, done) {
-    generateTokens({
-        userId: user,
-        applicationId: config.get('default:client:applicationId')
-    }, done);
+    generateTokens({ userId: user, applicationId: config.get('default:client:applicationId') }, done);
 }));
 
 // Exchange refreshToken for access token.
@@ -87,18 +85,14 @@ authServer.exchange(oauth2orize.exchange.refreshToken(function(client, refreshTo
             return done(err);
         }
         if (!token) {
-            return done({
-                status: 401, code: 'user_error', message: 'Invalid Refresh Token'
-            }, false);
+            return done({ status: 401, code: 'user_error', message: 'Invalid Refresh Token' }, false);
         }
         User.findById(token.userId, function(err, user) {
             if (err) {
                 return done(err);
             }
             if (!user) {
-                return done({
-                    status: 404, code: 'user_error' , message: 'User not found'
-                }, false);
+                return done({ status: 404, code: 'user_error' , message: 'User not found' }, false);
             }
             generateTokens({ userId: user, applicationId: client.applicationId }, done);
         });
