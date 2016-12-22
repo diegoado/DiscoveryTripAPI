@@ -13,6 +13,11 @@ var Photo = new Schema({
         type: Schema.ObjectId,
         ref: User.schemaName,
         required: true
+    },
+
+    data: {
+        type: Buffer,
+        required: true
     }
 
 }, {

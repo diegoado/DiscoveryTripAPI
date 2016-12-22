@@ -29,12 +29,12 @@ var Attraction = new Schema({
     name: {
         type: String,
         unique: true,
-        require: true
+        required: true
     },
 
     description: {
         type: String,
-        require: true
+        required: true
     },
 
     category: {
@@ -49,7 +49,7 @@ var Attraction = new Schema({
 
         longitude: {
             type: String,
-            require: true,
+            required: true,
             validate: validator({
                 validator: 'matches',
                 arguments: /^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/i,
@@ -59,7 +59,7 @@ var Attraction = new Schema({
 
         latitude: {
             type: String,
-            require: true,
+            required: true,
             validate: validator({
                 validator: 'matches',
                 arguments: /^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/i,
@@ -95,7 +95,7 @@ var Attraction = new Schema({
     images: [{
         type: Schema.ObjectId,
         ref: Photo.schemaName,
-        require: true,
+        required: true,
         validate: validator({
             validator: 'arrayLength', message: 'Tourist attractions must have between one and ten photos.'
         })

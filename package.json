@@ -29,6 +29,7 @@
     "mongoose": "~4.7.0",
     "mongoose-findorcreate": "^0.1.2",
     "mongoose-validator": "^1.2.5",
+    "multer": "^1.2.1",
     "nconf": "^0.6.x",
     "node-geocoder": "^3.15.1",
     "oauth2orize": "^1.0.x",
