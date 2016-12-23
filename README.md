@@ -247,7 +247,7 @@ Lists details of a user present in the application.
 
 * **URL**
 
-  `/api/users/:id`
+  `/api/users/`
 
 * **Method:**
 
@@ -257,7 +257,7 @@ Lists details of a user present in the application.
 
    *Required:*
  
-     * `id = [string]`
+     * `None`
     
 * **Success Response:**
   
@@ -282,7 +282,7 @@ Lists details of a user present in the application.
      curl -i \
        -H "Content-Type: application/json" \
        -H "Authorization: bearer <access_token>" \
-       http://localhost:8080/api/users/:id
+       http://localhost:8080/api/users/
    ```
 
 #### **Update a User**
@@ -290,13 +290,18 @@ Lists details of a user present in the application.
 Modifies details of the specified user in the mobile application. 
 Valid user with update privilege logged in to the application may modify the user details.
 
-   `POST`
+* **URL**
+
+  `/api/users/`
+
+* **Method:**
+
+   `PUT`
   
 * **URL Params**
 
    *Required:*
  
-     * `id = [string]`
      * `password = [string]`
 
    *Optional:*
@@ -339,7 +344,7 @@ Removes a user present in the application based on your ID.
 
 * **URL**
 
-  `/api/users/:id`
+  `/api/users/`
 
 * **Method:**
 
@@ -349,7 +354,6 @@ Removes a user present in the application based on your ID.
 
    *Required:*
  
-     * `id = [string]`
      * `password = [string]`
     
 * **Success Response:**

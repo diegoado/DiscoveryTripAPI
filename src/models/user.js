@@ -4,6 +4,14 @@ var mongoose = require('mongoose'),
     crypto = require('crypto'),
     Schema = mongoose.Schema;
 
+// Find project working directory
+var src = process.cwd() + '/src/';
+
+var log = require(src + 'helpers/log')(module);
+
+var AccessToken = require(src + 'models/accessToken');
+
+
 /* User: Who factor uses the mobile application.
  *
  * A user is who has a name, password hash and a salt.
@@ -23,8 +31,7 @@ var User = new Schema({
     },
 
     socialId: {
-        type: String,
-        select: false
+        type: String
     },
 
     photo_url: {
@@ -33,22 +40,16 @@ var User = new Schema({
     },
 
     hashedPassword: {
-        type: String,
-        select: false
+        type: String
     },
 
     salt: {
-        type: String,
-        select: false
+        type: String
     },
 
+    //TODO(diegoado): Create a method to decrypt the hashedPassword
     _plainPassword: {
         type: String,
-        select: false
-    },
-
-    socialAuth: {
-        type: Boolean,
         select: false
     },
 
@@ -63,6 +64,11 @@ var User = new Schema({
 User.virtual('userId')
     .get(function () {
         return this.id;
+    });
+
+User.virtual('socialAuth')
+    .get(function () {
+       return this.socialId;
     });
 
 User.virtual('password')
@@ -96,7 +102,19 @@ User.methods.toJSON = function () {
     }
 };
 
+// Create indexes
 User.index({socialId: 1}, {unique: true, sparse: true});
+
+// Register cascading actions
+User.post('remove', function (user) {
+    AccessToken.findOne({ userId: user.userId }, function (err, token) {
+        if (err) {
+            log.warn('Fail to find user access token')
+        } else if (token) {
+            token.remove()
+        }
+    }).exec();
+});
 
 User.plugin(findOrCreate);
 

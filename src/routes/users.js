@@ -6,30 +6,11 @@ var passport = require('passport'),
 var src = process.cwd() + '/src/';
 
 var log = require(src + 'helpers/log')(module),
-    mailer = require(src + 'helpers/mailer'),
     error = require(src + 'helpers/error');
 
 // Load Models
 var User = require(src + 'models/user');
 
-router.post('/pwd_reminder', function (req, res) {
-    User.findOne({ email: req.body.email.toLowerCase() }, '+_plainPassword', function (err, user) {
-        if (!user) {
-            return error.genericErrorHandler(res, 404, 'User not found!');
-        } else if (err) {
-            return error.genericErrorHandler(res, err.status, err.code, err.message);
-        } else  {
-            mailer.isRunning()
-                .then(function () {
-                    return mailer.sendPwdReminder(res, user);
-                })
-                .catch(function (err) {
-                    var message = "Server is not  enabled to send password reminder messages to users. Error caused by: " + err.message;
-                    return error.genericErrorHandler(res, err.statusCode, 'server_error', message);
-                });
-        }
-    })
-});
 
 //TODO(diegoado): Validate the required params before create a local user
 router.post('/', function(req, res) {
@@ -56,40 +37,30 @@ router.post('/', function(req, res) {
     });
 });
 
-router.get('/:id', passport.authenticate('bearer', { session: false }), function(req, res) {
-    User.findById(req.params.id, function (err, user) {
-        if (!user) {
-            return error.genericErrorHandler(res, 404, 'User not found!');
-        } else if (err) {
-            return error.genericErrorHandler(res, err.status, err.code, err.message);
-        } else {
-            var message = 'User found with success';
+router.get('/', passport.authenticate('bearer', { session: false }), function(req, res) {
+    var message = 'User found with success';
 
-            log.info(message);
-            return res.json({ user: user.toJSON(), status: 'ok', message: message });
-        }
-    });
+    log.info(message);
+    return res.json({ user: req.user.toJSON(), status: 'ok', message: message });
+
 });
 
-router.put('/:id', passport.authenticate('bearer', { session: false }), function (req, res) {
-    User.findById(req.params.id, function (err, user) {
+router.put('/', passport.authenticate('bearer', { session: false }), function (req, res) {
+    if (!req.user.checkPassword(req.body.password)) {
+        return error.genericErrorHandler(res, 400, 'user_error', 'Password is wrong!');
+    } else {
+        req.user.username = req.body.username            || req.user.username;
+        req.user.password = req.body.new_password        || req.user.password;
+        req.user.email    = req.body.email.toLowerCase() || req.user.email;
+        req.user.picture  = req.body.picture             || req.user.picture;
 
-        if (!user) {
-            return error.genericErrorHandler(res, 404, 'user_error', 'User not found!');
-        }
-
-        user.username = req.body.username;
-        user.password = req.body.password;
-        user.email = req.body.email.toLowerCase();
-        user.picture = req.body.picture;
-
-        user.save(function (err) {
+        req.user.save(function (err) {
 
             if (!err) {
                 var message = 'User updated with success!';
 
                 log.info(message);
-                return res.json({ user: user.toJSON(), status: 'ok', message: message });
+                return res.json({user: req.user.toJSON(), status: 'ok', message: message});
             } else {
                 if (err.name === 'ValidationError') {
                     return error.invalidFieldError(err, res);
@@ -98,29 +69,25 @@ router.put('/:id', passport.authenticate('bearer', { session: false }), function
                 }
             }
         });
-    });
+    }
 });
 
-router.delete('/:id', passport.authenticate('bearer', { session: false }), function (req, res) {
+router.delete('/', passport.authenticate('bearer', { session: false }), function (req, res) {
+    if (!req.user.checkPassword(req.body.password)) {
+        return error.genericErrorHandler(res, 400, 'user_error', 'Password is wrong!');
+    } else {
+        req.user.remove(function (err) {
 
-    User.findById(req.params.id, function (err, user) {
+            if (!err) {
+                var message = 'User deleted with success!';
 
-        if (!user) {
-            return error.genericErrorHandler(res, 404, 'user_error', 'User not found!');
-        } else {
-            user.remove(function (err) {
-
-                if (!err) {
-                    var message = 'User deleted with success!';
-
-                    log.info(message);
-                    return res.json({ user: user.toJSON(), status: 'ok', message: message });
-                } else {
-                   return error.genericErrorHandler(res, err.status, err.code, err.message);
-                }
-            });
-        }
-    });
+                log.info(message);
+                return res.json({ user: req.user.toJSON(), status: 'ok', message: message });
+            } else {
+               return error.genericErrorHandler(res, err.status, err.code, err.message);
+            }
+        });
+    }
 });
 
 module.exports = router;

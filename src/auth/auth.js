@@ -18,7 +18,7 @@ var User = require(src + 'models/user'),
 
 passport.use(new LocalStrategy(
     function(username, password, done) {
-        User.findOne( {$or: [{ username: username }, { email: username }]}, '+hashedPassword +salt', function (err, user) {
+        User.findOne( {$or: [{ username: username }, { email: username }]}, function (err, user) {
             if (err) {
                 return done(err);
             }
