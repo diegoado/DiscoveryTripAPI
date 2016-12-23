@@ -44,7 +44,7 @@ router.get('/', passport.authenticate('bearer', { session: false }), function(re
 });
 
 router.put('/', passport.authenticate('bearer', { session: false }), function (req, res) {
-    if (user.socialAuth) {
+    if (req.user.socialAuth) {
         return error.genericErrorHandler(res, 400, 'user_error', 'Service available only for local users');
     } else if (!req.user.checkPassword(req.body.password)) {
         return error.genericErrorHandler(res, 400, 'user_error', 'Password is wrong!');
