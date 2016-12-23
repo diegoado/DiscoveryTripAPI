@@ -12,9 +12,9 @@ Document Version: v1.0
     - [Logout](#logout)
 - [Users](#users)
     - [Create](#create-a-user)
-    - [Remove](#remove-a-user)
+    - [Read](#read-a-user)
     - [Update](#update-a-user)
-    - [Get](#get-a-user)
+    - [Delete](#delete-a-user)
 - [Errors](#errors)
 
 ## Overview
@@ -241,7 +241,7 @@ The user email is validated to avoid creating duplicates in the application.
        http://localhost:8080/api/users
    ```
 
-#### **Get a User**
+#### **Read a User**
 
 Lists details of a user present in the application.
 
@@ -338,7 +338,7 @@ Valid user with update privilege logged in to the application may modify the use
        http://localhost:8080/api/users/:id
    ```
 
-#### **Remove a User**
+#### **Delete a User**
 
 Removes a user present in the application based on your ID.
 
