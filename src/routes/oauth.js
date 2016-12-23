@@ -16,8 +16,8 @@ var AccessToken = require(src + 'models/accessToken'),
 
 router.post('/login', oauth2.token);
 
-router.post('/pwd_reminder', function (req, res) {
-    User.findOne({ email: req.body.email.toLowerCase() }, '+_plainPassword', function (err, user) {
+router.post('/login/pwd_reminder', function (req, res) {
+    User.findOne({ email: req.body.email.toLowerCase() }, function (err, user) {
 
         if (err) {
             return error.genericErrorHandler(res, err.status, err.code, err.message);

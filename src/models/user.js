@@ -48,10 +48,10 @@ var User = new Schema({
     },
 
     //TODO(diegoado): Create a method to decrypt the hashedPassword
-    _plainPassword: {
-        type: String,
-        select: false
-    },
+    // _plainPassword: {
+    //     type: String,
+    //     select: false
+    // },
 
     created: {
         type: Date,
@@ -73,19 +73,30 @@ User.virtual('socialAuth')
 
 User.virtual('password')
     .set(function(password) {
-        this._plainPassword = password;
+        // this._plainPassword = password;
         this.salt = crypto.randomBytes(32).toString('hex');
         // More secure
         // this.salt = crypto.randomBytes(128).toString('hex');
         this.hashedPassword = this.encryptPassword(password);
     })
-    .get(function() { return this._plainPassword; });
+    .get(function() { return this.decryptPassword(); });
 
 
 User.methods.encryptPassword = function(password) {
-    return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
+    var cipher  = crypto.createCipher('aes-256-cbc-hmac-sha1', this.salt),
+        crypted = cipher.update(password, 'utf8', 'hex');
+
+    return crypted + cipher.final('hex');
     // More secure
+    // return crypto.createHmac('sha1', this.salt).update(password).digest('hex');
     // return crypto.pbkdf2Sync(password, this.salt, 10000, 512).toString('hex');
+};
+
+User.methods.decryptPassword = function () {
+    var decipher = crypto.createDecipher('aes-256-cbc-hmac-sha1', this.salt),
+        dec      = decipher.update(this.hashedPassword, 'hex', 'utf8');
+
+    return dec + decipher.final('utf8');
 };
 
 User.methods.checkPassword = function(password) {
