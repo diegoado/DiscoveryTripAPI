@@ -92,7 +92,7 @@ var Attraction = new Schema({
         }
     },
 
-    images: [{
+    photos: [{
         type: Schema.ObjectId,
         ref: Photo.schemaName,
         required: true,

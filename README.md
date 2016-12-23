@@ -7,6 +7,7 @@ Document Version: v1.0
 - [Overview](#overview)
 - [Auth Service](#auth-service)
     - [Login](#login)
+    - [Password Reminder](#password-reminder)
     - [Session Refresh](#session-refresh)
     - [Logout](#logout)
 - [Users](#users)
@@ -68,7 +69,44 @@ Authenticate user with specified credentials. Username or Password and password 
        -X POST -d '{"grant_type": "client_credentials", "username": <USERNAME>, "password": <PASSWORD>}' \
        http://localhost:8080/api/login
    ```
+
+#### **Password Reminder**
+
+Send an e-mail with the user's password, if the user registers in the application by local strategy.
+
+* **URL**
+
+  `/api/login/pwd_reminder`
+
+* **Method:**
+
+   `POST`
   
+* **URL Params**
+
+   *Required:*
+     
+     * `email = [string]`
+    
+* **Success Response:**
+  
+  * *Code:* 200
+    
+   ```json
+     {
+       "status": "ok",
+       "message": "Password reminder sent to user <USERNAME> with success!"
+     }
+   ```
+* **Sample Call:**
+
+   ```bash
+     curl -i \
+       -H "Content-Type: application/json" \
+       -X POST -d '{"email": "example@example.com"}' \
+       http://localhost:8080/api/login/pwd_reminder
+   ```
+
 #### **Session Refresh**
 
 Refresh the user access token. Refresh token, application id and secret key as input in request body.

@@ -36,5 +36,14 @@
     "google": {
       "clientID": "125864993307-uct771sru27ies9gfkp1t027osf1hcbj.apps.googleusercontent.com"
     }
+  },
+  "smtpConfig": {
+    "host": "smtp-mail.outlook.com",
+    "port": 587,
+    "secure": false,
+    "auth": {
+      "user": "discovery.trip-app@hotmail.com",
+      "pass": "discoveryTrip"
+    }
   }
 }

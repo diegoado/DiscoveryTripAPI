@@ -24,7 +24,6 @@ var User = new Schema({
 
     socialId: {
         type: String,
-        unique: true,
         select: false
     },
 
@@ -39,6 +38,11 @@ var User = new Schema({
     },
 
     salt: {
+        type: String,
+        select: false
+    },
+
+    _plainPassword: {
         type: String,
         select: false
     },
@@ -91,6 +95,8 @@ User.methods.toJSON = function () {
         created  : this.created
     }
 };
+
+User.index({socialId: 1}, {unique: true, sparse: true});
 
 User.plugin(findOrCreate);
 

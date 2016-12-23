@@ -17,11 +17,16 @@ var api = require('./routes/api'),
     oauth = require('./routes/oauth'),
     attractions = require('./routes/attractions');
 
+// view engine setup
+// app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
+
 app.use(cookieParser());
 app.use(methodOverride());  // HTTP PUT and DELETE support
 app.use(bodyParser.json()); // JSON parsing
 app.use(passport.initialize());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Register routes
 app.use('/', api);
