@@ -11,8 +11,6 @@ var log = require(src + 'helpers/log')(module),
 // Load Models
 var User = require(src + 'models/user');
 
-
-//TODO(diegoado): Validate the required params before create a local user
 router.post('/', function(req, res) {
     var user = new User({
         username : req.body.username,
@@ -46,7 +44,9 @@ router.get('/', passport.authenticate('bearer', { session: false }), function(re
 });
 
 router.put('/', passport.authenticate('bearer', { session: false }), function (req, res) {
-    if (!req.user.checkPassword(req.body.password)) {
+    if (user.socialAuth) {
+        return error.genericErrorHandler(res, 400, 'user_error', 'Service available only for local users');
+    } else if (!req.user.checkPassword(req.body.password)) {
         return error.genericErrorHandler(res, 400, 'user_error', 'Password is wrong!');
     } else {
         req.user.username = req.body.username            || req.user.username;
