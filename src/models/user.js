@@ -47,12 +47,6 @@ var User = new Schema({
         type: String
     },
 
-    //TODO(diegoado): Create a method to decrypt the hashedPassword
-    // _plainPassword: {
-    //     type: String,
-    //     select: false
-    // },
-
     created: {
         type: Date,
         default: Date.now
