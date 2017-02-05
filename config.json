@@ -45,5 +45,8 @@
       "user": "discovery.trip-app@hotmail.com",
       "pass": "discoveryTrip"
     }
+  },
+  "images": {
+    "mimetype": ["image/jpg", "image/jpeg", "image/png"]
   }
 }

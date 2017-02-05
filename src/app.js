@@ -23,9 +23,9 @@ app.set('view engine', 'ejs');
 
 app.use(cookieParser());
 app.use(methodOverride());  // HTTP PUT and DELETE support
-app.use(bodyParser.json()); // JSON parsing
 app.use(passport.initialize());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({limit: '100mb'})); // JSON parsing
+app.use(bodyParser.urlencoded({ limit: '100mb', extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Register routes
