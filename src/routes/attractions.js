@@ -66,8 +66,8 @@ router.post('/', upload.array('photos', 10), passport.authenticate('bearer', { s
             latitude: req.body.latitude, longitude: req.body.longitude
         }
     });
-    attraction.save(function (err) {
-        if (!err) {
+    attraction.save()
+        .then(function()  {
             // Populate the attraction photos
             _.each(photos, function (photo) {
                 photo.save()
@@ -78,14 +78,20 @@ router.post('/', upload.array('photos', 10), passport.authenticate('bearer', { s
 
             log.info(message);
             return res.json({ attraction: attraction.toJSON(), status: 'ok', message: message });
-        } else {
+        })
+        .catch(function(err) {
             if (err.name === 'ValidationError') {
                 return error.invalidFieldError(err, res);
             } else {
                 return error.genericErrorHandler(res, err.status, err.code, err.message);
             }
-        }
-    });
+        })
+        .then(function() {
+            _.each(req.files, function (file) {
+                fs.unlinkSync(file.path)
+            });
+        });
+
 });
 
 module.exports = router;

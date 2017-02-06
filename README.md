@@ -444,7 +444,8 @@ The latitude and longitude is validated to avoid creating duplicates in the appl
     curl -i -X POST  \
       -H "Content-Type: multipart/form-data" \
       -H "Authorization: bearer accessToken" \
-      -F "name=attraction name" -F "description=some description to new attraction" \ 
+      -F "name=attraction name" \
+      -F "description=some description to new attraction" \ 
       -F "latitude=XX.XXX" -F "longitude=X.XXX"  \
       -F "photos=@path_to_image1" \
       -F "photos=@path_to_imageN" \
