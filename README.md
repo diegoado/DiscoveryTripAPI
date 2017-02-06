@@ -15,6 +15,8 @@ Document Version: v1.0
     - [Read](#read-a-user)
     - [Update](#update-a-user)
     - [Delete](#delete-a-user)
+- [Attractions](#attractions)
+    -[Create](#create-a-attraction)
 - [Errors](#errors)
 
 ## Overview
@@ -61,6 +63,7 @@ Authenticate user with specified credentials. Username or Password and password 
        "token_type": "Bearer"
      }
    ```
+   
 * **Sample Call:**
 
    ```bash
@@ -98,6 +101,7 @@ Send an e-mail with the user's password, if the user registers in the applicatio
        "message": "Password reminder sent to user <USERNAME> with success!"
      }
    ```
+   
 * **Sample Call:**
 
    ```bash
@@ -142,6 +146,7 @@ Refresh the user access token. Refresh token, application id and secret key as i
        "token_type": "Bearer"
      }
    ```
+   
 * **Sample Call:**
 
    ```bash
@@ -177,6 +182,7 @@ Remove User session by invoking an explicit logout. Session token to be provided
        "message": "User logout completed with success!"
      }
    ```
+   
 * **Sample Call:**
 
    ```bash
@@ -276,6 +282,7 @@ Lists details of a user present in the application.
      "message": "User found with success!"
    }
   ```
+  
 * **Sample Call:**
 
    ```bash
@@ -373,6 +380,7 @@ Removes a user present in the application based on your ID.
      "message": "User deleted with success!"
    }
   ```
+  
 * **Sample Call:**
 
    ```bash
@@ -382,7 +390,68 @@ Removes a user present in the application based on your ID.
        -X DELETE -d '{"password": <PASSWORD>}' \
        http://localhost:8080/api/users/:id
    ```
-   
+
+## Attractions
+
+#### **Create a Attraction**
+
+Adds a new tourist attraction to the mobile application. 
+The latitude and longitude is validated to avoid creating duplicates in the application.
+
+* **URL**
+
+  `/api/attaction/`
+
+* **Method:**
+
+   `POST`
+  
+* **URL Params**
+
+   *Required:*
+ 
+     * `name        = [string]`
+     * `description = [string]`
+     * `latitude    = [string]  <- In ISO 6709 format`
+     * `longitude   = [string]  <- In ISO 6709 format`
+     * `photos      = [blob]    <- At least one photo and a maximum of 10 photos`
+    
+* **Success Response:**
+  
+  * *Code:* 200
+    
+  ```json
+   {
+     "attraction": { 
+       "name": "attraction name", 
+       "description": "some description to new attraction",
+       "localization": { 
+         "longitude": "X.XXX", 
+         "latitude": "XX.XXX" 
+       },
+       "photos":["photo_id1", "photo_id2", "..."],
+       "state":"In Approval",
+       "created":"YYYY-MM-DDThh:mm:ss.sssZ"
+     },
+     "status":"ok",
+     "message":"New Tourist Attraction created with success"
+   }
+  ```
+
+* **Sample Call:**
+
+  ```bash
+    curl -i -X POST  \
+      -H "Content-Type: multipart/form-data" \
+      -H "Authorization: bearer accessToken" \
+      -F "name=attraction name" -F "description=some description to new attraction" \ 
+      -F "latitude=XX.XXX" -F "longitude=X.XXX"  \
+      -F "photos=@path_to_image1" \
+      -F "photos=@path_to_imageN" \
+      http://localhost:8080/api/attractions
+
+  ```
+
 ## Errors
 
 All server errors were normalized according to the examples below. 

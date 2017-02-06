@@ -1,6 +1,7 @@
 var mongoose = require('mongoose'),
     NodeGeocoder = require('node-geocoder'),
     validator = require('mongoose-validator'),
+    deepPopulate = require('mongoose-deep-populate')(mongoose),
     Schema = mongoose.Schema;
 
 // Find project working directory
@@ -11,13 +12,12 @@ var log = require(src + 'helpers/log')(module);
 // Get NodeGeocode using as provider the Google
 var geocoder = NodeGeocoder({provider: 'google'});
 
-// Custom validator functions
-validator.extend(
-    'arrayLength', function (arr) { return arr.length >= 1 && arr.length < 11 }, 'Array cannot this length');
-
 // Load Models
 var User = require(src + 'models/user'),
     Photo = require(src + 'models/photo');
+
+// Custom validator functions
+validator.extend('chkArr', function (arr) { return arr.length >= 1 && arr.length <= 10 }, 'Array size is invalid');
 
 var Attraction = new Schema({
     userId: {
@@ -97,7 +97,8 @@ var Attraction = new Schema({
         ref: Photo.schemaName,
         required: true,
         validate: validator({
-            validator: 'arrayLength', message: 'Tourist attractions must have between one and ten photos.'
+            validator: 'chkArr',
+            message: 'Tourist attractions must have at least one photo and in the picture 10 photos!'
         })
     }],
 
@@ -161,8 +162,14 @@ Attraction.methods.toJSON = function () {
         state       : this.state,
         created     : this.created
     }
-
 };
 
+Attraction.plugin(deepPopulate, {
+    populate: {
+        'photos': {
+            select: 'name'
+        }
+    }
+});
 
 module.exports = mongoose.model('Attraction', Attraction);
