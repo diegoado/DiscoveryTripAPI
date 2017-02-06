@@ -16,7 +16,7 @@ Document Version: v1.0
     - [Update](#update-a-user)
     - [Delete](#delete-a-user)
 - [Attractions](#attractions)
-    -[Create](#create-a-attraction)
+    - [Create](#create-a-attraction)
 - [Errors](#errors)
 
 ## Overview

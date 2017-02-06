@@ -92,15 +92,17 @@ var Attraction = new Schema({
         }
     },
 
-    photos: [{
-        type: Schema.ObjectId,
-        ref: Photo.schemaName,
+    photos: {
+        type: [{
+            type: Schema.ObjectId,
+            ref: Photo.schemaName
+        }],
         required: true,
         validate: validator({
             validator: 'chkArr',
             message: 'Tourist attractions must have at least one photo and in the picture 10 photos!'
         })
-    }],
+    },
 
     approved: {
         type: Boolean,
