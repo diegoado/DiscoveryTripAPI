@@ -20,7 +20,7 @@ var User = require(src + 'models/user'),
 validator.extend('chkArr', function (arr) { return arr.length >= 1 && arr.length <= 10 }, 'Array size is invalid');
 
 var Attraction = new Schema({
-    userId: {
+    ownerId: {
         type: Schema.ObjectId,
         ref: User.schemaName,
         required: true
@@ -161,6 +161,7 @@ Attraction.methods.toJSON = function () {
         name        : this.name,
         description : this.description,
         localization: this.localization,
+        photos      : this.photos,
         state       : this.state,
         created     : this.created
     }

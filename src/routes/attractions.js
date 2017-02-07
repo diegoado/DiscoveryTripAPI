@@ -1,7 +1,5 @@
 var passport = require('passport'),
     express = require('express'),
-    crypto = require('crypto'),
-    multer = require('multer'),
     _ = require("underscore"),
     fs = require('fs');
 
@@ -12,32 +10,15 @@ var router = express.Router();
 var src = process.cwd() + '/src/';
 
 var log = require(src + 'helpers/log')(module),
-    config = require(src + 'helpers/conf'),
+    multer = require(src + 'helpers/multer'),
     error = require(src + 'helpers/error');
 
 // Load Models
 var Attraction = require(src + 'models/attraction'),
     Photo = require(src + 'models/photo');
 
-var upload = multer({dest: src + '../public/images/',
-    limits: {
-        fields: 10,
-        fieldSize: 2097152,
-        files: 10,
-        fileSize : 5242880
-    },
-    rename: function(fieldname, filename) {
-        return filename;
-    },
-    onFileUploadStart: function(file) {
-        if(config.get('images:mimetype').indexOf(file.mimetype) < 0) {
-            return false;
-        }
-    },
-    inMemory: true
-});
 
-router.post('/', upload.array('photos', 10), passport.authenticate('bearer', { session: false }), function(req, res) {
+router.post('/', multer.array('photos', 10), passport.authenticate('bearer', { session: false }), function(req, res) {
     var photos = [];
 
     _.each(req.files, function (file) {
@@ -57,7 +38,7 @@ router.post('/', upload.array('photos', 10), passport.authenticate('bearer', { s
         }
     });
     var attraction = new Attraction({
-        userId:      req.user,
+        ownerId:   req.user,
         name:        req.body.name,
         description: req.body.description,
         category:    req.body.category,
@@ -72,8 +53,6 @@ router.post('/', upload.array('photos', 10), passport.authenticate('bearer', { s
             _.each(photos, function (photo) {
                 photo.save()
             });
-            Attraction.deepPopulate('photos');
-
             var message = 'New Tourist Attraction created with success';
 
             log.info(message);
@@ -91,7 +70,6 @@ router.post('/', upload.array('photos', 10), passport.authenticate('bearer', { s
                 fs.unlinkSync(file.path)
             });
         });
-
 });
 
 module.exports = router;

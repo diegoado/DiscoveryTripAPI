@@ -15,6 +15,7 @@ var log = require('./helpers/log')(module);
 var api = require('./routes/api'),
     users = require('./routes/users'),
     oauth = require('./routes/oauth'),
+    events = require('./routes/events'),
     attractions = require('./routes/attractions');
 
 // view engine setup
@@ -33,6 +34,7 @@ app.use('/', api);
 app.use('/api', api);
 app.use('/api', oauth);
 app.use('/api/users', users);
+app.use('/api/attractions', events);
 app.use('/api/attractions', attractions);
 
 // Catch 404 and forward to error handler

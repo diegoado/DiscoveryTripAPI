@@ -17,6 +17,8 @@ Document Version: v1.0
     - [Delete](#delete-a-user)
 - [Attractions](#attractions)
     - [Create](#create-a-attraction)
+- [Events](#events)
+    - [Create](#create-a-event)
 - [Errors](#errors)
 
 ## Overview
@@ -450,7 +452,73 @@ The latitude and longitude is validated to avoid creating duplicates in the appl
       -F "photos=@path_to_image1" \
       -F "photos=@path_to_imageN" \
       http://localhost:8080/api/attractions
+  ```
 
+## Events
+
+#### **Create a Event**
+
+* **URL**
+
+  `/api/attaction/:id/events`
+
+* **Method:**
+
+   `POST`
+  
+* **URL Params**
+
+   *Required:*
+ 
+     * `name        = [string]`
+     * `description = [string]`
+     * `endData     = [string]  <- In ISO Date format`
+   
+   *Optional:*
+   
+     * `photo     = [file]`
+     * `kind      = [String]     <- Public|Private`
+     * `price     = [Number]`
+     * `keywords  = [Array of Strings]`
+     * `startDate = [String]     <- In ISO Date format`
+    
+* **Success Response:**
+  
+  * *Code:* 200
+    
+  ```json
+   {
+     "event": { 
+       "name": "attraction name", 
+       "description": "some description to new event",
+       "attraction": "attraction_id",
+       "photo": "photo_id",
+       "kind": "public",
+       "price": "0",
+       "keywords": ["keyword1", "...", "keywordN"],
+       "startDate": "YYYY-MM-DDThh:mm:ss.sssZ",
+       "endDate": "YYYY-MM-DDThh:mm:ss.sssZ",
+       "created":"YYYY-MM-DDThh:mm:ss.sssZ"
+     },
+     "status":"ok",
+     "message":"New Event created with success"
+   }
+  ```
+
+* **Sample Call:**
+
+  ```bash
+    curl -i -X POST \
+      -H "Content-Type: multipart/form-data" \
+      -H "Authorization: bearer accessToken" \
+      -F "name= event name" \
+      -F "description=some description to new event" \ 
+      -F "keywords[]=keyword1" \
+      -F "keywords[]=keywordN" \
+      -F "startDate=YYYY-MM-DDThh:mm:ss.sssZ" \
+      -F "endDate=YYYY-MM-DDThh:mm:ss.sssZ" \
+      -F "photo=@path_to_eventImage" \ 
+      http://localhost:8080/api/attractions/:attraction_id/events
   ```
 
 ## Errors
