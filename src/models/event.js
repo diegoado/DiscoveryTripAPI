@@ -1,6 +1,5 @@
 var mongoose = require('mongoose'),
     validator = require('mongoose-validator'),
-    deepPopulate = require('mongoose-deep-populate')(mongoose),
     Schema = mongoose.Schema;
 
 // Find project working directory
@@ -10,8 +9,7 @@ var log = require(src + 'helpers/log')(module);
 
 // Load Models
 var User = require(src + 'models/user'),
-    Photo = require(src + 'models/photo'),
-    Attraction = require(src + 'models/attraction');
+    Photo = require(src + 'models/photo');
 
 // Custom validator functions
 validator.extend('chkDates', function (inputDate) { return this.startDate < inputDate }, 'Invalid input date');
@@ -19,8 +17,8 @@ validator.extend('chkDates', function (inputDate) { return this.startDate < inpu
 
 var Event = new Schema({
     ownerId: {
-        type: Schema.ObjectId,
-        ref: User.schemaName,
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
 
@@ -35,22 +33,16 @@ var Event = new Schema({
         required: true
     },
 
-    attraction: {
-        type: Schema.ObjectId,
-        ref: Attraction.schemaName,
-        required: true
-    },
-
     guests: {
         type: [{
-            type: Schema.ObjectId,
-            ref: User.schemaName
+            type: Schema.Types.ObjectId,
+            ref: 'User'
         }]
     },
 
     photo: {
-        type: Schema.ObjectId,
-        ref: Photo.schemaName
+        type: Schema.Types.ObjectId,
+        ref: 'Photo'
     },
 
     kind: {
@@ -112,15 +104,5 @@ Event.methods.toJSON = function () {
     }
 };
 
-Event.plugin(deepPopulate, {
-    populate: {
-        'photo': {
-            select: 'name'
-        },
-        'attraction': {
-            select: 'name'
-        }
-    }
-});
 
 module.exports = mongoose.model('Event', Event);

@@ -34,7 +34,8 @@
       "profileFields": ["id", "name", "displayName", "link", "gender", "photos", "emails"]
     },
     "google": {
-      "clientID": "125864993307-uct771sru27ies9gfkp1t027osf1hcbj.apps.googleusercontent.com"
+      "clientID": "125864993307-uct771sru27ies9gfkp1t027osf1hcbj.apps.googleusercontent.com",
+      "apiKey": "AIzaSyB5cwFIEUcMeZVsPirKX504-FLXv4l9KLc"
     }
   },
   "smtpConfig": {

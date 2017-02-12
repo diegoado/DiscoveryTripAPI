@@ -99,7 +99,7 @@ User.methods.checkPassword = function(password) {
 
 User.methods.toJSON = function () {
     return {
-        id       : this.userId,
+        _id       : this.userId,
         username : this.username,
         email    : this.email,
         photo_url: this.photo_url,

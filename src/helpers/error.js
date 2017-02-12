@@ -29,3 +29,11 @@ exports.genericErrFn = function (cb, err) {
         return cb(err);
     }
 };
+
+exports.resultError = function (res, err) {
+    if (err.name === 'ValidationError') {
+        return exports.invalidFieldError(err, res);
+    } else {
+        return exports.genericErrorHandler(res, err.status, err.code, err.message);
+    }
+};

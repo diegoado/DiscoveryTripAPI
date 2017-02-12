@@ -24,8 +24,8 @@ var Photo = new Schema({
 
     size: {
         type: Number,
-        required: true,
-        validate: validator({ validator: 'chkSize', message: 'The Photo size is too large!' })
+        required: true
+        // validate: validator({ validator: 'chkSize', message: 'The Photo size is too large!' })
     },
 
     mimetype: {
@@ -43,10 +43,5 @@ var Photo = new Schema({
     versionKey: false
 });
 
-Photo.methods.hasError = function() {
-    this.validate(function (err) {
-       return err;
-    });
-};
 
 module.exports = mongoose.model('Photo', Photo);

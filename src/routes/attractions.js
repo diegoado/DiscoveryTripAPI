@@ -15,61 +15,89 @@ var log = require(src + 'helpers/log')(module),
 
 // Load Models
 var Attraction = require(src + 'models/attraction'),
-    Photo = require(src + 'models/photo');
+    Photo = require(src + 'models/photo'),
+    Localization = require(src + 'models/localization');
 
 
 router.post('/', multer.array('photos', 10), passport.authenticate('bearer', { session: false }), function(req, res) {
     var photos = [];
 
     _.each(req.files, function (file) {
-        var photo = new Photo({
-            name: file.originalname,
-            data: fs.readFileSync(file.path),
-            size: file.size,
-            encoding: file.encoding,
-            mimetype: file.mimetype
-        }),
-            err = photo.hasError();
-
-        if (!err) {
-            photos.push(photo);
-        } else {
-            log.warn('Cannot save photo: %s. Error caused by: %s', file.originalname, err.message);
-        }
+        photos.push(
+            new Photo({
+                name: file.originalname,
+                data: fs.readFileSync(file.path),
+                size: file.size, encoding: file.encoding, mimetype: file.mimetype
+            })
+        )
     });
-    var attraction = new Attraction({
-        ownerId:   req.user,
-        name:        req.body.name,
-        description: req.body.description,
-        category:    req.body.category,
-        photos:      photos,
-        localization: {
-            latitude: req.body.latitude, longitude: req.body.longitude
-        }
-    });
-    attraction.save()
-        .then(function()  {
-            // Populate the attraction photos
-            _.each(photos, function (photo) {
-                photo.save()
-            });
-            var message = 'New Tourist Attraction created with success';
 
-            log.info(message);
-            return res.json({ attraction: attraction.toJSON(), status: 'ok', message: message });
+    Photo.insertMany(photos)
+        .then(function (photos) {
+            saveLocalization(req, res, photos);
         })
-        .catch(function(err) {
-            if (err.name === 'ValidationError') {
-                return error.invalidFieldError(err, res);
-            } else {
-                return error.genericErrorHandler(res, err.status, err.code, err.message);
-            }
+        .catch(function (err) {
+            error.resultError(res, err);
         })
-        .then(function() {
+        .then(function () {
             _.each(req.files, function (file) {
                 fs.unlinkSync(file.path)
-            });
-        });
+        })
+    });
+    function saveLocalization(req, res, photos) {
+        new Localization({
+            latitude: req.body.latitude, longitude: req.body.longitude
+        }).save()
+            .then(function (localization) {
+                saveAttraction(req, res, photos, localization);
+            })
+            .catch(function (err) {
+                _.each(photos, function (photo) {
+                    photo.remove()
+                });
+                error.resultError(res, err);
+            })
+    }
+    function saveAttraction(req, res, photos, localization) {
+        new Attraction({
+            ownerId:      req.user,
+            name:         req.body.name,
+            description:  req.body.description,
+            category:     req.body.category,
+            photos:       photos,
+            localization: localization
+        }).save()
+            .then(function (attraction) {
+                var message = 'New Tourist Attraction created with success';
+
+                log.info(message);
+                return res.json({attraction: attraction.toSortJson(), status: 'ok', message: message});
+            })
+            .catch(function (err) {
+                _.each(photos, function (photo) {
+                    photo.remove()
+                });
+                localization.remove();
+                error.resultError(res, err);
+            })
+    }
+});
+
+router.get('/:id', passport.authenticate('bearer', { session: false }), function(req, res) {
+    Attraction.findById(req.params.id)
+        .populate('localization')
+        .exec(function (err, attraction) {
+            if (err) {
+
+            } else if(!attraction) {
+
+            } else {
+                var message = 'Attraction found with success';
+
+                log.info(message);
+                return res.json({attraction: attraction.toJSON(), status: 'ok', message: message});
+            }
+    });
 });
 
 module.exports = router;

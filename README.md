@@ -402,7 +402,7 @@ The latitude and longitude is validated to avoid creating duplicates in the appl
 
 * **URL**
 
-  `/api/attaction/`
+  `/api/attractions/`
 
 * **Method:**
 
@@ -417,6 +417,12 @@ The latitude and longitude is validated to avoid creating duplicates in the appl
      * `latitude    = [string]  <- In ISO 6709 format`
      * `longitude   = [string]  <- In ISO 6709 format`
      * `photos      = [blob]    <- At least one photo and a maximum of 10 photos`
+     
+   *Optional:*
+      
+     * `category     = [string] <- One of then [beaches, island resorts, parks, forests, monuments, temples, zoos, 
+                                                 aquariums, museums, art galleries, botanical gardens, castles, libraries,
+                                                 prisons, skyscrapers, bridges]`
     
 * **Success Response:**
   
@@ -460,7 +466,7 @@ The latitude and longitude is validated to avoid creating duplicates in the appl
 
 * **URL**
 
-  `/api/attaction/:id/events`
+  `/api/events`
 
 * **Method:**
 
@@ -518,7 +524,7 @@ The latitude and longitude is validated to avoid creating duplicates in the appl
       -F "startDate=YYYY-MM-DDThh:mm:ss.sssZ" \
       -F "endDate=YYYY-MM-DDThh:mm:ss.sssZ" \
       -F "photo=@path_to_eventImage" \ 
-      http://localhost:8080/api/attractions/:attraction_id/events
+      http://localhost:8080/api/events
   ```
 
 ## Errors

@@ -40,7 +40,6 @@ router.get('/', passport.authenticate('bearer', { session: false }), function(re
 
     log.info(message);
     return res.json({ user: req.user.toJSON(), status: 'ok', message: message });
-
 });
 
 router.put('/', passport.authenticate('bearer', { session: false }), function (req, res) {

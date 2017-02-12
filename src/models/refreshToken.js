@@ -11,8 +11,8 @@ var User = require(src + 'models/user');
  **/
 var RefreshToken = new Schema({
     userId: {
-        type: Schema.ObjectId,
-        ref: User.schemaName,
+        type: Schema.Types.ObjectId,
+        ref: 'User',
         required: true
     },
 
