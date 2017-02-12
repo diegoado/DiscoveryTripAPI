@@ -26,8 +26,9 @@ router.post('/', multer.array('photos', 10), passport.authenticate('bearer', { s
         photos.push(
             new Photo({
                 name: file.originalname,
-                data: fs.readFileSync(file.path),
-                size: file.size, encoding: file.encoding, mimetype: file.mimetype
+                data: new Buffer(fs.readFileSync(file.path, 'base64'), 'base64'),
+                size: file.size,
+                encoding: 'base64', mimetype: file.mimetype
             })
         )
     });
@@ -88,9 +89,9 @@ router.get('/:id', passport.authenticate('bearer', { session: false }), function
         .populate('localization')
         .exec(function (err, attraction) {
             if (err) {
-
+                error.genericErrorHandler(res, err.status, err.code, err.message);
             } else if(!attraction) {
-
+                error.genericErrorHandler(res, 404, 'user_error', 'Attraction not found');
             } else {
                 var message = 'Attraction found with success';
 

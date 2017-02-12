@@ -17,8 +17,13 @@ Document Version: v1.0
     - [Delete](#delete-a-user)
 - [Attractions](#attractions)
     - [Create](#create-a-attraction)
+    - [Read](#read-attraction)
+    - [Update](#update-a-attraction)
+    - [Delete](#delete-a-attraction)
 - [Events](#events)
     - [Create](#create-a-event)
+- [Photos](#photos)
+    - [Download](#download-a-photo)
 - [Errors](#errors)
 
 ## Overview
@@ -421,8 +426,8 @@ The latitude and longitude is validated to avoid creating duplicates in the appl
    *Optional:*
       
      * `category     = [string] <- One of then [beaches, island resorts, parks, forests, monuments, temples, zoos, 
-                                                 aquariums, museums, art galleries, botanical gardens, castles, libraries,
-                                                 prisons, skyscrapers, bridges]`
+                                                aquariums, museums, art galleries, botanical gardens, castles, libraries,
+                                                prisons, skyscrapers, bridges]`
     
 * **Success Response:**
   
@@ -459,6 +464,65 @@ The latitude and longitude is validated to avoid creating duplicates in the appl
       -F "photos=@path_to_imageN" \
       http://localhost:8080/api/attractions
   ```
+
+#### **Read a Attraction**
+
+Lists details of a user attraction in the application.
+
+* **URL**
+
+  `/api/attractions/:id`
+
+* **Method:**
+
+   `GET`
+  
+* **URL Params**
+
+   *Required:*
+ 
+     * `None`
+    
+* **Success Response:**
+  
+  * *Code:* 200
+    
+  ```json
+   {
+     "attraction": {
+       "_id": "id",
+       "name": "attraction name",
+       "description": "some description to attraction",
+       "localization": {
+         "_id": "id",
+         "latitude": "XX.XXX",
+         "longitude": "X.XXX",
+         "city": "city",
+         "country": "country",
+         "countryCode": "countryCode",
+         "streetName": "streetName",
+         "streetNumber": "streetNumber",
+         "zipcode": "XXX"
+       },
+       "photos": [
+         "id1", "id2", "...", "idN"
+       ],
+       "state": "In Approval",
+       "created": "2017-02-12T05:03:02.782Z"
+     },
+     "status": "ok",
+     "message": "Attraction found with success"
+   }
+  ```
+  
+* **Sample Call:**
+
+   ```bash
+     curl -i \
+       -H "Content-Type: application/json" \
+       -H "Authorization: bearer <access_token>" \
+       http://localhost:8080/api/attractions/:id
+   ```
 
 ## Events
 
@@ -526,6 +590,42 @@ The latitude and longitude is validated to avoid creating duplicates in the appl
       -F "photo=@path_to_eventImage" \ 
       http://localhost:8080/api/events
   ```
+  
+## Photos
+
+#### **Download a Photo**
+
+Download a photo of one event or attraction in the application.
+
+* **URL**
+
+  `/api/photos/:id/download`
+
+* **Method:**
+
+   `GET`
+  
+* **URL Params**
+
+   *Required:*
+ 
+     * `id = [string] <- the photo id in the application`
+    
+* **Success Response:**
+  
+  * *Code:* 200
+  
+   `attachment; filename=file.extension`
+  
+* **Sample Call:**
+
+   ```bash
+     curl -i \
+       -H "Content-Type: application/json" \
+       -H "Authorization: bearer <access_token>" \
+       http://localhost:8080/api/photos/:id/download/
+   ```
+
 
 ## Errors
 
