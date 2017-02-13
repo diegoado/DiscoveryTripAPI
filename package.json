@@ -27,6 +27,7 @@
     "ejs": "~2.5.2",
     "email-templates": "^2.5.4",
     "express": "~4.14.0",
+    "georedis": "^3.0.3",
     "method-override": "^2.3.x",
     "mongoose": "~4.7.0",
     "mongoose-exists": "^0.1.0",
@@ -44,6 +45,7 @@
     "passport-http-bearer": "^1.0.x",
     "passport-local": "^1.0.0",
     "passport-oauth2-client-password": "^0.1.x",
+    "redis": "^2.6.5",
     "underscore": "^1.8.3",
     "winston": "^0.8.x"
   },

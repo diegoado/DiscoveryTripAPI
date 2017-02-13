@@ -9,9 +9,11 @@ var router = express.Router();
 // Find project working directory
 var src = process.cwd() + '/src/';
 
-var log = require(src + 'helpers/log')(module),
-    multer = require(src + 'helpers/multer'),
-    error = require(src + 'helpers/error');
+var error = require(src + 'helpers/error'),
+    log = require(src + 'helpers/log')(module);
+
+var multer = require(src + 'helpers/multer'),
+    georedis = require(src + 'helpers/georedis');
 
 // Load Models
 var Attraction = require(src + 'models/attraction'),
@@ -41,9 +43,7 @@ router.post('/', multer.array('photos', 10), passport.authenticate('bearer', { s
             error.resultError(res, err);
         })
         .then(function () {
-            _.each(req.files, function (file) {
-                fs.unlinkSync(file.path)
-        })
+            _.each(req.files, function (file) { fs.unlinkSync(file.path) });
     });
     function saveLocalization(req, res, photos) {
         new Localization({
@@ -53,10 +53,10 @@ router.post('/', multer.array('photos', 10), passport.authenticate('bearer', { s
                 saveAttraction(req, res, photos, localization);
             })
             .catch(function (err) {
-                _.each(photos, function (photo) {
-                    photo.remove()
-                });
-                error.resultError(res, err);
+                _.each(photos, function (photo) { photo.remove() });
+
+                // Request result in an Error
+                throw err;
             })
     }
     function saveAttraction(req, res, photos, localization) {
@@ -69,17 +69,21 @@ router.post('/', multer.array('photos', 10), passport.authenticate('bearer', { s
             localization: localization
         }).save()
             .then(function (attraction) {
+                // Add new attraction in search engine
+                georedis.addLocalization(attraction.name, req.body.latitude, req.body.longitude);
+
+                // Request result not in an Error
                 var message = 'New Tourist Attraction created with success';
 
                 log.info(message);
                 return res.json({attraction: attraction.toSortJson(), status: 'ok', message: message});
             })
             .catch(function (err) {
-                _.each(photos, function (photo) {
-                    photo.remove()
-                });
                 localization.remove();
-                error.resultError(res, err);
+                _.each(photos, function (photo) { photo.remove() });
+
+                // Request result in an Error
+                throw err;
             })
     }
 });

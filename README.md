@@ -7,6 +7,7 @@ Document Version: v1.0
 - [Overview](#overview)
 - [Auth Service](#auth-service)
     - [Login](#login)
+    - [Login by Facebook](#login-by-facebook)
     - [Password Reminder](#password-reminder)
     - [Session Refresh](#session-refresh)
     - [Logout](#logout)
@@ -38,7 +39,7 @@ The reconnect and logout REST APIs require a session token in the request header
 
 #### **Login**
 
-Authenticate user with specified credentials. Username or Password and password and as input in request body.
+Authenticate user with specified credentials. Username or Password and password as input in request body.
 
 * **URL**
 
@@ -62,8 +63,8 @@ Authenticate user with specified credentials. Username or Password and password 
     
    ```json
      {
-       "access_token": "c655642186d350d5e3dad7d8e456b1db3eb10bcb688ffddfedce6dead4e642b3",
-       "refresh_token": "b3fb150f12ed552cabc86ba207d3c1af23719d1c1ad5a09aa751e8475e7039cd",
+       "access_token": "<access_token>",
+       "refresh_token": "<refresh_token>",
        "expires_in": 3600,
        "message": "Access Token acquired with success!",
        "status": "ok",
@@ -76,8 +77,46 @@ Authenticate user with specified credentials. Username or Password and password 
    ```bash
      curl -i \
        -H "Content-Type: application/json" \
-       -X POST -d '{"grant_type": "client_credentials", "username": <USERNAME>, "password": <PASSWORD>}' \
+       -X POST -d '{"grant_type": "client_credentials", "username": <username>, "password": <password>}' \
        http://localhost:8080/api/login
+   ```
+
+#### **Login by Facebook**
+
+Authenticate user using facebook as provider. Username or Password and password as input in request body.
+
+* **URL**
+
+  `/api/facebook/login`
+
+* **Method:**
+
+   `POST`
+  
+* **URL Params**
+
+   *Required:*
+     
+     * `access_token = [string] <- Access Token provide by Facebook`
+    
+* **Success Response:**
+  
+  * *Code:* 200
+    
+   ```json
+     {
+       "status": "ok",
+       "message": "User authentication by Facebook completed with success!"
+     }
+   ```
+   
+* **Sample Call:**
+
+   ```bash
+     curl -i \
+       -H "Content-Type: application/json" \
+       -X POST -d '{"access_token": "<access_token>"}' \
+       http://localhost:8080/api/facebook/login
    ```
 
 #### **Password Reminder**
@@ -105,7 +144,7 @@ Send an e-mail with the user's password, if the user registers in the applicatio
    ```json
      {
        "status": "ok",
-       "message": "Password reminder sent to user <USERNAME> with success!"
+       "message": "Password reminder sent to user <username> with success!"
      }
    ```
    
@@ -114,7 +153,7 @@ Send an e-mail with the user's password, if the user registers in the applicatio
    ```bash
      curl -i \
        -H "Content-Type: application/json" \
-       -X POST -d '{"email": "example@example.com"}' \
+       -X POST -d '{"email": "<email>"}' \
        http://localhost:8080/api/login/pwd_reminder
    ```
 
@@ -145,8 +184,8 @@ Refresh the user access token. Refresh token, application id and secret key as i
     
    ```json
      {
-       "access_token": "c655642186d350d5e3dad7d8e456b1db3eb10bcb688ffddfedce6dead4e642b3",
-       "refresh_token": "b3fb150f12ed552cabc86ba207d3c1af23719d1c1ad5a09aa751e8475e7039cd",
+       "access_token": "<access_token>",
+       "refresh_token": "<refresh_token>",
        "expires_in": 3600,
        "message": "Access Token acquired with success!",
        "status": "ok",
@@ -159,7 +198,7 @@ Refresh the user access token. Refresh token, application id and secret key as i
    ```bash
      curl -i \
        -H "Content-Type: application/json" \
-       -X POST -d '{"grant_type": "refresh_token", "refresh_token": <TOKEN>, "client_id": <ID>, "client_secret": <KEY>}' \
+       -X POST -d '{"grant_type": "refresh_token", "refresh_token": <token>, "client_id": <id>, "client_secret": <key>}' \
        http://localhost:8080/api/login
    ```
 
@@ -195,7 +234,7 @@ Remove User session by invoking an explicit logout. Session token to be provided
    ```bash
      curl -i \
        -H "Content-Type: application/json" \
-       -H "Authorization: bearer fe4b6b458906fd6b9dad77a06bed82597bd16dd790a8f48d99f52d8975610c71" \
+       -H "Authorization: bearer <access_token>" \
        -X DELETE \
        http://localhost:8080/api/logout
    ```
@@ -234,10 +273,10 @@ The user email is validated to avoid creating duplicates in the application.
    ```json
      {
        "user": {
-         "id": "584c2c99632e7b325f9e696e",
-         "username": "username",
-         "email": "email@example.com",
-         "photo_url": "photo_url",
+         "id": "<id>",
+         "username": "<username>",
+         "email": "<email>",
+         "photo_url": "<photo_url>",
          "created": "YYYY-MM-DDThh:mm:ss.sssZ"
        },
        "status": "ok",
@@ -250,7 +289,7 @@ The user email is validated to avoid creating duplicates in the application.
    ```bash
      curl -i \
        -H "Content-Type: application/json" \
-       -X POST -d '{"username": <USERNAME>, "email": <EMAIL>, "password": <PASSWORD>}' \
+       -X POST -d '{"username": <username>, "email": <email>, "password": <password>}' \
        http://localhost:8080/api/users
    ```
 
@@ -279,10 +318,10 @@ Lists details of a user present in the application.
   ```json
    {
      "user": {
-       "id": "584c2c99632e7b325f9e696e",
-       "username": "name",
-       "email": "email@example.com",
-       "photo_url": "photo_url",
+       "id": "<id>",
+       "username": "<name>",
+       "email": "<email>",
+       "photo_url": "<photo_url>",
        "created": "YYYY-MM-DDThh:mm:ss.sssZ"
      },
      "status": "ok",
@@ -332,10 +371,10 @@ Valid user with update privilege logged in to the application may modify the use
    ```json
      {
        "user": {
-         "id": "584c2c99632e7b325f9e696e",
-         "username": "username",
-         "email": "email@example.com",
-         "photo_url": "photo_url",
+         "id": "<id>",
+         "username": "<username>",
+         "email": "<email>",
+         "photo_url": "<photo_url>",
          "created": "YYYY-MM-DDThh:mm:ss.sssZ"
        },
        "status": "ok",
@@ -348,7 +387,7 @@ Valid user with update privilege logged in to the application may modify the use
    ```bash
      curl -i \
        -H "Content-Type: application/json" \
-       -X PUT -d '{"username": <USERNAME>, "email": <EMAIL>, "password": <PASSWORD>}' \
+       -X PUT -d '{"username": <username>, "email": <email>, "password": <password>}' \
        http://localhost:8080/api/users/:id
    ```
 
@@ -377,10 +416,10 @@ Removes a user present in the application based on your ID.
   ```json
    {
      "user": {
-       "id": "584c2c99632e7b325f9e696e",
-       "username": "name",
-       "email": "email@example.com",
-       "photo_url": "photo_url",
+       "id": "<id>",
+       "username": "<name>",
+       "email": "<email>",
+       "photo_url": "<photo_url>",
        "created": "YYYY-MM-DDThh:mm:ss.sssZ"
      },
      "status": "ok",
@@ -394,7 +433,7 @@ Removes a user present in the application based on your ID.
      curl -i \
        -H "Content-Type: application/json" \
        -H "Authorization: bearer <access_token>" \
-       -X DELETE -d '{"password": <PASSWORD>}' \
+       -X DELETE -d '{"password": <password>}' \
        http://localhost:8080/api/users/:id
    ```
 
@@ -625,7 +664,6 @@ Download a photo of one event or attraction in the application.
        -H "Authorization: bearer <access_token>" \
        http://localhost:8080/api/photos/:id/download/
    ```
-
 
 ## Errors
 

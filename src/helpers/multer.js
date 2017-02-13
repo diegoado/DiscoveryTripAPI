@@ -20,6 +20,7 @@ var fileUpload = multer({dest: src + '../public/images/',
             return false;
         }
     },
+    errorHandling: 'manual',
     inMemory: true
 });
 
