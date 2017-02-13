@@ -18,7 +18,7 @@ Document Version: v1.0
     - [Delete](#delete-a-user)
 - [Attractions](#attractions)
     - [Create](#create-a-attraction)
-    - [Read](#read-attraction)
+    - [Read](#read-a-attraction)
     - [Update](#update-a-attraction)
     - [Delete](#delete-a-attraction)
 - [Events](#events)
