@@ -105,4 +105,8 @@ router.get('/:id', passport.authenticate('bearer', { session: false }), function
     });
 });
 
+router.delete('/:id', passport.authenticate('bearer', { session: false }), function(req, res) {
+
+});
+
 module.exports = router;

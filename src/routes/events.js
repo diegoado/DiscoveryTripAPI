@@ -18,7 +18,7 @@ var Attraction = require(src + 'models/attraction'),
     Photo = require(src + 'models/photo');
 
 
-router.post('/:id/events', multer.single('photo'), passport.authenticate('bearer', { session: false }), function (req, res) {
+router.post('/:id', multer.single('photo'), passport.authenticate('bearer', { session: false }), function (req, res) {
     Attraction.findById(req.params.id, function (err, attraction) {
         var photo;
 
