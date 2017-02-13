@@ -1,6 +1,6 @@
 // Initialize geo services
 var redis   = require('redis'),
-    client  = redis.createClient(),
+    client  = redis.createClient(process.env.REDIS_URL),
     geo     = require('georedis').initialize(client);
 
 // Find project working directory
