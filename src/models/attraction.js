@@ -115,6 +115,28 @@ Attraction.methods.toSortJson = function () {
     }
 };
 
+// Register cascading actions
+Attraction.post('remove', function (attraction) {
+    Localization.findById(attraction.localization, function (err, localization) {
+        if (err) {
+            log.warn('Fail to remove attraction localization with id: ' + attraction.localization);
+        } else {
+            localization.remove();
+        }
+    }).exec();
+
+    Photo.find({ _id: { $in: attraction.photos }}, function (err, photos) {
+        if (err) {
+            log.warn('Fail to remove attraction photos with ids: ' + attraction.photos);
+        } else {
+            _.each(photos, function (photo) {
+                photo.remove();
+            })
+        }
+    }).exec();
+});
+
+
 Attraction.plugin(exists);
 
 module.exports = mongoose.model('Attraction', Attraction);

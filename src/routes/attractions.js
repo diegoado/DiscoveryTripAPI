@@ -73,7 +73,7 @@ router.post('/', multer.array('photos', 10), passport.authenticate('bearer', { s
                 georedis.addLocalization(attraction.name, req.body.latitude, req.body.longitude);
 
                 // Request result not in an Error
-                var message = 'New Tourist Attraction created with success';
+                var message = 'New Tourist Attraction created with success!';
 
                 log.info(message);
                 return res.json({attraction: attraction.toSortJson(), status: 'ok', message: message});
@@ -94,8 +94,8 @@ router.get('/:id', passport.authenticate('bearer', { session: false }), function
         .exec(function (err, attraction) {
             if (err) {
                 error.genericErrorHandler(res, err.status, err.code, err.message);
-            } else if(!attraction) {
-                error.genericErrorHandler(res, 404, 'user_error', 'Attraction not found');
+            } else if (!attraction) {
+                error.genericErrorHandler(res, 404, 'user_error', 'Attraction not found!');
             } else {
                 var message = 'Attraction found with success';
 
@@ -106,7 +106,26 @@ router.get('/:id', passport.authenticate('bearer', { session: false }), function
 });
 
 router.delete('/:id', passport.authenticate('bearer', { session: false }), function(req, res) {
+    Attraction.findById(req.params.id, function (err, attraction) {
+        if (err) {
+            error.genericErrorHandler(res, err.status, err.code, err.message);
+        } else if (!attraction) {
+            error.genericErrorHandler(res, 404, 'user_error', 'Attraction not found!');
+        } else if (attraction.ownerId !== req.user.userId) {
+            error.genericErrorHandler(res, 404, 'user_error', 'Only the owner of the attraction can remove it!');
+        } else {
+            attraction.remove(function (err) {
+                if (err) {
+                    error.genericErrorHandler(res, 500, "server_error", err.message)
+                } else {
+                    var message = 'Attraction deleted with success!';
 
+                    log.info(message);
+                    return res.json({ attraction: attraction.toSortJson(), status: 'ok', message: message });
+                }
+            });
+        }
+    })
 });
 
 module.exports = router;

@@ -36,7 +36,7 @@ var AccessToken = new Schema({
 });
 
 AccessToken.post('remove', function (accessToken) {
-    RefreshToken.remove({userId: accessToken.userId}).exec();
+    RefreshToken.remove({ userId: accessToken.userId }).exec();
 });
 
 module.exports  = mongoose.model('AccessToken', AccessToken);

@@ -1,4 +1,5 @@
 var mongoose = require('mongoose'),
+    _ = require("underscore"),
     validator = require('mongoose-validator'),
     findOrCreate = require('mongoose-findorcreate'),
     crypto = require('crypto'),
@@ -112,11 +113,13 @@ User.index({socialId: 1}, {unique: true, sparse: true});
 
 // Register cascading actions
 User.post('remove', function (user) {
-    AccessToken.findOne({ userId: user.userId }, function (err, token) {
+    AccessToken.find({ userId: user.userId }, function (err, tokens) {
         if (err) {
-            log.warn('Fail to find user access token')
-        } else if (token) {
-            token.remove()
+            log.warn('Fail to remove access token that belongs to user by id: ' + user.userId)
+        } else {
+            _.each(tokens, function (token) {
+                token.remove();
+            })
         }
     }).exec();
 });
