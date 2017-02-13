@@ -56,7 +56,7 @@ router.post('/', multer.array('photos', 10), passport.authenticate('bearer', { s
                 _.each(photos, function (photo) { photo.remove() });
 
                 // Request result in an Error
-                throw err;
+                error.resultError(res, err);
             })
     }
     function saveAttraction(req, res, photos, localization) {
@@ -83,7 +83,7 @@ router.post('/', multer.array('photos', 10), passport.authenticate('bearer', { s
                 _.each(photos, function (photo) { photo.remove() });
 
                 // Request result in an Error
-                throw err;
+                error.resultError(res, err);
             })
     }
 });
