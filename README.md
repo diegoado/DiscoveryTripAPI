@@ -25,6 +25,8 @@ Document Version: v1.0
     - [Create](#create-a-event)
 - [Photos](#photos)
     - [Download](#download-a-photo)
+- [Searches](#searches)
+    - [Attraction by Localization](#attraction-by-localization)
 - [Errors](#errors)
 
 ## Overview
@@ -474,10 +476,12 @@ The latitude and longitude is validated to avoid creating duplicates in the appl
     
   ```json
    {
-     "attraction": { 
+     "attraction": {
+       "_id": "id",
        "name": "attraction name", 
        "description": "some description to new attraction",
        "localization": { 
+         "_id": "id",
          "longitude": "X.XXX", 
          "latitude": "XX.XXX" 
        },
@@ -562,6 +566,54 @@ Lists details of a user attraction in the application.
        -H "Authorization: bearer <access_token>" \
        http://localhost:8080/api/attractions/:id
    ```
+   
+#### **Delete a Attraction**
+
+Removes a attraction present in the application based on your ID.
+
+* **URL**
+
+  `/api/attractions/:id`
+
+* **Method:**
+
+   `DELETE`
+  
+* **URL Params**
+
+   *Required:*
+ 
+     * `id = [string]`
+    
+* **Success Response:**
+  
+  * *Code:* 200
+    
+  ```json
+   {
+     "attraction": {
+       "_id": "id",
+       "name": "attraction name", 
+       "description": "some description to new attraction",
+       "localization": "id",
+       "photos": ["photo_id1", "photo_id2", "..."],
+       "state": "In Approval",
+       "created":"YYYY-MM-DDThh:mm:ss.sssZ"
+     },
+     "status": "ok",
+     "message": "Attraction deleted with success!"
+   }
+  ```
+  
+* **Sample Call:**
+
+   ```bash
+     curl -i \
+       -H "Content-Type: application/json" \
+       -H "Authorization: bearer <access_token>" \
+       -X DELETE \
+       http://localhost:8080/api/attractions/:id
+   ```
 
 ## Events
 
@@ -597,7 +649,7 @@ Lists details of a user attraction in the application.
     
   ```json
    {
-     "event": { 
+     "event": {
        "name": "attraction name", 
        "description": "some description to new event",
        "attraction": "attraction_id",
@@ -664,6 +716,69 @@ Download a photo of one event or attraction in the application.
        -H "Authorization: bearer <access_token>" \
        http://localhost:8080/api/photos/:id/download/
    ```
+   
+## Search
+
+#### **Attraction by Localization**
+
+Search attractions near to a localization around a determinate input radius (in meters)
+
+* **URL**
+
+  `/api/search/attraction`
+
+* **Method:**
+
+   `GET`
+  
+* **URL Params**
+
+   *Required:*
+ 
+     * `latitude  = [string] <- In ISO 6709 format`
+     * `longitude = [string] <- In ISO 6709 format`
+     * `distance  = [number] <- Default: 5000m`
+    
+* **Success Response:**
+  
+  * *Code:* 200
+  
+   ```json
+   {
+     "attractions": [
+       {
+         "_id": "id",
+         "name": "attraction name",
+         "description": "some description to attraction",
+         "localization": {
+           "_id": "id",
+           "latitude": "XX.XXX",
+           "longitude": "X.XXX",
+           "city": "city",
+           "country": "country",
+           "countryCode": "countryCode",
+           "streetName": "streetName",
+           "streetNumber": "streetNumber",
+           "zipcode": "XXX"
+         },
+         "photos": ["id1", "id2", "...", "idN"],
+         "state": "In Approval",
+         "created": "2017-02-12T05:03:02.782Z"
+       }
+     ],
+     "status": "ok",
+     "message": "Were found attractions near the input coordinates"
+   }
+   ```
+  
+* **Sample Call:**
+
+   ```bash
+     curl -i \
+       -H "Content-Type: application/json" \
+       -H "Authorization: bearer <access_token>" \
+       http://localhost:8080/api/search/attraction?latitude=latitude&longitude=longitude&distance=5000
+
 
 ## Errors
 

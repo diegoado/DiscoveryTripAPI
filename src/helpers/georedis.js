@@ -12,6 +12,17 @@ var log = require(src + 'helpers/log')(module);
 var attrSet  = geo.addSet('attractions'),
     eventSet = geo.addSet('events');
 
+//TODO(diegoado): use this to create advanced queries
+var options = {
+    withCoordinates: false, // Will provide coordinates with locations, default false
+    withHashes: false,      // Will provide a 52bit geohash Integer, default false
+    withDistances: false,   // Will provide distance from query, default false
+    order: 'ASC',           // or 'DESC' or true (same as 'ASC'), default false
+    units: 'm',             // or 'km', 'mi', 'ft', default 'm'
+    count: 100,             // Number of results to return, default undefined
+    accurate: false         // Useful if in emulated mode and accuracy is important, default false
+};
+
 
 exports.addLocalization = function(name, latitude, longitude) {
     if (typeof name === 'string') {
@@ -45,6 +56,18 @@ exports.deleteLocalization = function (name) {
                 throw err;
             else
                 log.info('The search in event ' + name.toString() + ' is successfully disabled');
+        });
+    }
+};
+
+exports.searchNearbyLocalizations = function (key, latitude, longitude, distance, cb) {
+    if (key === 'attractions') {
+        attrSet.nearby({ latitude: latitude, longitude: longitude}, distance, function (err, attractions) {
+            cb(err, attractions);
+        });
+    } else if (key === 'events') {
+        eventSet.nearby({ latitude: latitude, longitude: longitude}, distance, function (err, events) {
+            cb(err, events);
         });
     }
 };

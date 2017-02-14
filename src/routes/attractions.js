@@ -105,6 +105,10 @@ router.get('/:id', passport.authenticate('bearer', { session: false }), function
     });
 });
 
+router.put('/:id', passport.authenticate('bearer', { session: false }), function(req, res) {
+    error.genericErrorHandler(res, 500, "server_error", "Route not implemented!");
+});
+
 router.delete('/:id', passport.authenticate('bearer', { session: false }), function(req, res) {
     Attraction.findById(req.params.id, function (err, attraction) {
         if (err) {
@@ -118,6 +122,10 @@ router.delete('/:id', passport.authenticate('bearer', { session: false }), funct
                 if (err) {
                     error.genericErrorHandler(res, 500, "server_error", err.message)
                 } else {
+                    // Remove attraction in search engine
+                    georedis.deleteLocalization(attraction.name);
+
+                    // Request result not in an Error
                     var message = 'Attraction deleted with success!';
 
                     log.info(message);
