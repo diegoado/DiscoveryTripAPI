@@ -778,7 +778,7 @@ Search attractions near to a localization around a determinate input radius (in 
        -H "Content-Type: application/json" \
        -H "Authorization: bearer <access_token>" \
        http://localhost:8080/api/search/attraction?latitude=latitude&longitude=longitude&distance=5000
-
+   ```
 
 ## Errors
 
