@@ -22,7 +22,7 @@ var Localization = new Schema({
         required: true,
         validate: validator({
             validator: 'matches',
-            arguments: /^(\+|-)?(?:180(?:(?:\.0{1,6})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,6})?))$/i,
+            arguments: /^(\+|-)?(?:180(?:(?:\.0{1,8})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,8})?))$/i,
             message: 'Invalid Longitude matches'
         })
     },
@@ -32,7 +32,7 @@ var Localization = new Schema({
         required: true,
         validate: validator({
             validator: 'matches',
-            arguments: /^(\+|-)?(?:90(?:(?:\.0{1,6})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,6})?))$/i,
+            arguments: /^(\+|-)?(?:90(?:(?:\.0{1,8})?)|(?:[0-9]|[1-8][0-9])(?:(?:\.[0-9]{1,8})?))$/i,
             message: 'Invalid Latitude matches'
         })
     },
@@ -89,7 +89,7 @@ Localization.post('save', function (localization) {
     });
 });
 
-Localization.index({longitude: 1, latitude: 1}, {unique: true});
-
+// Remove longitude and latitude restriction
+// Localization.index({longitude: 1, latitude: 1}, {unique: true});
 
 module.exports = mongoose.model('Localization', Localization);
