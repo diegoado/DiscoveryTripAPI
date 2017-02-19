@@ -76,7 +76,7 @@ router.post('/', multer.array('photos', 10), passport.authenticate('bearer', { s
                 var message = 'New Tourist Attraction created with success!';
 
                 log.info(message);
-                return res.json({attraction: attraction.toSortJson(), status: 'ok', message: message});
+                return res.json({attraction: attraction.toSortJSON(), status: 'ok', message: message});
             })
             .catch(function (err) {
                 localization.remove();
@@ -129,7 +129,7 @@ router.delete('/:id', passport.authenticate('bearer', { session: false }), funct
                     var message = 'Attraction deleted with success!';
 
                     log.info(message);
-                    return res.json({ attraction: attraction.toSortJson(), status: 'ok', message: message });
+                    return res.json({ attraction: attraction.toSortJSON(), status: 'ok', message: message });
                 }
             });
         }

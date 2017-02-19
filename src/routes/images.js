@@ -33,7 +33,7 @@ router.get('/:id/download', passport.authenticate('bearer', { session: false }),
                     res.setHeader('Content-disposition', 'attachment; filename=' + photo.name);
 
                     res.contentType(photo.mimetype);
-                    res.end(content);
+                    res.end(content, 'binary');
                 }
                 fs.unlinkSync(filepath);
             });

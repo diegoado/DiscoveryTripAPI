@@ -1,4 +1,5 @@
 var mongoose = require('mongoose'),
+    exists = require('mongoose-exists'),
     Schema = mongoose.Schema;
 
 // Find project working directory
@@ -13,7 +14,8 @@ var AccessToken = new Schema({
     userId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: true,
+        exists: true
     },
 
     applicationId: {
@@ -34,6 +36,9 @@ var AccessToken = new Schema({
 }, {
     versionKey: false
 });
+
+
+AccessToken.plugin(exists);
 
 AccessToken.post('remove', function (accessToken) {
     RefreshToken.remove({ userId: accessToken.userId }).exec();

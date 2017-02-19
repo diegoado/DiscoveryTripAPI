@@ -1,5 +1,6 @@
 var mongoose = require('mongoose'),
     validator = require('mongoose-validator'),
+    exists = require('mongoose-exists'),
     Schema = mongoose.Schema;
 
 // Find project working directory
@@ -19,7 +20,8 @@ var Event = new Schema({
     ownerId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: true,
+        exists: true
     },
 
     name: {
@@ -36,12 +38,21 @@ var Event = new Schema({
         type: [{
             type: Schema.Types.ObjectId,
             ref: 'User'
-        }]
+        }],
+        exists: true
     },
 
     photo: {
         type: Schema.Types.ObjectId,
-        ref: 'Photo'
+        ref: 'Photo',
+        exists: true
+    },
+
+    localization: {
+        type: Schema.Types.ObjectId,
+        ref: 'Localization',
+        required: true,
+        exists: true
     },
 
     kind: {
@@ -90,10 +101,11 @@ var Event = new Schema({
 
 Event.methods.toJSON = function () {
     return {
+        _id         : this._id,
         name        : this.name,
         description : this.description,
-        attraction  : this.attraction,
-        photo       : this.photo,
+        localization: this.localization,
+        photo       : this.photo._id,
         kind        : this.kind,
         price       : this.price,
         keywords    : this.keywords,
@@ -102,6 +114,8 @@ Event.methods.toJSON = function () {
         created     : this.created
     }
 };
+
+Event.plugin(exists);
 
 
 module.exports = mongoose.model('Event', Event);

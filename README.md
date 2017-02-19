@@ -633,6 +633,8 @@ Removes a attraction present in the application based on your ID.
  
      * `name        = [string]`
      * `description = [string]`
+     * `latitude    = [string]  <- In ISO 6709 format`
+     * `longitude   = [string]  <- In ISO 6709 format`
      * `endData     = [string]  <- In ISO Date format`
    
    *Optional:*
@@ -650,9 +652,19 @@ Removes a attraction present in the application based on your ID.
   ```json
    {
      "event": {
-       "name": "attraction name", 
+       "name": "event name", 
        "description": "some description to new event",
-       "attraction": "attraction_id",
+       "localization": {
+         "_id": "id",
+         "latitude": "XX.XXX",
+         "longitude": "X.XXX",
+         "city": "city",
+         "country": "country",
+         "countryCode": "countryCode",
+         "streetName": "streetName",
+         "streetNumber": "streetNumber",
+         "zipcode": "XXX"
+       },
        "photo": "photo_id",
        "kind": "public",
        "price": "0",
@@ -725,7 +737,7 @@ Search attractions near to a localization around a determinate input radius (in 
 
 * **URL**
 
-  `/api/search/attraction`
+  `/api/search/attractions`
 
 * **Method:**
 

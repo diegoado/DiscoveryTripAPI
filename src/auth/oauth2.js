@@ -28,8 +28,8 @@ var generateTokens = function (data, done) {
         accessTokenValue;
 
     // Remove all old tokens associated with data.userId
-    RefreshToken.remove(data, errorHandler);
-    AccessToken .remove(data, errorHandler);
+    RefreshToken.remove({ userId: data.userId }, errorHandler);
+    AccessToken .remove({ userId: data.userId }, errorHandler);
 
     accessTokenValue  = crypto.randomBytes(32).toString('hex');
     refreshTokenValue = crypto.randomBytes(32).toString('hex');
@@ -40,17 +40,25 @@ var generateTokens = function (data, done) {
     data.token   = refreshTokenValue;
     refreshToken = new RefreshToken(data);
 
-    accessToken.save(function (err) {
+    accessToken.save(function (err, accessToken) {
         if (err) {
             return done(err);
+        } else {
+            refreshToken.accessToken = accessToken;
+
+            // Saving Refresh token associated with Access Token
+            refreshToken.save(function (err) {
+                if (err)
+                    return done(err);
+                else {
+                    var message = 'Access Token acquired with success!',
+                        info = {expires_in: config.get('security:tokenLife'), message: message, status: 'ok'};
+
+                    log.info(message);
+                    done(null, accessTokenValue, refreshTokenValue, info);
+                }
+            });
         }
-        refreshToken.save(errorHandler);
-
-        var message = 'Access Token acquired with success!',
-            info = {expires_in: config.get('security:tokenLife'), message: message, status: 'ok'};
-
-        log.info(message);
-        done(null, accessTokenValue, refreshTokenValue, info);
     });
 };
 

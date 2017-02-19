@@ -20,7 +20,8 @@ var Attraction = new Schema({
     ownerId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: true,
+        exists: true
     },
 
     name: {
@@ -98,7 +99,7 @@ Attraction.methods.toJSON = function () {
     }
 };
 
-Attraction.methods.toSortJson = function () {
+Attraction.methods.toSortJSON = function () {
     var photos = [];
     _.each(this.photos, function (photo) {
         photos.push(photo._id)

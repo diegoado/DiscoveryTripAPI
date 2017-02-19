@@ -1,4 +1,5 @@
 var mongoose = require('mongoose'),
+    exists = require('mongoose-exists'),
     Schema = mongoose.Schema;
 
 // Find project working directory
@@ -13,7 +14,15 @@ var RefreshToken = new Schema({
     userId: {
         type: Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: true,
+        exists: true
+    },
+
+    accessToken: {
+        type: Schema.Types.ObjectId,
+        ref: 'AccessToken',
+        required: true,
+        exists: true
     },
 
     applicationId: {
@@ -31,8 +40,12 @@ var RefreshToken = new Schema({
         type: Date,
         default: Date.now
     }
+
 }, {
     versionKey: false
 });
+
+RefreshToken.plugin(exists);
+
 
 module.exports = mongoose.model('RefreshToken', RefreshToken);
