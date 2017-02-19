@@ -110,8 +110,7 @@ Event.methods.toJSON = function () {
         price       : this.price,
         keywords    : this.keywords,
         startDate   : this.startDate,
-        endDate     : this.endDate,
-        created     : this.created
+        endDate     : this.endDate
     }
 };
 

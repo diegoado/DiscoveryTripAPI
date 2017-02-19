@@ -23,10 +23,14 @@ Document Version: v1.0
     - [Delete](#delete-a-attraction)
 - [Events](#events)
     - [Create](#create-a-event)
+    - [Read](#read-a-event)
+    - [Update](#update-a-event)
+    - [Delete](#delete-a-event)
 - [Photos](#photos)
     - [Download](#download-a-photo)
 - [Searches](#searches)
-    - [Attraction by Localization](#attraction-by-localization)
+    - [Attractions by Localization](#attractions-by-localization)
+    - [Events by Localization](#events-by-localization)
 - [Errors](#errors)
 
 ## Overview
@@ -297,7 +301,7 @@ The user email is validated to avoid creating duplicates in the application.
 
 #### **Read a User**
 
-Lists details of a user present in the application.
+Lists details of an user present in the application.
 
 * **URL**
 
@@ -395,7 +399,7 @@ Valid user with update privilege logged in to the application may modify the use
 
 #### **Delete a User**
 
-Removes a user present in the application based on your ID.
+Removes an user present in the application based on your ID.
 
 * **URL**
 
@@ -444,7 +448,7 @@ Removes a user present in the application based on your ID.
 #### **Create a Attraction**
 
 Adds a new tourist attraction to the mobile application. 
-The latitude and longitude is validated to avoid creating duplicates in the application.
+The latitude and longitude is validated to avoid creating inconsistencies in the application.
 
 * **URL**
 
@@ -486,8 +490,7 @@ The latitude and longitude is validated to avoid creating duplicates in the appl
          "latitude": "XX.XXX" 
        },
        "photos":["photo_id1", "photo_id2", "..."],
-       "state":"In Approval",
-       "created":"YYYY-MM-DDThh:mm:ss.sssZ"
+       "state":"In Approval"
      },
      "status":"ok",
      "message":"New Tourist Attraction created with success"
@@ -510,7 +513,7 @@ The latitude and longitude is validated to avoid creating duplicates in the appl
 
 #### **Read a Attraction**
 
-Lists details of a user attraction in the application.
+Lists details of a tourist attraction in the application.
 
 * **URL**
 
@@ -550,8 +553,7 @@ Lists details of a user attraction in the application.
        "photos": [
          "id1", "id2", "...", "idN"
        ],
-       "state": "In Approval",
-       "created": "2017-02-12T05:03:02.782Z"
+       "state": "In Approval"
      },
      "status": "ok",
      "message": "Attraction found with success"
@@ -569,7 +571,7 @@ Lists details of a user attraction in the application.
    
 #### **Delete a Attraction**
 
-Removes a attraction present in the application based on your ID.
+Removes an attraction present in the application based on your ID.
 
 * **URL**
 
@@ -597,8 +599,7 @@ Removes a attraction present in the application based on your ID.
        "description": "some description to new attraction",
        "localization": "id",
        "photos": ["photo_id1", "photo_id2", "..."],
-       "state": "In Approval",
-       "created":"YYYY-MM-DDThh:mm:ss.sssZ"
+       "state": "In Approval"
      },
      "status": "ok",
      "message": "Attraction deleted with success!"
@@ -618,6 +619,9 @@ Removes a attraction present in the application based on your ID.
 ## Events
 
 #### **Create a Event**
+
+Adds a new event to the mobile application. 
+The latitude and longitude is validated to avoid creating inconsistencies in the application.
 
 * **URL**
 
@@ -670,8 +674,7 @@ Removes a attraction present in the application based on your ID.
        "price": "0",
        "keywords": ["keyword1", "...", "keywordN"],
        "startDate": "YYYY-MM-DDThh:mm:ss.sssZ",
-       "endDate": "YYYY-MM-DDThh:mm:ss.sssZ",
-       "created":"YYYY-MM-DDThh:mm:ss.sssZ"
+       "endDate": "YYYY-MM-DDThh:mm:ss.sssZ"
      },
      "status":"ok",
      "message":"New Event created with success"
@@ -686,6 +689,8 @@ Removes a attraction present in the application based on your ID.
       -H "Authorization: bearer accessToken" \
       -F "name= event name" \
       -F "description=some description to new event" \ 
+      -F "longitude=X.XXX" \
+      -F "latitude=XX.XXX" \
       -F "keywords[]=keyword1" \
       -F "keywords[]=keywordN" \
       -F "startDate=YYYY-MM-DDThh:mm:ss.sssZ" \
@@ -694,6 +699,115 @@ Removes a attraction present in the application based on your ID.
       http://localhost:8080/api/events
   ```
   
+#### **Read a Event**
+
+Lists details of an event in the application.
+
+* **URL**
+
+  `/api/events/:id`
+
+* **Method:**
+
+   `GET`
+  
+* **URL Params**
+
+   *Required:*
+ 
+     * `None`
+    
+* **Success Response:**
+  
+  * *Code:* 200
+    
+  ```json
+     {
+       "event": {
+         "name": "event name", 
+         "description": "some description to new event",
+         "localization": {
+            "_id": "id",
+            "latitude": "XX.XXX",
+            "longitude": "X.XXX",
+            "city": "city",
+            "country": "country",
+            "countryCode": "countryCode",
+            "streetName": "streetName",
+            "streetNumber": "streetNumber",
+            "zipcode": "XXX"
+         },
+         "photo": "photo_id",
+         "kind": "public",
+         "price": "0",
+         "keywords": ["keyword1", "...", "keywordN"],
+         "startDate": "YYYY-MM-DDThh:mm:ss.sssZ",
+         "endDate": "YYYY-MM-DDThh:mm:ss.sssZ"
+       },
+       "status": "ok",
+       "message": "Event found with success!"
+     }
+  ```
+  
+* **Sample Call:**
+
+   ```bash
+     curl -i \
+       -H "Content-Type: application/json" \
+       -H "Authorization: bearer <access_token>" \
+       http://localhost:8080/api/events/:id
+   ```
+
+#### **Delete a Event**
+
+Removes an event present in the application based on your ID.
+
+* **URL**
+
+  `/api/events/:id`
+
+* **Method:**
+
+   `DELETE`
+  
+* **URL Params**
+
+   *Required:*
+ 
+     * `id = [string]`
+    
+* **Success Response:**
+  
+  * *Code:* 200
+    
+  ```json
+   {
+     "event": {
+       "name": "event name", 
+       "description": "some description to new event",
+       "localization": "localization_id",
+       "photo": "photo_id",
+       "kind": "public",
+       "price": "0",
+       "keywords": ["keyword1", "...", "keywordN"],
+       "startDate": "YYYY-MM-DDThh:mm:ss.sssZ",
+       "endDate": "YYYY-MM-DDThh:mm:ss.sssZ"
+     },
+     "status": "ok",
+     "message": "Attraction deleted with success!"
+   }
+  ```
+  
+* **Sample Call:**
+
+   ```bash
+     curl -i \
+       -H "Content-Type: application/json" \
+       -H "Authorization: bearer <access_token>" \
+       -X DELETE \
+       http://localhost:8080/api/events/:id
+   ```  
+    
 ## Photos
 
 #### **Download a Photo**
@@ -731,7 +845,7 @@ Download a photo of one event or attraction in the application.
    
 ## Search
 
-#### **Attraction by Localization**
+#### **Attractions by Localization**
 
 Search attractions near to a localization around a determinate input radius (in meters)
 
@@ -774,8 +888,7 @@ Search attractions near to a localization around a determinate input radius (in 
            "zipcode": "XXX"
          },
          "photos": ["id1", "id2", "...", "idN"],
-         "state": "In Approval",
-         "created": "2017-02-12T05:03:02.782Z"
+         "state": "In Approval"
        }
      ],
      "status": "ok",
@@ -789,7 +902,71 @@ Search attractions near to a localization around a determinate input radius (in 
      curl -i \
        -H "Content-Type: application/json" \
        -H "Authorization: bearer <access_token>" \
-       http://localhost:8080/api/search/attraction?latitude=latitude&longitude=longitude&distance=5000
+       http://localhost:8080/api/search/attractions?latitude=latitude&longitude=longitude&distance=5000
+   ```
+
+#### **Events by Localization**
+
+Search events near to a localization around a determinate input radius (in meters)
+
+* **URL**
+
+  `/api/search/events`
+
+* **Method:**
+
+   `GET`
+  
+* **URL Params**
+
+   *Required:*
+ 
+     * `latitude  = [string] <- In ISO 6709 format`
+     * `longitude = [string] <- In ISO 6709 format`
+     * `distance  = [number] <- Default: 5000m`
+    
+* **Success Response:**
+  
+  * *Code:* 200
+  
+   ```json
+   {
+     "events": [
+       {
+         "_id": "id",
+         "name": "event name", 
+         "description": "some description to new event",
+         "localization": {
+           "_id": "id",
+           "latitude": "XX.XXX",
+           "longitude": "X.XXX",
+           "city": "city",
+           "country": "country",
+           "countryCode": "countryCode",
+           "streetName": "streetName",
+           "streetNumber": "streetNumber",
+           "zipcode": "XXX"
+         },
+         "photo": "photo_id",
+         "kind": "public",
+         "price": "0",
+         "keywords": ["keyword1", "...", "keywordN"],
+         "startDate": "YYYY-MM-DDThh:mm:ss.sssZ",
+         "endDate": "YYYY-MM-DDThh:mm:ss.sssZ"
+       } 
+     ],
+     "status": "ok",
+     "message": "Were found events near the input coordinates"
+   }
+   ```
+  
+* **Sample Call:**
+
+   ```bash
+     curl -i \
+       -H "Content-Type: application/json" \
+       -H "Authorization: bearer <access_token>" \
+       http://localhost:8080/api/search/events?latitude=latitude&longitude=longitude&distance=5000
    ```
 
 ## Errors

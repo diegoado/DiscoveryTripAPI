@@ -94,8 +94,7 @@ Attraction.methods.toJSON = function () {
         description : this.description,
         localization: this.localization,
         photos      : this.photos,
-        state       : this.state,
-        created     : this.created
+        state       : this.state
     }
 };
 
@@ -111,8 +110,7 @@ Attraction.methods.toSortJSON = function () {
         description : this.description,
         localization: this.localization,
         photos      : photos,
-        state       : this.state,
-        created     : this.created
+        state       : this.state
     }
 };
 
