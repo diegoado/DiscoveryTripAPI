@@ -26,8 +26,8 @@ Document Version: v1.0
     - [Read](#read-a-event)
     - [Update](#update-a-event)
     - [Delete](#delete-a-event)
-- [Photos](#photos)
-    - [Download](#download-a-photo)
+- [Images](#images)
+    - [Download](#download-a-image)
 - [Searches](#searches)
     - [Attractions by Localization](#attractions-by-localization)
     - [Events by Localization](#events-by-localization)
@@ -808,15 +808,15 @@ Removes an event present in the application based on your ID.
        http://localhost:8080/api/events/:id
    ```  
     
-## Photos
+## Images
 
-#### **Download a Photo**
+#### **Download a Image**
 
-Download a photo of one event or attraction in the application.
+Download a image of one event or attraction in the application.
 
 * **URL**
 
-  `/api/photos/:id/download`
+  `/api/images/:id/download`
 
 * **Method:**
 
