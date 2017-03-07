@@ -73,7 +73,7 @@ router.get('/events', passport.authenticate('bearer', { session: false }), funct
     } else if(!regExpLatitude.test(latitude) || !regExpLongitude.test(longitude)) {
         error.genericErrorHandler(res, 400, "user_error", "Invalid Latitude or Longitude matches!");
     } else {
-        georedis.searchNearbyLocalizations('attractions', latitude, longitude, distance, function (err, result) {
+        georedis.searchNearbyLocalizations('events', latitude, longitude, distance, function (err, result) {
             if (err) {
                 log.error(err.message);
 
