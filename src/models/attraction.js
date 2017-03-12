@@ -50,6 +50,7 @@ Attraction.virtual('state')
 Attraction.methods.toJSON = function () {
     return {
         _id         : this._id,
+        _type       : this._type,
         name        : this.name,
         description : this.description,
         localization: this.localization,
@@ -66,6 +67,7 @@ Attraction.methods.toSortJSON = function () {
 
     return {
         _id         : this._id,
+        _type       : this._type,
         name        : this.name,
         description : this.description,
         localization: this.localization,
