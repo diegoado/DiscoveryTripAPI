@@ -25,7 +25,7 @@ exports.addLocalization = function(id, latitude, longitude) {
         if (err) {
             throw err;
         } else
-            log.info('The search in point by' + id.toString() + ' is successfully enabled');
+            log.info('The search in point by ' + id.toString() + ' is successfully enabled');
     });
 };
 
