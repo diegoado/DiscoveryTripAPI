@@ -78,7 +78,7 @@ router.post('/', multer.single('photo'), passport.authenticate('bearer', { sessi
                 var message = 'New Event created with success!';
 
                 log.info(message);
-                return res.json({event: event.toJSON(), status: 'ok', message: message});
+                return res.json({event: event, status: 'ok', message: message});
             })
             .catch(function (err) {
                 if (photo) {
@@ -104,7 +104,7 @@ router.get('/:id', passport.authenticate('bearer', { session: false }), function
                 var message = 'Event found with success';
 
                 log.info(message);
-                return res.json({event: event.toJSON(), status: 'ok', message: message});
+                return res.json({event: event, status: 'ok', message: message});
             }
         });
 });
@@ -133,7 +133,7 @@ router.delete('/:id', passport.authenticate('bearer', { session: false }), funct
                     var message = 'Event deleted with success!';
 
                     log.info(message);
-                    return res.json({ event: event.toJSON(), status: 'ok', message: message });
+                    return res.json({ event: event, status: 'ok', message: message });
                 }
             });
         }

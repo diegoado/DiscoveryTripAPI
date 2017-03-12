@@ -100,7 +100,7 @@ router.get('/:id', passport.authenticate('bearer', { session: false }), function
                 var message = 'Attraction found with success';
 
                 log.info(message);
-                return res.json({attraction: attraction.toJSON(), status: 'ok', message: message});
+                return res.json({attraction: attraction, status: 'ok', message: message});
             }
     });
 });
