@@ -70,7 +70,7 @@ router.post('/', multer.array('photos', 10), passport.authenticate('bearer', { s
         }).save()
             .then(function (attraction) {
                 // Add new attraction in search engine
-                georedis.addLocalization(attraction.name, req.body.latitude, req.body.longitude);
+                georedis.addLocalization(attraction._id, req.body.latitude, req.body.longitude);
 
                 // Request result not in an Error
                 var message = 'New Tourist Attraction created with success!';
@@ -123,7 +123,7 @@ router.delete('/:id', passport.authenticate('bearer', { session: false }), funct
                     error.genericErrorHandler(res, 500, "server_error", err.message)
                 } else {
                     // Remove attraction in search engine
-                    georedis.deleteLocalization(attraction.name);
+                    georedis.deleteLocalization(attraction._id);
 
                     // Request result not in an Error
                     var message = 'Attraction deleted with success!';

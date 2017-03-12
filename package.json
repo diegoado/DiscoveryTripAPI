@@ -32,6 +32,7 @@
     "mongoose": "~4.7.0",
     "mongoose-exists": "^0.1.0",
     "mongoose-findorcreate": "^0.1.2",
+    "mongoose-schema-extend": "^0.2.2",
     "mongoose-validator": "^1.2.5",
     "multer": "^1.2.1",
     "nconf": "^0.6.x",

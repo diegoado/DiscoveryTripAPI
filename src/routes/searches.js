@@ -17,11 +17,11 @@ var regExpLatitude  = /^(\+|-)?(?:90(?:(?:\.0{1,8})?)|(?:[0-9]|[1-8][0-9])(?:(?:
     regExpLongitude = /^(\+|-)?(?:180(?:(?:\.0{1,8})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,8})?))$/;
 
 // Load Models
-var Attraction   = require(src + 'models/attraction'),
-    Event = require(src + 'models/event');
+var Attraction = require(src + 'models/attraction'),
+    Event = require(src + 'models/event'),
+    Point = require(src + 'models/point');
 
-
-router.get('/attractions', passport.authenticate('bearer', { session: false }), function(req, res) {
+router.get('/points', passport.authenticate('bearer', { session: false }), function(req, res) {
     var latitude  = req.query.latitude,
         longitude = req.query.longitude,
         distance  = parseInt(req.query.distance, 10) || 5000;
@@ -31,72 +31,30 @@ router.get('/attractions', passport.authenticate('bearer', { session: false }), 
     } else if(!regExpLatitude.test(latitude) || !regExpLongitude.test(longitude)) {
         error.genericErrorHandler(res, 400, "user_error", "Invalid Latitude or Longitude matches!");
     } else {
-        georedis.searchNearbyLocalizations('attractions', latitude, longitude, distance, function (err, result) {
+        georedis.searchNearbyLocalizations(latitude, longitude, distance, function (err, result) {
             if (err) {
                 log.error(err.message);
 
                 error.genericErrorHandler(res, 500, "server_error", "Search engine error");
             } else if (!result.length) {
                 // Request result not in an Error, but any attraction was found
-                var message = "Not found any attraction near the input coordinates";
+                var message = "Not found any point near the input coordinates";
 
                 log.info(message);
-                res.json({attractions: [], status: 'ok', message: message});
+                res.json({points: [], status: 'ok', message: message});
             } else {
-                Attraction.find({name: { $in: result }})
+                Point.find({_id: { $in: result }})
                     .populate('localization')
-                    .exec(function (err, attractions) {
+                    .exec(function (err, points) {
                         if (err) {
                             log.error(err.message);
                             error.genericErrorHandler(res, 500, "server_error", "mongodb_error")
                         } else {
                             // Request result not in an Error
-                            var message = "Were found attractions near the input coordinates";
+                            var message = "Were found points near the input coordinates";
 
                             log.info(message);
-                            res.json({attractions: attractions, status: "ok", message: message});
-                        }
-                    });
-            }
-        })
-    }
-});
-
-
-router.get('/events', passport.authenticate('bearer', { session: false }), function(req, res) {
-    var latitude  = req.query.latitude,
-        longitude = req.query.longitude,
-        distance  = parseInt(req.query.distance, 10) || 5000;
-
-    if (!latitude || !longitude) {
-        error.genericErrorHandler(res, 400, "user_error", "Latitude and Longitude is required in this search!");
-    } else if(!regExpLatitude.test(latitude) || !regExpLongitude.test(longitude)) {
-        error.genericErrorHandler(res, 400, "user_error", "Invalid Latitude or Longitude matches!");
-    } else {
-        georedis.searchNearbyLocalizations('attractions', latitude, longitude, distance, function (err, result) {
-            if (err) {
-                log.error(err.message);
-
-                error.genericErrorHandler(res, 500, "server_error", "Search engine error");
-            } else if (!result.length) {
-                // Request result not in an Error, but any attraction was found
-                var message = "Not found any event near the input coordinates";
-
-                log.info(message);
-                res.json({events: [], status: 'ok', message: message});
-            } else {
-                Event.find({_id: { $in: result }})
-                    .populate('localization')
-                    .exec(function (err, events) {
-                        if (err) {
-                            log.error(err.message);
-                            error.genericErrorHandler(res, 500, "server_error", "mongodb_error")
-                        } else {
-                            // Request result not in an Error
-                            var message = "Were found events near the input coordinates";
-
-                            log.info(message);
-                            res.json({events: events, status: "ok", message: message});
+                            res.json({points: points, status: "ok", message: message});
                         }
                     });
             }

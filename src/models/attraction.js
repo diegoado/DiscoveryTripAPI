@@ -1,52 +1,26 @@
 var mongoose = require('mongoose'),
     _ = require("underscore"),
-    exists = require('mongoose-exists'),
     validator = require('mongoose-validator'),
     Schema = mongoose.Schema;
-
 
 // Find project working directory
 var src = process.cwd() + '/src/';
 
 // Load Models
-var User = require(src + 'models/user'),
+var Point = require(src + 'models/point'),
     Photo = require(src + 'models/photo'),
     Localization = require(src + 'models/localization');
 
 // Custom validator functions
 validator.extend('chkArr', function (arr) { return arr.length >= 1 && arr.length <= 10 }, 'Array size is invalid');
 
-var Attraction = new Schema({
-    ownerId: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
-        exists: true
-    },
-
-    name: {
-        type: String,
-        required: true
-    },
-
-    description: {
-        type: String,
-        required: true
-    },
-
+var Attraction = Point.schema.extend({
     category: {
         type: String,
         enum: [
             'beaches', 'island resorts', 'parks', 'forests', 'monuments', 'temples', 'zoos', 'aquariums', 'museums',
             'art galleries', 'botanical gardens', 'castles', 'libraries', 'prisons', 'skyscrapers', 'bridges'
         ]
-    },
-
-    localization: {
-        type: Schema.Types.ObjectId,
-        ref: 'Localization',
-        required: true,
-        exists: true
     },
 
     photos: {
@@ -65,21 +39,7 @@ var Attraction = new Schema({
         type: Boolean,
         select: false,
         default: false
-    },
-
-    created: {
-        type: Date,
-        default: Date.now
-    },
-
-    updated: {
-        type: Date,
-        select: false,
-        default: Date.now
     }
-
-}, {
-    versionKey: false
 });
 
 Attraction.virtual('state')
@@ -135,7 +95,5 @@ Attraction.post('remove', function (attraction) {
     }).exec();
 });
 
-
-Attraction.plugin(exists);
 
 module.exports = mongoose.model('Attraction', Attraction);
