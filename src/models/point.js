@@ -42,7 +42,7 @@ var PointSchema = new Schema({
 }, {
     versionKey: false,
     collection: 'points',
-    discriminatorKey: { name: '_type', select: true }
+    discriminatorKey: '_type'
 });
 
 PointSchema.plugin(exists);

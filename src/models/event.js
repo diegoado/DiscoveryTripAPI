@@ -65,6 +65,7 @@ var Event = Point.schema.extend({
 Event.methods.toJSON = function () {
     return {
         _id         : this._id,
+        _type       : this._type,
         name        : this.name,
         description : this.description,
         localization: this.localization,
