@@ -17,9 +17,7 @@ var regExpLatitude  = /^(\+|-)?(?:90(?:(?:\.0{1,8})?)|(?:[0-9]|[1-8][0-9])(?:(?:
     regExpLongitude = /^(\+|-)?(?:180(?:(?:\.0{1,8})?)|(?:[0-9]|[1-9][0-9]|1[0-7][0-9])(?:(?:\.[0-9]{1,8})?))$/;
 
 // Load Models
-var Attraction = require(src + 'models/attraction'),
-    Event = require(src + 'models/event'),
-    Point = require(src + 'models/point');
+var Point = require(src + 'models/point');
 
 router.get('/points', passport.authenticate('bearer', { session: false }), function(req, res) {
     var latitude  = req.query.latitude,

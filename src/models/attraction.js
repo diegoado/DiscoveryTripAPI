@@ -8,8 +8,7 @@ var src = process.cwd() + '/src/';
 
 // Load Models
 var Point = require(src + 'models/point'),
-    Photo = require(src + 'models/photo'),
-    Localization = require(src + 'models/localization');
+    Photo = require(src + 'models/photo');
 
 // Custom validator functions
 validator.extend('chkArr', function (arr) { return arr.length >= 1 && arr.length <= 10 }, 'Array size is invalid');
@@ -78,14 +77,6 @@ Attraction.methods.toSortJSON = function () {
 
 // Register cascading actions
 Attraction.post('remove', function (attraction) {
-    Localization.findById(attraction.localization, function (err, localization) {
-        if (err) {
-            log.warn('Fail to remove attraction localization with id: ' + attraction.localization);
-        } else {
-            localization.remove();
-        }
-    }).exec();
-
     Photo.find({ _id: { $in: attraction.photos }}, function (err, photos) {
         if (err) {
             log.warn('Fail to remove attraction photos with ids: ' + attraction.photos);

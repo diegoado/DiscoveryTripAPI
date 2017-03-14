@@ -10,8 +10,7 @@ var log = require(src + 'helpers/log')(module);
 
 // Load Models
 var Point = require(src + 'models/point'),
-    Photo = require(src + 'models/photo'),
-    Localization = require(src + 'models/localization');
+    Photo = require(src + 'models/photo');
 
 // Custom validator functions
 validator.extend('chkDates', function (inputDate) { return this.startDate < inputDate }, 'Invalid input date');
@@ -80,19 +79,9 @@ Event.methods.toJSON = function () {
 
 // Register cascading actions
 Event.post('remove', function (event) {
-    Localization.findById(event.localization, function (err, localization) {
+    Photo.findByIdAndRemove(event.photo, function (err, photo) {
         if (err) {
-            log.warn('Fail to remove attraction localization with id: ' + event.localization);
-        } else {
-            localization.remove();
-        }
-    }).exec();
-
-    Photo.findById(event.photo, function (err, photo) {
-        if (err) {
-            log.warn('Fail to remove attraction photos with ids: ' + event.photos);
-        } else {
-            photo.remove();
+            log.warn('Fail to remove event photo with id: ' + event.photo);
         }
     }).exec();
 });
