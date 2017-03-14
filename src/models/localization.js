@@ -65,7 +65,6 @@ var Localization = new Schema({
     versionKey: false
 });
 
-/**
 Localization.post('save', function (localization) {
     geocoder.reverse({lat: localization.latitude, lon: localization.longitude}, function (err, address) {
         if (err) {
@@ -89,7 +88,6 @@ Localization.post('save', function (localization) {
         }
     });
 });
-**/
 
 // Remove longitude and latitude restriction
 // Localization.index({longitude: 1, latitude: 1}, {unique: true});
