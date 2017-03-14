@@ -10,7 +10,6 @@ var src = process.cwd() + '/src/';
 var config = require(src + 'helpers/conf'),
     log = require(src + 'helpers/log')(module);
 
-
 // Load Models
 var Localization = require(src + 'models/localization');
 
