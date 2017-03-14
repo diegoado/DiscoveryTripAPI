@@ -1,52 +1,25 @@
 var mongoose = require('mongoose'),
     _ = require("underscore"),
-    exists = require('mongoose-exists'),
     validator = require('mongoose-validator'),
     Schema = mongoose.Schema;
-
 
 // Find project working directory
 var src = process.cwd() + '/src/';
 
 // Load Models
-var User = require(src + 'models/user'),
-    Photo = require(src + 'models/photo'),
-    Localization = require(src + 'models/localization');
+var Point = require(src + 'models/point'),
+    Photo = require(src + 'models/photo');
 
 // Custom validator functions
 validator.extend('chkArr', function (arr) { return arr.length >= 1 && arr.length <= 10 }, 'Array size is invalid');
 
-var Attraction = new Schema({
-    ownerId: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
-        exists: true
-    },
-
-    name: {
-        type: String,
-        required: true
-    },
-
-    description: {
-        type: String,
-        required: true
-    },
-
+var Attraction = Point.schema.extend({
     category: {
         type: String,
         enum: [
             'beaches', 'island resorts', 'parks', 'forests', 'monuments', 'temples', 'zoos', 'aquariums', 'museums',
             'art galleries', 'botanical gardens', 'castles', 'libraries', 'prisons', 'skyscrapers', 'bridges'
         ]
-    },
-
-    localization: {
-        type: Schema.Types.ObjectId,
-        ref: 'Localization',
-        required: true,
-        exists: true
     },
 
     photos: {
@@ -65,21 +38,7 @@ var Attraction = new Schema({
         type: Boolean,
         select: false,
         default: false
-    },
-
-    created: {
-        type: Date,
-        default: Date.now
-    },
-
-    updated: {
-        type: Date,
-        select: false,
-        default: Date.now
     }
-
-}, {
-    versionKey: false
 });
 
 Attraction.virtual('state')
@@ -90,6 +49,7 @@ Attraction.virtual('state')
 Attraction.methods.toJSON = function () {
     return {
         _id         : this._id,
+        _type       : this._type,
         name        : this.name,
         description : this.description,
         localization: this.localization,
@@ -106,6 +66,7 @@ Attraction.methods.toSortJSON = function () {
 
     return {
         _id         : this._id,
+        _type       : this._type,
         name        : this.name,
         description : this.description,
         localization: this.localization,
@@ -116,14 +77,6 @@ Attraction.methods.toSortJSON = function () {
 
 // Register cascading actions
 Attraction.post('remove', function (attraction) {
-    Localization.findById(attraction.localization, function (err, localization) {
-        if (err) {
-            log.warn('Fail to remove attraction localization with id: ' + attraction.localization);
-        } else {
-            localization.remove();
-        }
-    }).exec();
-
     Photo.find({ _id: { $in: attraction.photos }}, function (err, photos) {
         if (err) {
             log.warn('Fail to remove attraction photos with ids: ' + attraction.photos);
@@ -135,7 +88,5 @@ Attraction.post('remove', function (attraction) {
     }).exec();
 });
 
-
-Attraction.plugin(exists);
 
 module.exports = mongoose.model('Attraction', Attraction);

@@ -24,7 +24,7 @@ router.post('/', function(req, res) {
             var message = 'New User created with success';
 
             log.info(message);
-            return res.json({ user: user.toJSON(), status: 'ok', message: message });
+            return res.json({ user: user, status: 'ok', message: message });
         } else {
             if (err.name === 'ValidationError') {
                 return error.invalidFieldError(err, res);
@@ -39,7 +39,7 @@ router.get('/', passport.authenticate('bearer', { session: false }), function(re
     var message = 'User found with success';
 
     log.info(message);
-    return res.json({ user: req.user.toJSON(), status: 'ok', message: message });
+    return res.json({ user: req.user, status: 'ok', message: message });
 });
 
 router.put('/', passport.authenticate('bearer', { session: false }), function (req, res) {
@@ -59,7 +59,7 @@ router.put('/', passport.authenticate('bearer', { session: false }), function (r
                 var message = 'User updated with success!';
 
                 log.info(message);
-                return res.json({user: req.user.toJSON(), status: 'ok', message: message});
+                return res.json({user: req.user, status: 'ok', message: message});
             } else {
                 if (err.name === 'ValidationError') {
                     return error.invalidFieldError(err, res);
@@ -81,7 +81,7 @@ router.delete('/', passport.authenticate('bearer', { session: false }), function
                 var message = 'User deleted with success!';
 
                 log.info(message);
-                return res.json({ user: req.user.toJSON(), status: 'ok', message: message });
+                return res.json({ user: req.user, status: 'ok', message: message });
             } else {
                return error.genericErrorHandler(res, err.status, err.code, err.message);
             }

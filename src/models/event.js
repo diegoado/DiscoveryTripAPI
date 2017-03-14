@@ -1,6 +1,6 @@
 var mongoose = require('mongoose'),
     validator = require('mongoose-validator'),
-    exists = require('mongoose-exists'),
+    extend = require('mongoose-schema-extend'),
     Schema = mongoose.Schema;
 
 // Find project working directory
@@ -9,31 +9,14 @@ var src = process.cwd() + '/src/';
 var log = require(src + 'helpers/log')(module);
 
 // Load Models
-var User = require(src + 'models/user'),
+var Point = require(src + 'models/point'),
     Photo = require(src + 'models/photo');
 
 // Custom validator functions
 validator.extend('chkDates', function (inputDate) { return this.startDate < inputDate }, 'Invalid input date');
 
 
-var Event = new Schema({
-    ownerId: {
-        type: Schema.Types.ObjectId,
-        ref: 'User',
-        required: true,
-        exists: true
-    },
-
-    name: {
-        type: String,
-        required: true
-    },
-
-    description: {
-        type: String,
-        required: true
-    },
-
+var Event = Point.schema.extend({
     guests: {
         type: [{
             type: Schema.Types.ObjectId,
@@ -45,13 +28,6 @@ var Event = new Schema({
     photo: {
         type: Schema.Types.ObjectId,
         ref: 'Photo',
-        exists: true
-    },
-
-    localization: {
-        type: Schema.Types.ObjectId,
-        ref: 'Localization',
-        required: true,
         exists: true
     },
 
@@ -82,26 +58,13 @@ var Event = new Schema({
         type: Date,
         required: true,
         validate: validator({ validator: 'chkDates', message: 'End date must be after start date'})
-    },
-
-    created: {
-        type: Date,
-        default: Date.now
-    },
-
-    updated: {
-        type: Date,
-        select: false,
-        default: Date.now
     }
-
-}, {
-    versionKey: false
 });
 
 Event.methods.toJSON = function () {
     return {
         _id         : this._id,
+        _type       : this._type,
         name        : this.name,
         description : this.description,
         localization: this.localization,
@@ -114,7 +77,14 @@ Event.methods.toJSON = function () {
     }
 };
 
-Event.plugin(exists);
+// Register cascading actions
+Event.post('remove', function (event) {
+    Photo.findByIdAndRemove(event.photo, function (err, photo) {
+        if (err) {
+            log.warn('Fail to remove event photo with id: ' + event.photo);
+        }
+    }).exec();
+});
 
 
 module.exports = mongoose.model('Event', Event);

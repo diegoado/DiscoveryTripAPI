@@ -29,8 +29,7 @@ Document Version: v1.0
 - [Images](#images)
     - [Download](#download-a-image)
 - [Searches](#searches)
-    - [Attractions by Localization](#attractions-by-localization)
-    - [Events by Localization](#events-by-localization)
+    - [Points by Localization](#points-by-localization)
 - [Errors](#errors)
 
 ## Overview
@@ -845,13 +844,13 @@ Download a image of one event or attraction in the application.
    
 ## Search
 
-#### **Attractions by Localization**
+#### **Points by Localization**
 
-Search attractions near to a localization around a determinate input radius (in meters)
+Search attractions and events near to a localization around a determinate input radius (in meters)
 
 * **URL**
 
-  `/api/search/attractions`
+  `/api/search/points`
 
 * **Method:**
 
@@ -871,9 +870,10 @@ Search attractions near to a localization around a determinate input radius (in 
   
    ```json
    {
-     "attractions": [
+     "points": [
        {
          "_id": "id",
+         "_type": "Attraction",
          "name": "attraction name",
          "description": "some description to attraction",
          "localization": {
@@ -892,7 +892,7 @@ Search attractions near to a localization around a determinate input radius (in 
        }
      ],
      "status": "ok",
-     "message": "Were found attractions near the input coordinates"
+     "message": "Were found points near the input coordinates"
    }
    ```
   
@@ -902,72 +902,9 @@ Search attractions near to a localization around a determinate input radius (in 
      curl -i \
        -H "Content-Type: application/json" \
        -H "Authorization: bearer <access_token>" \
-       http://localhost:8080/api/search/attractions?latitude=latitude&longitude=longitude&distance=5000
+       http://localhost:8080/api/search/point?latitude=latitude&longitude=longitude&distance=5000
    ```
 
-#### **Events by Localization**
-
-Search events near to a localization around a determinate input radius (in meters)
-
-* **URL**
-
-  `/api/search/events`
-
-* **Method:**
-
-   `GET`
-  
-* **URL Params**
-
-   *Required:*
- 
-     * `latitude  = [string] <- In ISO 6709 format`
-     * `longitude = [string] <- In ISO 6709 format`
-     * `distance  = [number] <- Default: 5000m`
-    
-* **Success Response:**
-  
-  * *Code:* 200
-  
-   ```json
-   {
-     "events": [
-       {
-         "_id": "id",
-         "name": "event name", 
-         "description": "some description to new event",
-         "localization": {
-           "_id": "id",
-           "latitude": "XX.XXX",
-           "longitude": "X.XXX",
-           "city": "city",
-           "country": "country",
-           "countryCode": "countryCode",
-           "streetName": "streetName",
-           "streetNumber": "streetNumber",
-           "zipcode": "XXX"
-         },
-         "photo": "photo_id",
-         "kind": "public",
-         "price": "0",
-         "keywords": ["keyword1", "...", "keywordN"],
-         "startDate": "YYYY-MM-DDThh:mm:ss.sssZ",
-         "endDate": "YYYY-MM-DDThh:mm:ss.sssZ"
-       } 
-     ],
-     "status": "ok",
-     "message": "Were found events near the input coordinates"
-   }
-   ```
-  
-* **Sample Call:**
-
-   ```bash
-     curl -i \
-       -H "Content-Type: application/json" \
-       -H "Authorization: bearer <access_token>" \
-       http://localhost:8080/api/search/events?latitude=latitude&longitude=longitude&distance=5000
-   ```
 
 ## Errors
 
