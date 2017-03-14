@@ -51,7 +51,7 @@ router.get('/points', passport.authenticate('bearer', { session: false }), funct
                             error.genericErrorHandler(res, 500, "server_error", "mongodb_error")
                         } else {
                             // Request result not in an Error
-                            var message = "Were found points near the input coordinates";
+                            var message = "Were found attractions near the input coordinates";
 
                             log.info(message);
                             res.json({points: points, status: "ok", message: message});
