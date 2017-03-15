@@ -67,7 +67,7 @@ router.post('/', multer.single('photo'), passport.authenticate('bearer', { sessi
             kind         : req.body.kind,
             price        : req.body.price,
             keywords     : req.body.keywords,
-            startDate  : req.body.startDate ? new Date(req.body.startDate) : null,
+            startDate  : req.body.startDate ? new Date(req.body.startDate) : new Date(),
             endDate    : new Date(req.body.endDate)
         }).save()
             .then(function (event) {
