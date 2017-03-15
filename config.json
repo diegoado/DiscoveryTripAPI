@@ -36,6 +36,10 @@
     "google": {
       "clientID": "125864993307-uct771sru27ies9gfkp1t027osf1hcbj.apps.googleusercontent.com",
       "apiKey": "AIzaSyCygi_NV1IngLzeffAuJTd9sw6IlFttO64"
+    },
+    "here": {
+      "appId": "b6fWXc0pEL3obqy8PkEs",
+      "appCode": "mVZKtxJlpjLFBsKuiJXjJw"
     }
   },
   "smtpConfig": {
