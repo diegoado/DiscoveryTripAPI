@@ -61,14 +61,14 @@ var Event = Point.schema.extend({
     }
 });
 
-Event.methods.toJSON = function () {
+Event.methods.toEventJSON = function () {
     return {
         _id         : this._id,
         _type       : this._type,
         name        : this.name,
         description : this.description,
         localization: this.localization,
-        photo       : this.photo._id,
+        photo       : this.photo ? this.photo._id : null,
         kind        : this.kind,
         price       : this.price,
         keywords    : this.keywords,

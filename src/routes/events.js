@@ -76,8 +76,6 @@ router.post('/', multer.single('photo'), passport.authenticate('bearer', { sessi
 
                 // Request result not in an Error
                 var message = 'New Event created with success!';
-
-                log.info(message);
                 return res.json({event: event, status: 'ok', message: message});
             })
             .catch(function (err) {
@@ -92,52 +90,8 @@ router.post('/', multer.single('photo'), passport.authenticate('bearer', { sessi
     }
 });
 
-router.get('/:id', passport.authenticate('bearer', { session: false }), function(req, res) {
-    Event.findById(req.params.id)
-        .populate('localization')
-        .exec(function (err, event) {
-            if (err) {
-                error.genericErrorHandler(res, err.status, err.code, err.message);
-            } else if (!event) {
-                error.genericErrorHandler(res, 404, 'user_error', 'Attraction not found!');
-            } else {
-                var message = 'Event found with success';
-
-                log.info(message);
-                return res.json({event: event, status: 'ok', message: message});
-            }
-        });
-});
-
 router.put('/:id', passport.authenticate('bearer', { session: false }), function(req, res) {
     error.genericErrorHandler(res, 500, "server_error", "Route not implemented!");
-});
-
-router.delete('/:id', passport.authenticate('bearer', { session: false }), function(req, res) {
-    Event.findById(req.params.id, function (err, event) {
-        if (err) {
-            error.genericErrorHandler(res, err.status, err.code, err.message);
-        } else if (!event) {
-            error.genericErrorHandler(res, 404, 'user_error', 'Attraction not found!');
-        } else if (event.ownerId !== req.user.userId) {
-            error.genericErrorHandler(res, 404, 'user_error', 'Only the owner of the attraction can remove it!');
-        } else {
-            event.remove(function (err) {
-                if (err) {
-                    error.genericErrorHandler(res, 500, "server_error", err.message)
-                } else {
-                    // Remove attraction in search engine
-                    georedis.deleteLocalization(event._id);
-
-                    // Request result not in an Error
-                    var message = 'Event deleted with success!';
-
-                    log.info(message);
-                    return res.json({ event: event, status: 'ok', message: message });
-                }
-            });
-        }
-    })
 });
 
 

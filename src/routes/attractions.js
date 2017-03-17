@@ -88,52 +88,9 @@ router.post('/', multer.array('photos', 10), passport.authenticate('bearer', { s
     }
 });
 
-router.get('/:id', passport.authenticate('bearer', { session: false }), function(req, res) {
-    Attraction.findById(req.params.id)
-        .populate('localization')
-        .exec(function (err, attraction) {
-            if (err) {
-                error.genericErrorHandler(res, err.status, err.code, err.message);
-            } else if (!attraction) {
-                error.genericErrorHandler(res, 404, 'user_error', 'Attraction not found!');
-            } else {
-                var message = 'Attraction found with success';
-
-                log.info(message);
-                return res.json({attraction: attraction, status: 'ok', message: message});
-            }
-    });
-});
-
 router.put('/:id', passport.authenticate('bearer', { session: false }), function(req, res) {
     error.genericErrorHandler(res, 500, "server_error", "Route not implemented!");
 });
 
-router.delete('/:id', passport.authenticate('bearer', { session: false }), function(req, res) {
-    Attraction.findById(req.params.id, function (err, attraction) {
-        if (err) {
-            error.genericErrorHandler(res, err.status, err.code, err.message);
-        } else if (!attraction) {
-            error.genericErrorHandler(res, 404, 'user_error', 'Attraction not found!');
-        } else if (attraction.ownerId !== req.user.userId) {
-            error.genericErrorHandler(res, 404, 'user_error', 'Only the owner of the attraction can remove it!');
-        } else {
-            attraction.remove(function (err) {
-                if (err) {
-                    error.genericErrorHandler(res, 500, "server_error", err.message)
-                } else {
-                    // Remove attraction in search engine
-                    georedis.deleteLocalization(attraction._id);
-
-                    // Request result not in an Error
-                    var message = 'Attraction deleted with success!';
-
-                    log.info(message);
-                    return res.json({ attraction: attraction.toSortJSON(), status: 'ok', message: message });
-                }
-            });
-        }
-    })
-});
 
 module.exports = router;

@@ -29,6 +29,7 @@ Document Version: v1.0
 - [Images](#images)
     - [Download](#download-a-image)
 - [Searches](#searches)
+    - [User Points](#user-points)
     - [Points by Localization](#points-by-localization)
 - [Errors](#errors)
 
@@ -481,6 +482,7 @@ The latitude and longitude is validated to avoid creating inconsistencies in the
    {
      "attraction": {
        "_id": "id",
+       "_type": "Attraction",
        "name": "attraction name", 
        "description": "some description to new attraction",
        "localization": { 
@@ -516,7 +518,7 @@ Lists details of a tourist attraction in the application.
 
 * **URL**
 
-  `/api/attractions/:id`
+  `/api/points/:id`
 
 * **Method:**
 
@@ -536,6 +538,7 @@ Lists details of a tourist attraction in the application.
    {
      "attraction": {
        "_id": "id",
+       "_type": "Attraction",
        "name": "attraction name",
        "description": "some description to attraction",
        "localization": {
@@ -565,7 +568,7 @@ Lists details of a tourist attraction in the application.
      curl -i \
        -H "Content-Type: application/json" \
        -H "Authorization: bearer <access_token>" \
-       http://localhost:8080/api/attractions/:id
+       http://localhost:8080/api/points/:id
    ```
    
 #### **Delete a Attraction**
@@ -574,7 +577,7 @@ Removes an attraction present in the application based on your ID.
 
 * **URL**
 
-  `/api/attractions/:id`
+  `/api/points/:id`
 
 * **Method:**
 
@@ -594,6 +597,7 @@ Removes an attraction present in the application based on your ID.
    {
      "attraction": {
        "_id": "id",
+       "_type": "Attraction",
        "name": "attraction name", 
        "description": "some description to new attraction",
        "localization": "id",
@@ -612,7 +616,7 @@ Removes an attraction present in the application based on your ID.
        -H "Content-Type: application/json" \
        -H "Authorization: bearer <access_token>" \
        -X DELETE \
-       http://localhost:8080/api/attractions/:id
+       http://localhost:8080/api/points/:id
    ```
 
 ## Events
@@ -655,6 +659,8 @@ The latitude and longitude is validated to avoid creating inconsistencies in the
   ```json
    {
      "event": {
+       "id": "id",
+       "_type": "Event",
        "name": "event name", 
        "description": "some description to new event",
        "localization": {
@@ -704,7 +710,7 @@ Lists details of an event in the application.
 
 * **URL**
 
-  `/api/events/:id`
+  `/api/points/:id`
 
 * **Method:**
 
@@ -723,6 +729,8 @@ Lists details of an event in the application.
   ```json
      {
        "event": {
+         "_id": "id",
+         "_type": "Event",
          "name": "event name", 
          "description": "some description to new event",
          "localization": {
@@ -763,7 +771,7 @@ Removes an event present in the application based on your ID.
 
 * **URL**
 
-  `/api/events/:id`
+  `/api/points/:id`
 
 * **Method:**
 
@@ -782,6 +790,8 @@ Removes an event present in the application based on your ID.
   ```json
    {
      "event": {
+       "_id": "id",
+       "_type": "Event",
        "name": "event name", 
        "description": "some description to new event",
        "localization": "localization_id",
@@ -843,6 +853,88 @@ Download a image of one event or attraction in the application.
    ```
    
 ## Search
+
+#### **User Points**
+
+Get all points of a specific user
+
+* **URL**
+
+  `/api/search/points`
+
+* **Method:**
+
+   `GET`
+  
+* **URL Params**
+
+   *Required:*
+ 
+     * `None`
+    
+* **Success Response:**
+  
+  * *Code:* 200
+  
+   ```json
+   {
+     "points": [
+       {
+         "_id": "id",
+         "_type": "Attraction",
+         "name": "attraction name",
+         "description": "some description to attraction",
+         "localization": {
+           "_id": "id",
+           "latitude": "XX.XXX",
+           "longitude": "X.XXX",
+           "city": "city",
+           "country": "country",
+           "countryCode": "countryCode",
+           "streetName": "streetName",
+           "streetNumber": "streetNumber",
+           "zipcode": "XXX"
+         },
+         "photos": ["id1", "id2", "...", "idN"],
+         "state": "In Approval"
+       },
+       {
+         "_id": "id",
+         "_type": "Event",
+         "name": "event name", 
+         "description": "some description to new event",
+         "localization": {
+           "_id": "id",
+           "latitude": "XX.XXX",
+           "longitude": "X.XXX",
+           "city": "city",
+           "country": "country",
+           "countryCode": "countryCode",
+           "streetName": "streetName",
+           "streetNumber": "streetNumber",
+           "zipcode": "XXX"
+         },
+         "photo": "photo_id",
+         "kind": "public",
+         "price": "0",
+         "keywords": ["keyword1", "...", "keywordN"],
+         "startDate": "YYYY-MM-DDThh:mm:ss.sssZ",
+         "endDate": "YYYY-MM-DDThh:mm:ss.sssZ"
+       }
+     ],
+     "status": "ok",
+     "message": "Points found with success"
+   }
+   ```
+  
+* **Sample Call:**
+
+   ```bash
+     curl -i \
+       -H "Content-Type: application/json" \
+       -H "Authorization: bearer <access_token>" \
+       http://localhost:8080/api/points
+   ```
 
 #### **Points by Localization**
 

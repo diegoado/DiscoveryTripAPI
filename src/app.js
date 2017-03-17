@@ -15,6 +15,7 @@ var log = require('./helpers/log')(module);
 var api         = require('./routes/api'),
     users       = require('./routes/users'),
     oauth       = require('./routes/oauth'),
+    points      = require('./routes/points'),
     events      = require('./routes/events'),
     images      = require('./routes/images'),
     searches    = require('./routes/searches'),
@@ -36,6 +37,7 @@ app.use('/', api);
 app.use('/api', api);
 app.use('/api', oauth);
 app.use('/api/users', users);
+app.use('/api/points', points);
 app.use('/api/images', images);
 app.use('/api/events', events);
 app.use('/api/search', searches);

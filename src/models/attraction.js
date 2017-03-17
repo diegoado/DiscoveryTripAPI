@@ -1,6 +1,7 @@
 var mongoose = require('mongoose'),
     _ = require("underscore"),
     validator = require('mongoose-validator'),
+    extend = require('mongoose-schema-extend'),
     Schema = mongoose.Schema;
 
 // Find project working directory

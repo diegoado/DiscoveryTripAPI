@@ -35,7 +35,7 @@ router.get('/points', passport.authenticate('bearer', { session: false }), funct
 
                 error.genericErrorHandler(res, 500, "server_error", "Search engine error");
             } else if (!result.length) {
-                // Request result not in an Error, but any attraction was found
+                // Request result not in an Error, but any point was found
                 var message = "Not found any point near the input coordinates";
 
                 log.info(message);
