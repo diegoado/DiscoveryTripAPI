@@ -31,6 +31,7 @@ Document Version: v1.0
 - [Searches](#searches)
     - [User Points](#user-points)
     - [Points by Localization](#points-by-localization)
+    - [Points by Name](#points-by-name)
 - [Errors](#errors)
 
 ## Overview
@@ -995,6 +996,65 @@ Search attractions and events near to a localization around a determinate input 
        -H "Content-Type: application/json" \
        -H "Authorization: bearer <access_token>" \
        http://localhost:8080/api/search/point?latitude=latitude&longitude=longitude&distance=5000
+   ```
+
+#### **Points by Name**
+
+Search attractions and events by name or a keyword or a text in point description 
+
+* **URL**
+
+  `/api/search/name`
+
+* **Method:**
+
+   `GET`
+  
+* **URL Params**
+
+   *Required:*
+ 
+     * `text  = [string]`
+    
+* **Success Response:**
+  
+  * *Code:* 200
+  
+   ```json
+   {
+     "points": [
+       {
+         "_id": "id",
+         "_type": "Attraction",
+         "name": "attraction name",
+         "description": "some description to attraction",
+         "localization": {
+           "_id": "id",
+           "latitude": "XX.XXX",
+           "longitude": "X.XXX",
+           "city": "city",
+           "country": "country",
+           "countryCode": "countryCode",
+           "streetName": "streetName",
+           "streetNumber": "streetNumber",
+           "zipcode": "XXX"
+         },
+         "photos": ["id1", "id2", "...", "idN"],
+         "state": "In Approval"
+       }
+     ],
+     "status": "ok",
+     "message": "Were found points near the input coordinates"
+   }
+   ```
+  
+* **Sample Call:**
+
+   ```bash
+     curl -i \
+       -H "Content-Type: application/json" \
+       -H "Authorization: bearer <access_token>" \
+       http://localhost:8080/api/search/name?text={name|a keyword|part of description}
    ```
 
 
