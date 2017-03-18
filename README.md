@@ -860,7 +860,7 @@ Get all points of a specific user
 
 * **URL**
 
-  `/api/search/points`
+  `/api/points`
 
 * **Method:**
 
