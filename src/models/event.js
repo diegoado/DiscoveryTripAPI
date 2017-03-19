@@ -17,7 +17,7 @@ validator.extend('chkDates', function (inputDate) { return this.startDate < inpu
 
 
 var Event = Point.schema.extend({
-    guests: {
+    interested: {
         type: [{
             type: Schema.Types.ObjectId,
             ref: 'User'
@@ -61,7 +61,7 @@ var Event = Point.schema.extend({
     }
 });
 
-Event.methods.toEventJSON = function () {
+Event.methods.toJSON = function () {
     return {
         _id         : this._id,
         _type       : this._type,

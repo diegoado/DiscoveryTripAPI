@@ -26,29 +26,25 @@ router.get('/name', passport.authenticate('bearer', { session: false }), functio
     if (!text) {
         error.genericErrorHandler(res, 400, "user_error", "Some input text is required in this search!");
     } else {
-        var message;
-        Point.find({ $or: [{ name: text }, { description: { $regex: text }}, { keywords: text }] })
-            .select('-guests')
+        var message,
+            query = [{name: text}, {description: { $regex: text, $options: 'i' }}, {category: text}, {keywords: text}];
+        Point.find({ $or: query })
             .populate('localization')
             .exec(function (err, points) {
                 if (err) {
                     log.error(err.message);
 
                     error.genericErrorHandler(res, 500, "server_error", "mongodb_error")
-                } else if (!points.length) {
-                    // Request result not in an Error, but any point was found
-                    message = "Not found any point that matches with input text";
-
-                    log.info(message);
-                    res.json({points: [], status: 'ok', message: message});
                 } else {
-                    // Request result not in an Error
-                    message = "Were found points that matches with input text";
-
-                    log.info(message);
-                    res.json({points: points, status: "ok", message: message});
-
+                    if (!points.length)
+                        // Request result not in an Error, but any point was found
+                        message = "Not found any point that matches with input text";
+                    else
+                        // Request result not in an Error
+                        message = "Were found points that matches with input text";
                 }
+                log.info(message);
+                res.json({points: points, status: "ok", message: message});
             });
     }
 });
@@ -77,7 +73,6 @@ router.get('/points', passport.authenticate('bearer', { session: false }), funct
                 res.json({points: [], status: 'ok', message: message});
             } else {
                 Point.find({_id: { $in: result }})
-                    .select('-guests')
                     .populate('localization')
                     .exec(function (err, points) {
                         if (err) {

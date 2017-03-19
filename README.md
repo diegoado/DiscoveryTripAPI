@@ -26,6 +26,10 @@ Document Version: v1.0
     - [Read](#read-a-event)
     - [Update](#update-a-event)
     - [Delete](#delete-a-event)
+- [Interested Events](#interested-events)
+    - [Create](#declare-event-interest)
+    - [Read](#read-interest-events)
+    - [Delete](#revoke-event-interest)
 - [Images](#images)
     - [Download](#download-a-image)
 - [Searches](#searches)
@@ -817,7 +821,123 @@ Removes an event present in the application based on your ID.
        -X DELETE \
        http://localhost:8080/api/events/:id
    ```  
+
+## Interested Events
+
+#### **Declare Event Interest**
+
+Add an event to list of interested events of an user
+
+* **URL**
+
+  `/api/events/:id/interestme`
+
+* **Method:**
+
+   `POST`
+  
+* **URL Params**
+
+   *Required:*
+ 
+     * `id = [string]`
     
+* **Success Response:**
+  
+  * *Code:* 200
+    
+  ```json
+   {
+     "status": "ok",
+     "message": "User interest on event <id> registered with success"
+   }
+  ```
+  
+* **Sample Call:**
+
+   ```bash
+     curl -i \
+       -H "Content-Type: application/json" \
+       -H "Authorization: bearer <access_token>" \
+       http://localhost:8080/api/events/:id/interestme
+   ```
+
+#### **Read Interest Events**
+
+Get all interest events of an user at current day
+
+* **URL**
+
+  `/api/events/interestme`
+
+* **Method:**
+
+   `GET`
+  
+* **URL Params**
+
+   *Required:*
+ 
+     * `id = [string]`
+    
+* **Success Response:**
+  
+  * *Code:* 200
+    
+  ```json
+   {
+     "status": "ok",
+     "message": "Was found events of interest to the user for today"
+   }
+  ```
+  
+* **Sample Call:**
+
+   ```bash
+     curl -i \
+       -H "Content-Type: application/json" \
+       -H "Authorization: bearer <access_token>" \
+       http://localhost:8080/api/events/interestme
+   ```
+   
+#### **Revoke Event Interest**
+
+Remove an event to list of interested events of an user
+
+* **URL**
+
+  `/api/events/:id/interestme`
+
+* **Method:**
+
+   `DELETE`
+  
+* **URL Params**
+
+   *Required:*
+ 
+     * `id = [string]`
+    
+* **Success Response:**
+  
+  * *Code:* 200
+    
+  ```json
+   {
+     "status": "ok",
+     "message": "User interest on event <id> unregistered with success"
+   }
+  ```
+  
+* **Sample Call:**
+
+   ```bash
+     curl -i \
+       -H "Content-Type: application/json" \
+       -H "Authorization: bearer <access_token>" \
+       http://localhost:8080/api/events/:id/interestme
+   ```
+   
 ## Images
 
 #### **Download a Image**
@@ -852,7 +972,8 @@ Download a image of one event or attraction in the application.
        -H "Authorization: bearer <access_token>" \
        http://localhost:8080/api/photos/:id/download/
    ```
-   
+
+
 ## Search
 
 #### **User Points**
@@ -1000,7 +1121,8 @@ Search attractions and events near to a localization around a determinate input 
 
 #### **Points by Name**
 
-Search attractions and events by name or a keyword or a text in point description 
+Search attractions and events by point name, or an event keyword, or an attraction category, 
+or a text in point description 
 
 * **URL**
 

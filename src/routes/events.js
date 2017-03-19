@@ -94,5 +94,73 @@ router.put('/:id', passport.authenticate('bearer', { session: false }), function
     error.genericErrorHandler(res, 500, "server_error", "Route not implemented!");
 });
 
+router.get('/interestme', passport.authenticate('bearer', { session: false }), function (req, res) {
+    var today    = new Date(),
+        iniOfDay = today.toISOString().split('T')[0] + 'T00:00:00.000Z',
+        endOfDay = today.toISOString().split('T')[0] + 'T23:59:59.999Z';
+
+    var query = [
+        { interested: req.user.userId }, { endDate: { $gte: new Date(iniOfDay), $lte: new Date(endOfDay) }}
+    ];
+    Event.find({ $and: query })
+        .populate('localization')
+        .exec(function (err, events) {
+            var message;
+            if (err) {
+                error.genericErrorHandler(res, err.status, err.code, err.message);
+            } else {
+                if (!events.length) {
+                    message = "No event has been found of user interest for today";
+                    log.info(message);
+                } else {
+                    message = "Was found events of interest to the user for today";
+                }
+                res.json({events: events, status: 'ok', message: message});
+            }
+        });
+});
+
+router.post('/:id/interestme', passport.authenticate('bearer', {session: false }), function (req, res) {
+    var update = { interested: req.user.userId },
+        query  = [{ _id: req.params.id }, { interested: { $ne: req.user.userId }}];
+
+    Event.findOneAndUpdate({ $and: query }, { $push: update }, { new: true }, function (err, event) {
+        var message;
+        if (err) {
+            error.genericErrorHandler(res, err.status, err.code, err.message);
+        } else if (!event) {
+            message = "Event by id " + req.params.id +
+                      " not found or user interest it's already gone registered on this event";
+
+            log.error(message);
+            error.genericErrorHandler(res, 400, 'user_error', message);
+        } else {
+            message = "User interest on event " + event._id + " registered with success";
+            return res.json({status: 'ok', message: message})
+        }
+    })
+});
+
+router.delete('/:id/interestme', passport.authenticate('bearer', {session: false }), function (req, res) {
+    var update = { interested: req.user.userId },
+        query  = [{ _id: req.params.id }, { interested: req.user.userId }];
+
+    Event.findOneAndUpdate({ $and: query }, { $pull: update }, {new: true }, function (err, event) {
+        var message;
+        if (err) {
+            error.genericErrorHandler(res, err.status, err.code, err.message);
+        } else if (!event) {
+            message = "Event by id " + req.params.id +
+                " not found or user interest it's not registered on this event";
+
+            log.error(message);
+            error.genericErrorHandler(res, 400, 'user_error', message);
+        } else {
+            message = "User interest on event " + event._id + " unregistered with success";
+            return res.json({status: 'ok', message: message})
+        }
+    })
+});
+
 
 module.exports = router;
