@@ -40,8 +40,7 @@ var Event = Point.schema.extend({
 
     price: {
         type: String,
-        default: '0',
-        validate: validator({validator: 'isNumeric', message: 'Invalid Event Price'})
+        validate: validator({validator: 'isNumeric', passIfEmpty: true, message: 'Invalid Event Price'})
     },
 
     keywords: {
