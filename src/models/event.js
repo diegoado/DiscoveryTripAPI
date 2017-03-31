@@ -68,7 +68,7 @@ Event.methods.toJSON = function () {
         name        : this.name,
         description : this.description,
         localization: this.localization,
-        photo       : this.photo ? this.photo._id : null,
+        photo       : this.photo ? this.photo : null,
         kind        : this.kind,
         price       : this.price,
         keywords    : this.keywords,
