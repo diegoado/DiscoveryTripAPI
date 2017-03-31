@@ -56,6 +56,7 @@ var PointSchema = new Schema({
 });
 
 PointSchema.methods.toJSON = function () {
+    log.info("I am in point' toJSON method");
     var jsonObj = {
         _id         : this._id,
         _type       : this._type,
@@ -75,7 +76,7 @@ PointSchema.methods.toJSON = function () {
     }
     jsonObj.startDate = this.startDate;
     jsonObj.endDate   = this.endDate;
-    
+
     return jsonObj;
 };
 
