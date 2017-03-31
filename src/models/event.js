@@ -61,7 +61,6 @@ var Event = Point.schema.extend({
 });
 
 Event.methods.toJSON = function () {
-    log.info("I am in event' toJSON method");
     return {
         _id         : this._id,
         _type       : this._type,
@@ -69,6 +68,24 @@ Event.methods.toJSON = function () {
         description : this.description,
         localization: this.localization,
         photo       : this.photo ? this.photo : null,
+        kind        : this.kind,
+        price       : this.price,
+        keywords    : this.keywords,
+        startDate   : this.startDate,
+        endDate     : this.endDate
+    }
+};
+
+Event.methods.toSortJSON = function () {
+    var photo = this.photo ? this.photo._id : null;
+
+    return {
+        _id         : this._id,
+        _type       : this._type,
+        name        : this.name,
+        description : this.description,
+        localization: this.localization,
+        photo       : photo,
         kind        : this.kind,
         price       : this.price,
         keywords    : this.keywords,

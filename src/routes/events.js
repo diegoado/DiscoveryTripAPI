@@ -76,7 +76,7 @@ router.post('/', multer.single('photo'), passport.authenticate('bearer', { sessi
 
                 // Request result not in an Error
                 var message = 'New Event created with success!';
-                return res.json({event: event, status: 'ok', message: message});
+                return res.json({event: event.toSortJSON(), status: 'ok', message: message});
             })
             .catch(function (err) {
                 if (photo) {

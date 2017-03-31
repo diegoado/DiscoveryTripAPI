@@ -55,31 +55,6 @@ var PointSchema = new Schema({
     discriminatorKey: '_type'
 });
 
-PointSchema.methods.toJSON = function () {
-    log.info("I am in point' toJSON method");
-    var jsonObj = {
-        _id         : this._id,
-        _type       : this._type,
-        name        : this.name,
-        description : this.description,
-        localization: this.localization
-    };
-
-    if (this._type === 'Event') {
-        jsonObj.photo    = this.photo ? this.photo._id : null;
-        jsonObj.kind     = this.kind;
-        jsonObj.price    = this.price;
-        jsonObj.keywords = this.keywords;
-    } else {
-        jsonObj.photos = this.photos;
-        jsonObj.state  = this.state;
-    }
-    jsonObj.startDate = this.startDate;
-    jsonObj.endDate   = this.endDate;
-
-    return jsonObj;
-};
-
 // Register cascading actions
 PointSchema.post('remove', function (point) {
     Localization.findByIdAndRemove(point.localization, function (err, localization) {
