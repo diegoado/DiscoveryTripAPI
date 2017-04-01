@@ -13,7 +13,7 @@ var Point = require(src + 'models/point'),
     Photo = require(src + 'models/photo');
 
 // Custom validator functions
-validator.extend('chkDates', function (inputDate) { return this.startDate < inputDate }, 'Invalid input date');
+validator.extend('chkDates', function (date) { return this.startDate < date }, 'Invalid input date');
 
 
 var Event = Point.schema.extend({
@@ -40,7 +40,9 @@ var Event = Point.schema.extend({
 
     price: {
         type: String,
-        validate: validator({validator: 'isNumeric', passIfEmpty: true, message: 'Invalid Event Price'})
+        validate: validator({
+            validator: 'isFloat', arguments: { min: 0 }, passIfEmpty: true, message: 'Invalid Event Price'
+        })
     },
 
     keywords: {
