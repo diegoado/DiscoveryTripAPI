@@ -878,7 +878,7 @@ Get all interest events of an user at current day
 
    *Required:*
  
-     * `id = [string]`
+     * `None`
     
 * **Success Response:**
   
@@ -1077,6 +1077,11 @@ Search attractions and events near to a localization around a determinate input 
      * `latitude  = [string] <- In ISO 6709 format`
      * `longitude = [string] <- In ISO 6709 format`
      * `distance  = [number] <- Default: 5000m`
+     
+   *Optional:*
+   
+     * `page   = [number] <- The length of the return window`
+     * `offset = [number] <- The i-th page that will returned`
     
 * **Success Response:**
   
@@ -1137,6 +1142,11 @@ or a text in point description
    *Required:*
  
      * `text  = [string]`
+     
+   *Optional:*
+     * `page   = [number] <- The length of the return window`
+     * `offset = [number] <- The i-th page that will returned`
+
     
 * **Success Response:**
   
