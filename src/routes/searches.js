@@ -27,7 +27,10 @@ router.get('/name', passport.authenticate('bearer', { session: false }), functio
         error.genericErrorHandler(res, 400, "user_error", "Some input text is required in this search!");
     } else {
         var message,
-            query = [{name: text}, {description: { $regex: text, $options: 'i' }}, {category: text}, {keywords: text}];
+            query = [
+                {name: { $regex: text, $options: 'i' }}, {description: { $regex: text, $options: 'i' }},
+                {category: { $regex: text, $options: 'i' }}, {keywords: text}
+            ];
         Point.find({ $or: query })
             .populate('localization')
             .exec(function (err, points) {
