@@ -1,6 +1,9 @@
 var passport = require('passport'),
     express = require('express');
 
+// constant fields
+const MAX_SAFE_INTEGER = 9007199254740991;
+
 // Create a router to attractions
 var router = express.Router();
 
@@ -19,7 +22,6 @@ var regExpLatitude  = /^(\+|-)?(?:90(?:(?:\.0{1,8})?)|(?:[0-9]|[1-8][0-9])(?:(?:
 // Load Models
 var Point = require(src + 'models/point');
 
-
 router.get('/name', passport.authenticate('bearer', { session: false }), function (req, res) {
     var text = req.query.text;
 
@@ -31,7 +33,14 @@ router.get('/name', passport.authenticate('bearer', { session: false }), functio
                 {name: { $regex: text, $options: 'i' }}, {description: { $regex: text, $options: 'i' }},
                 {category: { $regex: text, $options: 'i' }}, {keywords: text}
             ];
+
+        var page   = Math.min(req.query.page, MAX_SAFE_INTEGER),
+            offset = page !== MAX_SAFE_INTEGER ? Math.max(req.query.offset - 1, 0) : 0;
+
         Point.find({ $or: query })
+            .limit(page)
+            .skip(page * offset)
+            .sort({ updated: 'desc'})
             .populate('localization')
             .exec(function (err, points) {
                 if (err) {
@@ -75,7 +84,13 @@ router.get('/points', passport.authenticate('bearer', { session: false }), funct
                 log.info(message);
                 res.json({points: [], status: 'ok', message: message});
             } else {
+                var page   = Math.min(req.query.page, MAX_SAFE_INTEGER),
+                    offset = page !== MAX_SAFE_INTEGER ? Math.max(req.query.offset - 1, 0) : 0;
+
                 Point.find({_id: { $in: result }})
+                    .limit(page)
+                    .skip(page * offset)
+                    .sort({ updated: 'desc'})
                     .populate('localization')
                     .exec(function (err, points) {
                         if (err) {

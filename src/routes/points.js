@@ -63,7 +63,7 @@ router.delete('/:id', passport.authenticate('bearer', { session: false }), funct
             error.genericErrorHandler(res, err.status, err.code, err.message);
         } else if (!point) {
             error.genericErrorHandler(res, 404, 'user_error', 'Point not found!');
-        } else if (point.ownerId !== req.user.userId) {
+        } else if (point.ownerId.toString() !== req.user.userId) {
             error.genericErrorHandler(res, 404, 'user_error', 'Only the owner of the point can remove it!');
         } else {
             point.remove(function (err) {
